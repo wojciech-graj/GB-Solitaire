@@ -1,0 +1,786 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.0 #12072 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _draw_background
+                                     13 	.globl _draw_pile
+                                     14 	.globl _init_deck
+                                     15 	.globl _printf
+                                     16 	.globl _rand
+                                     17 	.globl _initrand
+                                     18 	.globl _set_bkg_tile_xy
+                                     19 	.globl _set_bkg_data
+                                     20 	.globl _delay
+                                     21 	.globl _top_card_idx
+                                     22 	.globl _piles
+                                     23 	.globl _deck
+                                     24 ;--------------------------------------------------------
+                                     25 ; special function registers
+                                     26 ;--------------------------------------------------------
+                                     27 ;--------------------------------------------------------
+                                     28 ; ram data
+                                     29 ;--------------------------------------------------------
+                                     30 	.area _DATA
+      000000                         31 _deck::
+      000000                         32 	.ds 312
+      000138                         33 _piles::
+      000138                         34 	.ds 20
+      00014C                         35 _top_card_idx::
+      00014C                         36 	.ds 1
+                                     37 ;--------------------------------------------------------
+                                     38 ; absolute external ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area _DABS (ABS)
+                                     41 ;--------------------------------------------------------
+                                     42 ; global & static initialisations
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _HOME
+                                     45 	.area _GSINIT
+                                     46 	.area _GSFINAL
+                                     47 	.area _GSINIT
+                                     48 ;--------------------------------------------------------
+                                     49 ; Home
+                                     50 ;--------------------------------------------------------
+                                     51 	.area _HOME
+                                     52 	.area _HOME
+                                     53 ;--------------------------------------------------------
+                                     54 ; code
+                                     55 ;--------------------------------------------------------
+                                     56 	.area _CODE
+                                     57 ;src/main.c:30: void init_deck(void)
+                                     58 ;	---------------------------------
+                                     59 ; Function init_deck
+                                     60 ; ---------------------------------
+      000000                         61 _init_deck::
+      000000 E8 EA                   62 	add	sp, #-22
+                                     63 ;src/main.c:32: Card *card = IDX_PTR(deck, 0);
+      000002 01r00r00                64 	ld	bc, #_deck
+                                     65 ;src/main.c:37: for (suit = 0; suit < 4u; suit++) {
+      000005 AF                      66 	xor	a, a
+      000006 F8 11                   67 	ldhl	sp,	#17
+      000008 77                      68 	ld	(hl), a
+                                     69 ;src/main.c:38: for (rank = 0; rank < 13u; rank++) {
+      000009                         70 00136$:
+      000009 AF                      71 	xor	a, a
+      00000A F8 12                   72 	ldhl	sp,	#18
+      00000C 77                      73 	ld	(hl), a
+                                     74 ;src/main.c:39: for (i = 0; i < 2u; i++) {
+      00000D                         75 00134$:
+      00000D F8 13                   76 	ldhl	sp,	#19
+      00000F 79                      77 	ld	a, c
+      000010 22                      78 	ld	(hl+), a
+      000011 78                      79 	ld	a, b
+      000012 22                      80 	ld	(hl+), a
+      000013 36 02                   81 	ld	(hl), #0x02
+      000015                         82 00114$:
+                                     83 ;src/main.c:40: card->rank = rank;
+                                     84 ;c
+      000015 F8 13                   85 	ldhl	sp,#19
+      000017 2A                      86 	ld	a, (hl+)
+      000018 5F                      87 	ld	e, a
+      000019 56                      88 	ld	d, (hl)
+      00001A 21 02 00                89 	ld	hl, #0x0002
+      00001D 19                      90 	add	hl, de
+      00001E E5                      91 	push	hl
+      00001F 7D                      92 	ld	a, l
+      000020 F8 11                   93 	ldhl	sp,	#17
+      000022 77                      94 	ld	(hl), a
+      000023 E1                      95 	pop	hl
+      000024 7C                      96 	ld	a, h
+      000025 F8 10                   97 	ldhl	sp,	#16
+      000027 32                      98 	ld	(hl-), a
+      000028 2A                      99 	ld	a, (hl+)
+      000029 5F                     100 	ld	e, a
+      00002A 2A                     101 	ld	a, (hl+)
+      00002B 57                     102 	ld	d, a
+      00002C 23                     103 	inc	hl
+      00002D 7E                     104 	ld	a, (hl)
+      00002E E6 0F                  105 	and	a, #0x0f
+      000030 4F                     106 	ld	c, a
+      000031 1A                     107 	ld	a, (de)
+      000032 E6 F0                  108 	and	a, #0xf0
+      000034 B1                     109 	or	a, c
+      000035 12                     110 	ld	(de), a
+                                    111 ;src/main.c:41: card->suit = suit;
+      000036 2B                     112 	dec	hl
+      000037 2B                     113 	dec	hl
+      000038 2B                     114 	dec	hl
+      000039 2A                     115 	ld	a, (hl+)
+      00003A 4F                     116 	ld	c, a
+      00003B 2A                     117 	ld	a, (hl+)
+      00003C 47                     118 	ld	b, a
+      00003D 7E                     119 	ld	a, (hl)
+      00003E CB 37                  120 	swap	a
+      000040 E6 30                  121 	and	a, #0x30
+      000042 6F                     122 	ld	l, a
+      000043 0A                     123 	ld	a, (bc)
+      000044 E6 CF                  124 	and	a, #0xcf
+      000046 B5                     125 	or	a, l
+      000047 02                     126 	ld	(bc), a
+                                    127 ;src/main.c:42: card->next_card = NULL;
+      000048 F8 13                  128 	ldhl	sp,	#19
+      00004A 2A                     129 	ld	a, (hl+)
+      00004B 66                     130 	ld	h, (hl)
+      00004C 6F                     131 	ld	l, a
+      00004D AF                     132 	xor	a, a
+      00004E 22                     133 	ld	(hl+), a
+      00004F 77                     134 	ld	(hl), a
+                                    135 ;src/main.c:43: card++;
+                                    136 ;c
+      000050 F8 13                  137 	ldhl	sp,#19
+      000052 2A                     138 	ld	a, (hl+)
+      000053 5F                     139 	ld	e, a
+      000054 56                     140 	ld	d, (hl)
+      000055 21 03 00               141 	ld	hl, #0x0003
+      000058 19                     142 	add	hl, de
+      000059 E5                     143 	push	hl
+      00005A 7D                     144 	ld	a, l
+      00005B F8 15                  145 	ldhl	sp,	#21
+      00005D 77                     146 	ld	(hl), a
+      00005E E1                     147 	pop	hl
+      00005F 7C                     148 	ld	a, h
+      000060 F8 14                  149 	ldhl	sp,	#20
+      000062 22                     150 	ld	(hl+), a
+                                    151 ;src/main.c:39: for (i = 0; i < 2u; i++) {
+      000063 35                     152 	dec	(hl)
+      000064 20 AF                  153 	jr	NZ, 00114$
+                                    154 ;src/main.c:38: for (rank = 0; rank < 13u; rank++) {
+      000066 2B                     155 	dec	hl
+      000067 2B                     156 	dec	hl
+      000068 2A                     157 	ld	a, (hl+)
+      000069 4F                     158 	ld	c, a
+      00006A 3A                     159 	ld	a, (hl-)
+      00006B 47                     160 	ld	b, a
+      00006C 2B                     161 	dec	hl
+      00006D 34                     162 	inc	(hl)
+      00006E 7E                     163 	ld	a, (hl)
+      00006F D6 0D                  164 	sub	a, #0x0d
+      000071 38 9A                  165 	jr	C, 00134$
+                                    166 ;src/main.c:37: for (suit = 0; suit < 4u; suit++) {
+      000073 2B                     167 	dec	hl
+      000074 34                     168 	inc	(hl)
+      000075 7E                     169 	ld	a, (hl)
+      000076 D6 04                  170 	sub	a, #0x04
+      000078 38 8F                  171 	jr	C, 00136$
+                                    172 ;src/main.c:48: card = IDX_PTR(deck, 103u);
+      00007A 23                     173 	inc	hl
+      00007B 23                     174 	inc	hl
+      00007C 3Er35                  175 	ld	a, #<((_deck + 0x0135))
+      00007E 22                     176 	ld	(hl+), a
+      00007F 36s01                  177 	ld	(hl), #>((_deck + 0x0135))
+                                    178 ;src/main.c:49: for (i = 103u; i; i--) {
+      000081 F8 0A                  179 	ldhl	sp,	#10
+      000083 7D                     180 	ld	a, l
+      000084 54                     181 	ld	d, h
+      000085 F8 0D                  182 	ldhl	sp,	#13
+      000087 22                     183 	ld	(hl+), a
+      000088 7A                     184 	ld	a, d
+      000089 32                     185 	ld	(hl-), a
+      00008A 2A                     186 	ld	a, (hl+)
+      00008B 5E                     187 	ld	e, (hl)
+      00008C 23                     188 	inc	hl
+      00008D 22                     189 	ld	(hl+), a
+      00008E 73                     190 	ld	(hl), e
+      00008F F8 15                  191 	ldhl	sp,	#21
+      000091 36 67                  192 	ld	(hl), #0x67
+      000093                        193 00119$:
+                                    194 ;src/main.c:50: Card *swap = IDX_PTR(deck, (UINT8)rand() % i);
+      000093 CDr00r00               195 	call	_rand
+      000096 7B                     196 	ld	a, e
+      000097 F8 15                  197 	ldhl	sp,	#21
+      000099 66                     198 	ld	h, (hl)
+      00009A E5                     199 	push	hl
+      00009B 33                     200 	inc	sp
+      00009C F5                     201 	push	af
+      00009D 33                     202 	inc	sp
+      00009E CDr00r00               203 	call	__moduchar
+      0000A1 E8 02                  204 	add	sp, #2
+      0000A3 4B                     205 	ld	c, e
+      0000A4 06 00                  206 	ld	b, #0x00
+      0000A6 69                     207 	ld	l, c
+      0000A7 60                     208 	ld	h, b
+      0000A8 29                     209 	add	hl, hl
+      0000A9 09                     210 	add	hl, bc
+      0000AA 7D                     211 	ld	a, l
+      0000AB C6r00                  212 	add	a, #<(_deck)
+      0000AD 4F                     213 	ld	c, a
+      0000AE 7C                     214 	ld	a, h
+      0000AF CEs00                  215 	adc	a, #>(_deck)
+      0000B1 47                     216 	ld	b, a
+      0000B2 F8 11                  217 	ldhl	sp,	#17
+      0000B4 79                     218 	ld	a, c
+      0000B5 22                     219 	ld	(hl+), a
+                                    220 ;src/main.c:52: temp = *card;
+      0000B6 78                     221 	ld	a, b
+      0000B7 22                     222 	ld	(hl+), a
+      0000B8 2A                     223 	ld	a, (hl+)
+      0000B9 5F                     224 	ld	e, a
+      0000BA 56                     225 	ld	d, (hl)
+      0000BB F8 0D                  226 	ldhl	sp,#13
+      0000BD 2A                     227 	ld	a, (hl+)
+      0000BE 4F                     228 	ld	c, a
+      0000BF 46                     229 	ld	b, (hl)
+      0000C0 21 03 00               230 	ld	hl, #0x0003
+      0000C3 E5                     231 	push	hl
+      0000C4 D5                     232 	push	de
+      0000C5 C5                     233 	push	bc
+      0000C6 CDr00r00               234 	call	___memcpy
+      0000C9 E8 06                  235 	add	sp, #6
+                                    236 ;src/main.c:53: *card = *swap;
+      0000CB F8 11                  237 	ldhl	sp,#17
+      0000CD 2A                     238 	ld	a, (hl+)
+      0000CE 5F                     239 	ld	e, a
+      0000CF 2A                     240 	ld	a, (hl+)
+      0000D0 57                     241 	ld	d, a
+      0000D1 2A                     242 	ld	a, (hl+)
+      0000D2 4F                     243 	ld	c, a
+      0000D3 46                     244 	ld	b, (hl)
+      0000D4 21 03 00               245 	ld	hl, #0x0003
+      0000D7 E5                     246 	push	hl
+      0000D8 D5                     247 	push	de
+      0000D9 C5                     248 	push	bc
+      0000DA CDr00r00               249 	call	___memcpy
+      0000DD E8 06                  250 	add	sp, #6
+                                    251 ;src/main.c:54: *swap = temp;
+      0000DF F8 0F                  252 	ldhl	sp,#15
+      0000E1 2A                     253 	ld	a, (hl+)
+      0000E2 5F                     254 	ld	e, a
+      0000E3 2A                     255 	ld	a, (hl+)
+      0000E4 57                     256 	ld	d, a
+      0000E5 2A                     257 	ld	a, (hl+)
+      0000E6 4F                     258 	ld	c, a
+      0000E7 46                     259 	ld	b, (hl)
+      0000E8 21 03 00               260 	ld	hl, #0x0003
+      0000EB E5                     261 	push	hl
+      0000EC D5                     262 	push	de
+      0000ED C5                     263 	push	bc
+      0000EE CDr00r00               264 	call	___memcpy
+      0000F1 E8 06                  265 	add	sp, #6
+                                    266 ;src/main.c:55: card--;
+      0000F3 F8 13                  267 	ldhl	sp,#19
+      0000F5 2A                     268 	ld	a, (hl+)
+      0000F6 5F                     269 	ld	e, a
+      0000F7 56                     270 	ld	d, (hl)
+      0000F8 21 03 00               271 	ld	hl, #0x0003
+      0000FB 7B                     272 	ld	a, e
+      0000FC 95                     273 	sub	a, l
+      0000FD 5F                     274 	ld	e, a
+      0000FE 7A                     275 	ld	a, d
+      0000FF 9C                     276 	sbc	a, h
+      000100 F8 14                  277 	ldhl	sp,	#20
+      000102 32                     278 	ld	(hl-), a
+                                    279 ;src/main.c:49: for (i = 103u; i; i--) {
+      000103 7B                     280 	ld	a, e
+      000104 22                     281 	ld	(hl+), a
+      000105 23                     282 	inc	hl
+      000106 35                     283 	dec	(hl)
+      000107 20 8A                  284 	jr	NZ, 00119$
+                                    285 ;src/main.c:58: UINT8 te[13] = {0};
+      000109 F8 00                  286 	ldhl	sp,	#0
+      00010B 4D                     287 	ld	c, l
+      00010C 44                     288 	ld	b, h
+      00010D AF                     289 	xor	a, a
+      00010E 02                     290 	ld	(bc), a
+      00010F 59                     291 	ld	e, c
+      000110 50                     292 	ld	d, b
+      000111 13                     293 	inc	de
+      000112 AF                     294 	xor	a, a
+      000113 12                     295 	ld	(de), a
+      000114 59                     296 	ld	e, c
+      000115 50                     297 	ld	d, b
+      000116 13                     298 	inc	de
+      000117 13                     299 	inc	de
+      000118 AF                     300 	xor	a, a
+      000119 12                     301 	ld	(de), a
+      00011A 59                     302 	ld	e, c
+      00011B 50                     303 	ld	d, b
+      00011C 13                     304 	inc	de
+      00011D 13                     305 	inc	de
+      00011E 13                     306 	inc	de
+      00011F AF                     307 	xor	a, a
+      000120 12                     308 	ld	(de), a
+      000121 21 04 00               309 	ld	hl, #0x0004
+      000124 09                     310 	add	hl, bc
+      000125 36 00                  311 	ld	(hl), #0x00
+      000127 21 05 00               312 	ld	hl, #0x0005
+      00012A 09                     313 	add	hl, bc
+      00012B 36 00                  314 	ld	(hl), #0x00
+      00012D 21 06 00               315 	ld	hl, #0x0006
+      000130 09                     316 	add	hl, bc
+      000131 36 00                  317 	ld	(hl), #0x00
+      000133 21 07 00               318 	ld	hl, #0x0007
+      000136 09                     319 	add	hl, bc
+      000137 36 00                  320 	ld	(hl), #0x00
+      000139 21 08 00               321 	ld	hl, #0x0008
+      00013C 09                     322 	add	hl, bc
+      00013D 36 00                  323 	ld	(hl), #0x00
+      00013F 21 09 00               324 	ld	hl, #0x0009
+      000142 09                     325 	add	hl, bc
+      000143 36 00                  326 	ld	(hl), #0x00
+      000145 21 0A 00               327 	ld	hl, #0x000a
+      000148 09                     328 	add	hl, bc
+      000149 36 00                  329 	ld	(hl), #0x00
+      00014B 21 0B 00               330 	ld	hl, #0x000b
+      00014E 09                     331 	add	hl, bc
+      00014F 36 00                  332 	ld	(hl), #0x00
+      000151 21 0C 00               333 	ld	hl, #0x000c
+      000154 09                     334 	add	hl, bc
+      000155 36 00                  335 	ld	(hl), #0x00
+                                    336 ;src/main.c:59: for (i = 0; i < 104; i++) {
+      000157 AF                     337 	xor	a, a
+      000158 F8 15                  338 	ldhl	sp,	#21
+      00015A 77                     339 	ld	(hl), a
+      00015B                        340 00121$:
+                                    341 ;src/main.c:60: te[deck[i].rank]++;
+      00015B F8 15                  342 	ldhl	sp,	#21
+      00015D 5E                     343 	ld	e, (hl)
+      00015E 16 00                  344 	ld	d, #0x00
+      000160 6B                     345 	ld	l, e
+      000161 62                     346 	ld	h, d
+      000162 29                     347 	add	hl, hl
+      000163 19                     348 	add	hl, de
+      000164 11r00r00               349 	ld	de, #_deck
+      000167 19                     350 	add	hl, de
+      000168 23                     351 	inc	hl
+      000169 23                     352 	inc	hl
+      00016A 7E                     353 	ld	a, (hl)
+      00016B E6 0F                  354 	and	a, #0x0f
+      00016D 6F                     355 	ld	l, a
+      00016E 26 00                  356 	ld	h, #0x00
+      000170 09                     357 	add	hl, bc
+      000171 34                     358 	inc	(hl)
+                                    359 ;src/main.c:59: for (i = 0; i < 104; i++) {
+      000172 F8 15                  360 	ldhl	sp,	#21
+      000174 34                     361 	inc	(hl)
+      000175 7E                     362 	ld	a, (hl)
+      000176 D6 68                  363 	sub	a, #0x68
+      000178 38 E1                  364 	jr	C, 00121$
+                                    365 ;src/main.c:62: for (i = 0; i < 13; i++) {
+      00017A 1E 00                  366 	ld	e, #0x00
+      00017C                        367 00123$:
+                                    368 ;src/main.c:63: if (te[i] != 8)
+      00017C 6B                     369 	ld	l, e
+      00017D 26 00                  370 	ld	h, #0x00
+      00017F 09                     371 	add	hl, bc
+      000180 7E                     372 	ld	a, (hl)
+      000181 FE 08                  373 	cp	a, #0x08
+      000183 28 11                  374 	jr	Z, 00124$
+                                    375 ;src/main.c:64: printf("%u\n", te[i]);
+      000185 6F                     376 	ld	l, a
+      000186 26 00                  377 	ld	h, #0x00
+      000188 C5                     378 	push	bc
+      000189 D5                     379 	push	de
+      00018A E5                     380 	push	hl
+      00018B 21r02r02               381 	ld	hl, #___str_0
+      00018E E5                     382 	push	hl
+      00018F CDr00r00               383 	call	_printf
+      000192 E8 04                  384 	add	sp, #4
+      000194 D1                     385 	pop	de
+      000195 C1                     386 	pop	bc
+      000196                        387 00124$:
+                                    388 ;src/main.c:62: for (i = 0; i < 13; i++) {
+      000196 1C                     389 	inc	e
+      000197 7B                     390 	ld	a, e
+      000198 D6 0D                  391 	sub	a, #0x0d
+      00019A 38 E0                  392 	jr	C, 00123$
+                                    393 ;src/main.c:67: card = IDX_PTR(deck, 0);
+      00019C 01r00r00               394 	ld	bc, #_deck
+                                    395 ;src/main.c:68: for (i = 0; i < 44u; i++) {
+      00019F AF                     396 	xor	a, a
+      0001A0 F8 15                  397 	ldhl	sp,	#21
+      0001A2 77                     398 	ld	(hl), a
+      0001A3                        399 00125$:
+                                    400 ;src/main.c:69: card->visible = 0;
+      0001A3 69                     401 	ld	l, c
+      0001A4 60                     402 	ld	h, b
+      0001A5 23                     403 	inc	hl
+      0001A6 23                     404 	inc	hl
+      0001A7 CB B6                  405 	res	6, (hl)
+                                    406 ;src/main.c:70: card->next_card = IDX_PTR(deck, i + 10u);
+      0001A9 F8 15                  407 	ldhl	sp,	#21
+      0001AB 5E                     408 	ld	e, (hl)
+      0001AC 16 00                  409 	ld	d, #0x00
+      0001AE 6B                     410 	ld	l, e
+      0001AF 62                     411 	ld	h, d
+      0001B0 29                     412 	add	hl, hl
+      0001B1 19                     413 	add	hl, de
+      0001B2 11r00r00               414 	ld	de, #_deck
+      0001B5 19                     415 	add	hl, de
+      0001B6 11 1E 00               416 	ld	de, #0x001e
+      0001B9 19                     417 	add	hl, de
+      0001BA 5D                     418 	ld	e, l
+      0001BB 54                     419 	ld	d, h
+      0001BC 69                     420 	ld	l, c
+      0001BD 60                     421 	ld	h, b
+      0001BE 7B                     422 	ld	a, e
+      0001BF 22                     423 	ld	(hl+), a
+      0001C0 72                     424 	ld	(hl), d
+                                    425 ;src/main.c:71: card++;
+      0001C1 03                     426 	inc	bc
+      0001C2 03                     427 	inc	bc
+      0001C3 03                     428 	inc	bc
+                                    429 ;src/main.c:68: for (i = 0; i < 44u; i++) {
+      0001C4 F8 15                  430 	ldhl	sp,	#21
+      0001C6 34                     431 	inc	(hl)
+      0001C7 7E                     432 	ld	a, (hl)
+      0001C8 D6 2C                  433 	sub	a, #0x2c
+      0001CA 38 D7                  434 	jr	C, 00125$
+      0001CC 5E                     435 	ld	e, (hl)
+      0001CD                        436 00128$:
+                                    437 ;src/main.c:73: for (; i < 54u; i++) {
+      0001CD 7B                     438 	ld	a, e
+      0001CE D6 36                  439 	sub	a, #0x36
+      0001D0 30 0C                  440 	jr	NC, 00110$
+                                    441 ;src/main.c:74: card->visible = 1u;
+      0001D2 69                     442 	ld	l, c
+      0001D3 60                     443 	ld	h, b
+      0001D4 23                     444 	inc	hl
+      0001D5 23                     445 	inc	hl
+      0001D6 CB F6                  446 	set	6, (hl)
+                                    447 ;src/main.c:75: card++;
+      0001D8 03                     448 	inc	bc
+      0001D9 03                     449 	inc	bc
+      0001DA 03                     450 	inc	bc
+                                    451 ;src/main.c:73: for (; i < 54u; i++) {
+      0001DB 1C                     452 	inc	e
+      0001DC 18 EF                  453 	jr	00128$
+      0001DE                        454 00110$:
+                                    455 ;src/main.c:78: card = IDX_PTR(deck, 0);
+      0001DE 01r00r00               456 	ld	bc, #_deck
+                                    457 ;src/main.c:79: for (i = 0; i < 10; i++) {
+      0001E1 1E 00                  458 	ld	e, #0x00
+      0001E3                        459 00130$:
+                                    460 ;src/main.c:80: piles[i] = card;
+      0001E3 7B                     461 	ld	a, e
+      0001E4 26 00                  462 	ld	h, #0x00
+      0001E6 6F                     463 	ld	l, a
+      0001E7 29                     464 	add	hl, hl
+      0001E8 D5                     465 	push	de
+      0001E9 11r38r01               466 	ld	de, #_piles
+      0001EC 19                     467 	add	hl, de
+      0001ED D1                     468 	pop	de
+      0001EE 79                     469 	ld	a, c
+      0001EF 22                     470 	ld	(hl+), a
+      0001F0 70                     471 	ld	(hl), b
+                                    472 ;src/main.c:81: card++;
+      0001F1 03                     473 	inc	bc
+      0001F2 03                     474 	inc	bc
+      0001F3 03                     475 	inc	bc
+                                    476 ;src/main.c:79: for (i = 0; i < 10; i++) {
+      0001F4 1C                     477 	inc	e
+      0001F5 7B                     478 	ld	a, e
+      0001F6 D6 0A                  479 	sub	a, #0x0a
+      0001F8 38 E9                  480 	jr	C, 00130$
+                                    481 ;src/main.c:84: top_card_idx = 53u;
+      0001FA 21r4Cr01               482 	ld	hl, #_top_card_idx
+      0001FD 36 35                  483 	ld	(hl), #0x35
+                                    484 ;src/main.c:85: }
+      0001FF E8 16                  485 	add	sp, #22
+      000201 C9                     486 	ret
+      000202                        487 ___str_0:
+      000202 25 75                  488 	.ascii "%u"
+      000204 0A                     489 	.db 0x0a
+      000205 00                     490 	.db 0x00
+                                    491 ;src/main.c:87: void draw_pile(Card *card, UINT8 x, UINT8 y)
+                                    492 ;	---------------------------------
+                                    493 ; Function draw_pile
+                                    494 ; ---------------------------------
+      000206                        495 _draw_pile::
+      000206 E8 FC                  496 	add	sp, #-4
+                                    497 ;src/main.c:89: while (1) {
+      000208 F8 08                  498 	ldhl	sp,	#8
+      00020A 7E                     499 	ld	a, (hl)
+      00020B 3C                     500 	inc	a
+      00020C F8 00                  501 	ldhl	sp,	#0
+      00020E 77                     502 	ld	(hl), a
+      00020F F8 09                  503 	ldhl	sp,	#9
+      000211 7E                     504 	ld	a, (hl)
+      000212 F8 01                  505 	ldhl	sp,	#1
+      000214 77                     506 	ld	(hl), a
+      000215                        507 00107$:
+                                    508 ;src/main.c:90: if (card->visible) {
+      000215 F8 06                  509 	ldhl	sp,	#6
+      000217 2A                     510 	ld	a, (hl+)
+      000218 5E                     511 	ld	e, (hl)
+      000219 F8 02                  512 	ldhl	sp,	#2
+      00021B 22                     513 	ld	(hl+), a
+      00021C 7B                     514 	ld	a, e
+      00021D 32                     515 	ld	(hl-), a
+      00021E 2A                     516 	ld	a, (hl+)
+      00021F 4F                     517 	ld	c, a
+      000220 46                     518 	ld	b, (hl)
+      000221 03                     519 	inc	bc
+      000222 03                     520 	inc	bc
+      000223 69                     521 	ld	l, c
+      000224 60                     522 	ld	h, b
+      000225 7E                     523 	ld	a, (hl)
+      000226 07                     524 	rlca
+      000227 07                     525 	rlca
+      000228 30 32                  526 	jr	NC, 00102$
+                                    527 ;src/main.c:91: set_bkg_tile_xy(x, y, card->rank + OFFSET_TEX_RANK);
+      00022A 69                     528 	ld	l, c
+      00022B 60                     529 	ld	h, b
+      00022C 7E                     530 	ld	a, (hl)
+      00022D E6 0F                  531 	and	a, #0x0f
+      00022F 3C                     532 	inc	a
+      000230 F5                     533 	push	af
+      000231 33                     534 	inc	sp
+      000232 F8 02                  535 	ldhl	sp,	#2
+      000234 7E                     536 	ld	a, (hl)
+      000235 F5                     537 	push	af
+      000236 33                     538 	inc	sp
+      000237 F8 0A                  539 	ldhl	sp,	#10
+      000239 7E                     540 	ld	a, (hl)
+      00023A F5                     541 	push	af
+      00023B 33                     542 	inc	sp
+      00023C CDr00r00               543 	call	_set_bkg_tile_xy
+      00023F E8 03                  544 	add	sp, #3
+                                    545 ;src/main.c:92: set_bkg_tile_xy(x + 1u, y, card->suit + OFFSET_TEX_SUIT);
+      000241 69                     546 	ld	l, c
+      000242 60                     547 	ld	h, b
+      000243 7E                     548 	ld	a, (hl)
+      000244 CB 37                  549 	swap	a
+      000246 E6 03                  550 	and	a, #0x03
+      000248 C6 0E                  551 	add	a, #0x0e
+      00024A F5                     552 	push	af
+      00024B 33                     553 	inc	sp
+      00024C F8 02                  554 	ldhl	sp,	#2
+      00024E 7E                     555 	ld	a, (hl)
+      00024F F5                     556 	push	af
+      000250 33                     557 	inc	sp
+      000251 2B                     558 	dec	hl
+      000252 7E                     559 	ld	a, (hl)
+      000253 F5                     560 	push	af
+      000254 33                     561 	inc	sp
+      000255 CDr00r00               562 	call	_set_bkg_tile_xy
+      000258 E8 03                  563 	add	sp, #3
+      00025A 18 25                  564 	jr	00103$
+      00025C                        565 00102$:
+                                    566 ;src/main.c:94: set_bkg_tile_xy(x, y, OFFSET_TEX_BACK);
+      00025C 3E 18                  567 	ld	a, #0x18
+      00025E F5                     568 	push	af
+      00025F 33                     569 	inc	sp
+      000260 F8 02                  570 	ldhl	sp,	#2
+      000262 7E                     571 	ld	a, (hl)
+      000263 F5                     572 	push	af
+      000264 33                     573 	inc	sp
+      000265 F8 0A                  574 	ldhl	sp,	#10
+      000267 7E                     575 	ld	a, (hl)
+      000268 F5                     576 	push	af
+      000269 33                     577 	inc	sp
+      00026A CDr00r00               578 	call	_set_bkg_tile_xy
+      00026D E8 03                  579 	add	sp, #3
+                                    580 ;src/main.c:95: set_bkg_tile_xy(x + 1u, y, OFFSET_TEX_BACK + 1u);
+      00026F 3E 19                  581 	ld	a, #0x19
+      000271 F5                     582 	push	af
+      000272 33                     583 	inc	sp
+      000273 F8 02                  584 	ldhl	sp,	#2
+      000275 7E                     585 	ld	a, (hl)
+      000276 F5                     586 	push	af
+      000277 33                     587 	inc	sp
+      000278 2B                     588 	dec	hl
+      000279 7E                     589 	ld	a, (hl)
+      00027A F5                     590 	push	af
+      00027B 33                     591 	inc	sp
+      00027C CDr00r00               592 	call	_set_bkg_tile_xy
+      00027F E8 03                  593 	add	sp, #3
+      000281                        594 00103$:
+                                    595 ;src/main.c:97: if (!card->next_card) {
+      000281 F8 02                  596 	ldhl	sp,#2
+      000283 2A                     597 	ld	a, (hl+)
+      000284 5F                     598 	ld	e, a
+      000285 56                     599 	ld	d, (hl)
+      000286 1A                     600 	ld	a, (de)
+      000287 2B                     601 	dec	hl
+      000288 22                     602 	ld	(hl+), a
+      000289 13                     603 	inc	de
+      00028A 1A                     604 	ld	a, (de)
+                                    605 ;src/main.c:98: set_bkg_tile_xy(x, y + 1u, OFFSET_TEX_BLANK + 2u);
+      00028B 32                     606 	ld	(hl-), a
+      00028C 2B                     607 	dec	hl
+      00028D 5E                     608 	ld	e, (hl)
+      00028E 1C                     609 	inc	e
+                                    610 ;src/main.c:97: if (!card->next_card) {
+      00028F 23                     611 	inc	hl
+      000290 23                     612 	inc	hl
+      000291 3A                     613 	ld	a, (hl-)
+      000292 B6                     614 	or	a, (hl)
+      000293 20 51                  615 	jr	NZ, 00105$
+                                    616 ;src/main.c:98: set_bkg_tile_xy(x, y + 1u, OFFSET_TEX_BLANK + 2u);
+      000295 D5                     617 	push	de
+      000296 16 14                  618 	ld	d, #0x14
+      000298 D5                     619 	push	de
+      000299 F8 0C                  620 	ldhl	sp,	#12
+      00029B 7E                     621 	ld	a, (hl)
+      00029C F5                     622 	push	af
+      00029D 33                     623 	inc	sp
+      00029E CDr00r00               624 	call	_set_bkg_tile_xy
+      0002A1 E8 03                  625 	add	sp, #3
+      0002A3 D1                     626 	pop	de
+                                    627 ;src/main.c:99: set_bkg_tile_xy(x + 1u, y + 1u, OFFSET_TEX_BLANK + 3u);
+      0002A4 16 15                  628 	ld	d, #0x15
+      0002A6 D5                     629 	push	de
+      0002A7 F8 02                  630 	ldhl	sp,	#2
+      0002A9 7E                     631 	ld	a, (hl)
+      0002AA F5                     632 	push	af
+      0002AB 33                     633 	inc	sp
+      0002AC CDr00r00               634 	call	_set_bkg_tile_xy
+      0002AF E8 03                  635 	add	sp, #3
+                                    636 ;src/main.c:100: set_bkg_tile_xy(x, y + 2u, card->suit + OFFSET_TEX_INV_SUIT);
+      0002B1 69                     637 	ld	l, c
+      0002B2 60                     638 	ld	h, b
+      0002B3 7E                     639 	ld	a, (hl)
+      0002B4 CB 37                  640 	swap	a
+      0002B6 E6 03                  641 	and	a, #0x03
+      0002B8 C6 2B                  642 	add	a, #0x2b
+      0002BA F8 01                  643 	ldhl	sp,	#1
+      0002BC 56                     644 	ld	d, (hl)
+      0002BD 14                     645 	inc	d
+      0002BE 14                     646 	inc	d
+      0002BF D5                     647 	push	de
+      0002C0 F5                     648 	push	af
+      0002C1 33                     649 	inc	sp
+      0002C2 D5                     650 	push	de
+      0002C3 33                     651 	inc	sp
+      0002C4 F8 0C                  652 	ldhl	sp,	#12
+      0002C6 7E                     653 	ld	a, (hl)
+      0002C7 F5                     654 	push	af
+      0002C8 33                     655 	inc	sp
+      0002C9 CDr00r00               656 	call	_set_bkg_tile_xy
+      0002CC E8 03                  657 	add	sp, #3
+      0002CE D1                     658 	pop	de
+                                    659 ;src/main.c:101: set_bkg_tile_xy(x + 1u, y + 2u, card->rank + OFFSET_TEX_INV_RANK);
+      0002CF 69                     660 	ld	l, c
+      0002D0 60                     661 	ld	h, b
+      0002D1 7E                     662 	ld	a, (hl)
+      0002D2 E6 0F                  663 	and	a, #0x0f
+      0002D4 C6 1E                  664 	add	a, #0x1e
+      0002D6 F5                     665 	push	af
+      0002D7 33                     666 	inc	sp
+      0002D8 D5                     667 	push	de
+      0002D9 33                     668 	inc	sp
+      0002DA F8 02                  669 	ldhl	sp,	#2
+      0002DC 7E                     670 	ld	a, (hl)
+      0002DD F5                     671 	push	af
+      0002DE 33                     672 	inc	sp
+      0002DF CDr00r00               673 	call	_set_bkg_tile_xy
+      0002E2 E8 03                  674 	add	sp, #3
+                                    675 ;src/main.c:102: break;
+      0002E4 18 0D                  676 	jr	00109$
+      0002E6                        677 00105$:
+                                    678 ;src/main.c:105: y++;
+      0002E6 F8 01                  679 	ldhl	sp,	#1
+                                    680 ;src/main.c:106: card = card->next_card;
+      0002E8 7B                     681 	ld	a, e
+      0002E9 22                     682 	ld	(hl+), a
+      0002EA 2A                     683 	ld	a, (hl+)
+      0002EB 5E                     684 	ld	e, (hl)
+      0002EC F8 06                  685 	ldhl	sp,	#6
+      0002EE 22                     686 	ld	(hl+), a
+      0002EF 73                     687 	ld	(hl), e
+      0002F0 C3r15r02               688 	jp	00107$
+      0002F3                        689 00109$:
+                                    690 ;src/main.c:108: }
+      0002F3 E8 04                  691 	add	sp, #4
+      0002F5 C9                     692 	ret
+                                    693 ;src/main.c:111: void draw_background(void)
+                                    694 ;	---------------------------------
+                                    695 ; Function draw_background
+                                    696 ; ---------------------------------
+      0002F6                        697 _draw_background::
+      0002F6 E8 FD                  698 	add	sp, #-3
+                                    699 ;src/main.c:114: Card **pile = IDX_PTR(piles, 0);
+      0002F8 01r38r01               700 	ld	bc, #_piles+0
+                                    701 ;src/main.c:115: for (x = 0; x < 20u; x += 2u) {
+      0002FB AF                     702 	xor	a, a
+      0002FC F8 02                  703 	ldhl	sp,	#2
+      0002FE 77                     704 	ld	(hl), a
+      0002FF                        705 00102$:
+                                    706 ;src/main.c:116: draw_pile(*pile, x, 0);
+      0002FF 59                     707 	ld	e, c
+      000300 50                     708 	ld	d, b
+      000301 1A                     709 	ld	a, (de)
+      000302 F8 00                  710 	ldhl	sp,	#0
+      000304 22                     711 	ld	(hl+), a
+      000305 13                     712 	inc	de
+      000306 1A                     713 	ld	a, (de)
+      000307 77                     714 	ld	(hl), a
+      000308 C5                     715 	push	bc
+      000309 AF                     716 	xor	a, a
+      00030A F5                     717 	push	af
+      00030B 33                     718 	inc	sp
+      00030C 23                     719 	inc	hl
+      00030D 7E                     720 	ld	a, (hl)
+      00030E F5                     721 	push	af
+      00030F 33                     722 	inc	sp
+      000310 2B                     723 	dec	hl
+      000311 2B                     724 	dec	hl
+      000312 2A                     725 	ld	a, (hl+)
+      000313 66                     726 	ld	h, (hl)
+      000314 6F                     727 	ld	l, a
+      000315 E5                     728 	push	hl
+      000316 CDr06r02               729 	call	_draw_pile
+      000319 E8 04                  730 	add	sp, #4
+      00031B C1                     731 	pop	bc
+                                    732 ;src/main.c:117: pile++;
+      00031C 03                     733 	inc	bc
+      00031D 03                     734 	inc	bc
+                                    735 ;src/main.c:115: for (x = 0; x < 20u; x += 2u) {
+      00031E F8 02                  736 	ldhl	sp,	#2
+      000320 34                     737 	inc	(hl)
+      000321 34                     738 	inc	(hl)
+      000322 7E                     739 	ld	a, (hl)
+      000323 D6 14                  740 	sub	a, #0x14
+      000325 38 D8                  741 	jr	C, 00102$
+                                    742 ;src/main.c:119: }
+      000327 E8 03                  743 	add	sp, #3
+      000329 C9                     744 	ret
+                                    745 ;src/main.c:121: void main(void)
+                                    746 ;	---------------------------------
+                                    747 ; Function main
+                                    748 ; ---------------------------------
+      00032A                        749 _main::
+                                    750 ;src/main.c:123: initrand(DIV_REG);
+      00032A F0r00                  751 	ldh	a, (_DIV_REG+0)
+      00032C 4F                     752 	ld	c, a
+      00032D 06 00                  753 	ld	b, #0x00
+      00032F C5                     754 	push	bc
+      000330 CDr00r00               755 	call	_initrand
+      000333 E8 02                  756 	add	sp, #2
+                                    757 ;src/main.c:125: set_bkg_data(0, 47u, card_textures);
+      000335 21r00r00               758 	ld	hl, #_card_textures
+      000338 E5                     759 	push	hl
+      000339 3E 2F                  760 	ld	a, #0x2f
+      00033B F5                     761 	push	af
+      00033C 33                     762 	inc	sp
+      00033D AF                     763 	xor	a, a
+      00033E F5                     764 	push	af
+      00033F 33                     765 	inc	sp
+      000340 CDr00r00               766 	call	_set_bkg_data
+      000343 E8 04                  767 	add	sp, #4
+                                    768 ;src/main.c:127: init_deck();
+      000345 CDr00r00               769 	call	_init_deck
+                                    770 ;src/main.c:129: draw_background();
+      000348 CDrF6r02               771 	call	_draw_background
+                                    772 ;src/main.c:130: SHOW_BKG;
+      00034B F0r00                  773 	ldh	a, (_LCDC_REG+0)
+      00034D F6 01                  774 	or	a, #0x01
+      00034F E0r00                  775 	ldh	(_LCDC_REG+0),a
+                                    776 ;src/main.c:132: while (1) {
+      000351                        777 00102$:
+                                    778 ;src/main.c:133: delay(1000u);
+      000351 21 E8 03               779 	ld	hl, #0x03e8
+      000354 E5                     780 	push	hl
+      000355 CDr00r00               781 	call	_delay
+      000358 E8 02                  782 	add	sp, #2
+                                    783 ;src/main.c:135: }
+      00035A 18 F5                  784 	jr	00102$
+                                    785 	.area _CODE
+                                    786 	.area _CABS (ABS)

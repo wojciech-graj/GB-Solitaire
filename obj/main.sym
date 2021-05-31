@@ -1,0 +1,43 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+    _DIV_REG                                                       ****** GX
+    _LCDC_REG                                                      ****** GX
+    ___memcpy                                                      ****** GX
+  0 ___str_0                                                       000202 R
+    __moduchar                                                     ****** GX
+    _card_textures                                                 ****** GX
+  1 _deck                                                          000000 GR
+    _delay                                                         ****** GX
+  0 _draw_background                                               0002F6 GR
+  0 _draw_pile                                                     000206 GR
+  0 _init_deck                                                     000000 GR
+    _initrand                                                      ****** GX
+  0 _main                                                          00032A GR
+  1 _piles                                                         000138 GR
+    _printf                                                        ****** GX
+    _rand                                                          ****** GX
+    _set_bkg_data                                                  ****** GX
+    _set_bkg_tile_xy                                               ****** GX
+  1 _top_card_idx                                                  00014C GR
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size    35C   flags    0
+   1 _DATA                                      size    14D   flags    0
+   2 _DABS                                      size      0   flags    8
+   3 _HOME                                      size      0   flags    0
+   4 _GSINIT                                    size      0   flags    0
+   5 _GSFINAL                                   size      0   flags    0
+   6 _CABS                                      size      0   flags    8
+

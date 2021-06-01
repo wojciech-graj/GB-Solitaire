@@ -9,23 +9,32 @@ Symbol Table
     .__.H$L.                                                    =  000000 L
     _DIV_REG                                                       ****** GX
     _LCDC_REG                                                      ****** GX
+    ___current_base_tile                                           ****** GX
+    ___current_metasprite                                          ****** GX
     ___memcpy                                                      ****** GX
-  0 ___str_0                                                       000202 R
+    ___move_metasprite                                             ****** GX
     __moduchar                                                     ****** GX
     _card_textures                                                 ****** GX
+  1 _cursor                                                        000157 GR
+    _cursor_frames                                                 ****** GX
+    _cursor_textures                                               ****** GX
   1 _deck                                                          000000 GR
-    _delay                                                         ****** GX
-  0 _draw_background                                               0002F6 GR
-  0 _draw_pile                                                     000206 GR
+  0 _draw_back                                                     0002BF GR
+  0 _draw_background                                               000321 GR
+  0 _draw_pile                                                     000199 GR
   0 _init_deck                                                     000000 GR
     _initrand                                                      ****** GX
-  0 _main                                                          00032A GR
+  1 _input_process_prev_input_65536_146                            00015E R
+    _joypad                                                        ****** GX
+  0 _main                                                          000362 GR
+  1 _main_prev_input_327680_174                                    00015F R
   1 _piles                                                         000138 GR
-    _printf                                                        ****** GX
     _rand                                                          ****** GX
     _set_bkg_data                                                  ****** GX
     _set_bkg_tile_xy                                               ****** GX
-  1 _top_card_idx                                                  00014C GR
+    _set_sprite_data                                               ****** GX
+  1 _top_card_idx                                                  000156 GR
+    _wait_vbl_done                                                 ****** GX
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
@@ -33,11 +42,11 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    35C   flags    0
-   1 _DATA                                      size    14D   flags    0
+   0 _CODE                                      size    4D4   flags    0
+   1 _DATA                                      size    160   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0
-   4 _GSINIT                                    size      0   flags    0
+   4 _GSINIT                                    size     29   flags    0
    5 _GSFINAL                                   size      0   flags    0
    6 _CABS                                      size      0   flags    8
 

@@ -16,1532 +16,778 @@
                                      16 ; ram data
                                      17 ;--------------------------------------------------------
                                      18 	.area _DATA
-      000000                         19 _card_textures::
-      000000                         20 	.ds 752
+                                     19 ;--------------------------------------------------------
+                                     20 ; absolute external ram data
                                      21 ;--------------------------------------------------------
-                                     22 ; absolute external ram data
+                                     22 	.area _DABS (ABS)
                                      23 ;--------------------------------------------------------
-                                     24 	.area _DABS (ABS)
+                                     24 ; global & static initialisations
                                      25 ;--------------------------------------------------------
-                                     26 ; global & static initialisations
-                                     27 ;--------------------------------------------------------
-                                     28 	.area _HOME
+                                     26 	.area _HOME
+                                     27 	.area _GSINIT
+                                     28 	.area _GSFINAL
                                      29 	.area _GSINIT
-                                     30 	.area _GSFINAL
-                                     31 	.area _GSINIT
-                                     32 ;res/cards.c:26: unsigned char card_textures[] =
-      000000 21r00r00                33 	ld	hl, #_card_textures
-      000003 36 00                   34 	ld	(hl), #0x00
-      000005 21r01r00                35 	ld	hl, #(_card_textures + 0x0001)
-      000008 36 00                   36 	ld	(hl), #0x00
-      00000A 21r02r00                37 	ld	hl, #(_card_textures + 0x0002)
-      00000D 36 00                   38 	ld	(hl), #0x00
-      00000F 21r03r00                39 	ld	hl, #(_card_textures + 0x0003)
-      000012 36 00                   40 	ld	(hl), #0x00
-      000014 21r04r00                41 	ld	hl, #(_card_textures + 0x0004)
-      000017 36 00                   42 	ld	(hl), #0x00
-      000019 21r05r00                43 	ld	hl, #(_card_textures + 0x0005)
-      00001C 36 00                   44 	ld	(hl), #0x00
-      00001E 21r06r00                45 	ld	hl, #(_card_textures + 0x0006)
-      000021 36 00                   46 	ld	(hl), #0x00
-      000023 21r07r00                47 	ld	hl, #(_card_textures + 0x0007)
-      000026 36 00                   48 	ld	(hl), #0x00
-      000028 21r08r00                49 	ld	hl, #(_card_textures + 0x0008)
-      00002B 36 00                   50 	ld	(hl), #0x00
-      00002D 21r09r00                51 	ld	hl, #(_card_textures + 0x0009)
-      000030 36 00                   52 	ld	(hl), #0x00
-      000032 21r0Ar00                53 	ld	hl, #(_card_textures + 0x000a)
-      000035 36 00                   54 	ld	(hl), #0x00
-      000037 21r0Br00                55 	ld	hl, #(_card_textures + 0x000b)
-      00003A 36 00                   56 	ld	(hl), #0x00
-      00003C 21r0Cr00                57 	ld	hl, #(_card_textures + 0x000c)
-      00003F 36 00                   58 	ld	(hl), #0x00
-      000041 21r0Dr00                59 	ld	hl, #(_card_textures + 0x000d)
-      000044 36 00                   60 	ld	(hl), #0x00
-      000046 21r0Er00                61 	ld	hl, #(_card_textures + 0x000e)
-      000049 36 00                   62 	ld	(hl), #0x00
-      00004B 21r0Fr00                63 	ld	hl, #(_card_textures + 0x000f)
-      00004E 36 00                   64 	ld	(hl), #0x00
-      000050 21r10r00                65 	ld	hl, #(_card_textures + 0x0010)
-      000053 36 7F                   66 	ld	(hl), #0x7f
-      000055 21r11r00                67 	ld	hl, #(_card_textures + 0x0011)
-      000058 36 7F                   68 	ld	(hl), #0x7f
-      00005A 21r12r00                69 	ld	hl, #(_card_textures + 0x0012)
-      00005D 36 80                   70 	ld	(hl), #0x80
-      00005F 21r13r00                71 	ld	hl, #(_card_textures + 0x0013)
-      000062 36 80                   72 	ld	(hl), #0x80
-      000064 21r14r00                73 	ld	hl, #(_card_textures + 0x0014)
-      000067 36 98                   74 	ld	(hl), #0x98
-      000069 21r15r00                75 	ld	hl, #(_card_textures + 0x0015)
-      00006C 36 98                   76 	ld	(hl), #0x98
-      00006E 21r16r00                77 	ld	hl, #(_card_textures + 0x0016)
-      000071 36 A4                   78 	ld	(hl), #0xa4
-      000073 21r17r00                79 	ld	hl, #(_card_textures + 0x0017)
-      000076 36 A4                   80 	ld	(hl), #0xa4
-      000078 21r18r00                81 	ld	hl, #(_card_textures + 0x0018)
-      00007B 36 BC                   82 	ld	(hl), #0xbc
-      00007D 21r19r00                83 	ld	hl, #(_card_textures + 0x0019)
-      000080 36 BC                   84 	ld	(hl), #0xbc
-      000082 21r1Ar00                85 	ld	hl, #(_card_textures + 0x001a)
-      000085 36 A4                   86 	ld	(hl), #0xa4
-      000087 21r1Br00                87 	ld	hl, #(_card_textures + 0x001b)
-      00008A 36 A4                   88 	ld	(hl), #0xa4
-      00008C 21r1Cr00                89 	ld	hl, #(_card_textures + 0x001c)
-      00008F 36 A4                   90 	ld	(hl), #0xa4
-      000091 21r1Dr00                91 	ld	hl, #(_card_textures + 0x001d)
-      000094 36 A4                   92 	ld	(hl), #0xa4
-      000096 21r1Er00                93 	ld	hl, #(_card_textures + 0x001e)
-      000099 36 80                   94 	ld	(hl), #0x80
-      00009B 21r1Fr00                95 	ld	hl, #(_card_textures + 0x001f)
-      00009E 36 80                   96 	ld	(hl), #0x80
-      0000A0 21r20r00                97 	ld	hl, #(_card_textures + 0x0020)
-      0000A3 36 7F                   98 	ld	(hl), #0x7f
-      0000A5 21r21r00                99 	ld	hl, #(_card_textures + 0x0021)
-      0000A8 36 7F                  100 	ld	(hl), #0x7f
-      0000AA 21r22r00               101 	ld	hl, #(_card_textures + 0x0022)
-      0000AD 36 80                  102 	ld	(hl), #0x80
-      0000AF 21r23r00               103 	ld	hl, #(_card_textures + 0x0023)
-      0000B2 36 80                  104 	ld	(hl), #0x80
-      0000B4 21r24r00               105 	ld	hl, #(_card_textures + 0x0024)
-      0000B7 36 98                  106 	ld	(hl), #0x98
-      0000B9 21r25r00               107 	ld	hl, #(_card_textures + 0x0025)
-      0000BC 36 98                  108 	ld	(hl), #0x98
-      0000BE 21r26r00               109 	ld	hl, #(_card_textures + 0x0026)
-      0000C1 36 A4                  110 	ld	(hl), #0xa4
-      0000C3 21r27r00               111 	ld	hl, #(_card_textures + 0x0027)
-      0000C6 36 A4                  112 	ld	(hl), #0xa4
-      0000C8 21r28r00               113 	ld	hl, #(_card_textures + 0x0028)
-      0000CB 36 88                  114 	ld	(hl), #0x88
-      0000CD 21r29r00               115 	ld	hl, #(_card_textures + 0x0029)
-      0000D0 36 88                  116 	ld	(hl), #0x88
-      0000D2 21r2Ar00               117 	ld	hl, #(_card_textures + 0x002a)
-      0000D5 36 90                  118 	ld	(hl), #0x90
-      0000D7 21r2Br00               119 	ld	hl, #(_card_textures + 0x002b)
-      0000DA 36 90                  120 	ld	(hl), #0x90
-      0000DC 21r2Cr00               121 	ld	hl, #(_card_textures + 0x002c)
-      0000DF 36 BC                  122 	ld	(hl), #0xbc
-      0000E1 21r2Dr00               123 	ld	hl, #(_card_textures + 0x002d)
-      0000E4 36 BC                  124 	ld	(hl), #0xbc
-      0000E6 21r2Er00               125 	ld	hl, #(_card_textures + 0x002e)
-      0000E9 36 80                  126 	ld	(hl), #0x80
-      0000EB 21r2Fr00               127 	ld	hl, #(_card_textures + 0x002f)
-      0000EE 36 80                  128 	ld	(hl), #0x80
-      0000F0 21r30r00               129 	ld	hl, #(_card_textures + 0x0030)
-      0000F3 36 7F                  130 	ld	(hl), #0x7f
-      0000F5 21r31r00               131 	ld	hl, #(_card_textures + 0x0031)
-      0000F8 36 7F                  132 	ld	(hl), #0x7f
-      0000FA 21r32r00               133 	ld	hl, #(_card_textures + 0x0032)
-      0000FD 36 80                  134 	ld	(hl), #0x80
-      0000FF 21r33r00               135 	ld	hl, #(_card_textures + 0x0033)
-      000102 36 80                  136 	ld	(hl), #0x80
-      000104 21r34r00               137 	ld	hl, #(_card_textures + 0x0034)
-      000107 36 B8                  138 	ld	(hl), #0xb8
-      000109 21r35r00               139 	ld	hl, #(_card_textures + 0x0035)
-      00010C 36 B8                  140 	ld	(hl), #0xb8
-      00010E 21r36r00               141 	ld	hl, #(_card_textures + 0x0036)
-      000111 36 84                  142 	ld	(hl), #0x84
-      000113 21r37r00               143 	ld	hl, #(_card_textures + 0x0037)
-      000116 36 84                  144 	ld	(hl), #0x84
-      000118 21r38r00               145 	ld	hl, #(_card_textures + 0x0038)
-      00011B 36 98                  146 	ld	(hl), #0x98
-      00011D 21r39r00               147 	ld	hl, #(_card_textures + 0x0039)
-      000120 36 98                  148 	ld	(hl), #0x98
-      000122 21r3Ar00               149 	ld	hl, #(_card_textures + 0x003a)
-      000125 36 84                  150 	ld	(hl), #0x84
-      000127 21r3Br00               151 	ld	hl, #(_card_textures + 0x003b)
-      00012A 36 84                  152 	ld	(hl), #0x84
-      00012C 21r3Cr00               153 	ld	hl, #(_card_textures + 0x003c)
-      00012F 36 B8                  154 	ld	(hl), #0xb8
-      000131 21r3Dr00               155 	ld	hl, #(_card_textures + 0x003d)
-      000134 36 B8                  156 	ld	(hl), #0xb8
-      000136 21r3Er00               157 	ld	hl, #(_card_textures + 0x003e)
-      000139 36 80                  158 	ld	(hl), #0x80
-      00013B 21r3Fr00               159 	ld	hl, #(_card_textures + 0x003f)
-      00013E 36 80                  160 	ld	(hl), #0x80
-      000140 21r40r00               161 	ld	hl, #(_card_textures + 0x0040)
-      000143 36 7F                  162 	ld	(hl), #0x7f
-      000145 21r41r00               163 	ld	hl, #(_card_textures + 0x0041)
-      000148 36 7F                  164 	ld	(hl), #0x7f
-      00014A 21r42r00               165 	ld	hl, #(_card_textures + 0x0042)
-      00014D 36 80                  166 	ld	(hl), #0x80
-      00014F 21r43r00               167 	ld	hl, #(_card_textures + 0x0043)
-      000152 36 80                  168 	ld	(hl), #0x80
-      000154 21r44r00               169 	ld	hl, #(_card_textures + 0x0044)
-      000157 36 88                  170 	ld	(hl), #0x88
-      000159 21r45r00               171 	ld	hl, #(_card_textures + 0x0045)
-      00015C 36 88                  172 	ld	(hl), #0x88
-      00015E 21r46r00               173 	ld	hl, #(_card_textures + 0x0046)
-      000161 36 98                  174 	ld	(hl), #0x98
-      000163 21r47r00               175 	ld	hl, #(_card_textures + 0x0047)
-      000166 36 98                  176 	ld	(hl), #0x98
-      000168 21r48r00               177 	ld	hl, #(_card_textures + 0x0048)
-      00016B 36 A8                  178 	ld	(hl), #0xa8
-      00016D 21r49r00               179 	ld	hl, #(_card_textures + 0x0049)
-      000170 36 A8                  180 	ld	(hl), #0xa8
-      000172 21r4Ar00               181 	ld	hl, #(_card_textures + 0x004a)
-      000175 36 BC                  182 	ld	(hl), #0xbc
-      000177 21r4Br00               183 	ld	hl, #(_card_textures + 0x004b)
-      00017A 36 BC                  184 	ld	(hl), #0xbc
-      00017C 21r4Cr00               185 	ld	hl, #(_card_textures + 0x004c)
-      00017F 36 88                  186 	ld	(hl), #0x88
-      000181 21r4Dr00               187 	ld	hl, #(_card_textures + 0x004d)
-      000184 36 88                  188 	ld	(hl), #0x88
-      000186 21r4Er00               189 	ld	hl, #(_card_textures + 0x004e)
-      000189 36 80                  190 	ld	(hl), #0x80
-      00018B 21r4Fr00               191 	ld	hl, #(_card_textures + 0x004f)
-      00018E 36 80                  192 	ld	(hl), #0x80
-      000190 21r50r00               193 	ld	hl, #(_card_textures + 0x0050)
-      000193 36 7F                  194 	ld	(hl), #0x7f
-      000195 21r51r00               195 	ld	hl, #(_card_textures + 0x0051)
-      000198 36 7F                  196 	ld	(hl), #0x7f
-      00019A 21r52r00               197 	ld	hl, #(_card_textures + 0x0052)
-      00019D 36 80                  198 	ld	(hl), #0x80
-      00019F 21r53r00               199 	ld	hl, #(_card_textures + 0x0053)
-      0001A2 36 80                  200 	ld	(hl), #0x80
-      0001A4 21r54r00               201 	ld	hl, #(_card_textures + 0x0054)
-      0001A7 36 BC                  202 	ld	(hl), #0xbc
-      0001A9 21r55r00               203 	ld	hl, #(_card_textures + 0x0055)
-      0001AC 36 BC                  204 	ld	(hl), #0xbc
-      0001AE 21r56r00               205 	ld	hl, #(_card_textures + 0x0056)
-      0001B1 36 A0                  206 	ld	(hl), #0xa0
-      0001B3 21r57r00               207 	ld	hl, #(_card_textures + 0x0057)
-      0001B6 36 A0                  208 	ld	(hl), #0xa0
-      0001B8 21r58r00               209 	ld	hl, #(_card_textures + 0x0058)
-      0001BB 36 B8                  210 	ld	(hl), #0xb8
-      0001BD 21r59r00               211 	ld	hl, #(_card_textures + 0x0059)
-      0001C0 36 B8                  212 	ld	(hl), #0xb8
-      0001C2 21r5Ar00               213 	ld	hl, #(_card_textures + 0x005a)
-      0001C5 36 84                  214 	ld	(hl), #0x84
-      0001C7 21r5Br00               215 	ld	hl, #(_card_textures + 0x005b)
-      0001CA 36 84                  216 	ld	(hl), #0x84
-      0001CC 21r5Cr00               217 	ld	hl, #(_card_textures + 0x005c)
-      0001CF 36 B8                  218 	ld	(hl), #0xb8
-      0001D1 21r5Dr00               219 	ld	hl, #(_card_textures + 0x005d)
-      0001D4 36 B8                  220 	ld	(hl), #0xb8
-      0001D6 21r5Er00               221 	ld	hl, #(_card_textures + 0x005e)
-      0001D9 36 80                  222 	ld	(hl), #0x80
-      0001DB 21r5Fr00               223 	ld	hl, #(_card_textures + 0x005f)
-      0001DE 36 80                  224 	ld	(hl), #0x80
-      0001E0 21r60r00               225 	ld	hl, #(_card_textures + 0x0060)
-      0001E3 36 7F                  226 	ld	(hl), #0x7f
-      0001E5 21r61r00               227 	ld	hl, #(_card_textures + 0x0061)
-      0001E8 36 7F                  228 	ld	(hl), #0x7f
-      0001EA 21r62r00               229 	ld	hl, #(_card_textures + 0x0062)
-      0001ED 36 80                  230 	ld	(hl), #0x80
-      0001EF 21r63r00               231 	ld	hl, #(_card_textures + 0x0063)
-      0001F2 36 80                  232 	ld	(hl), #0x80
-      0001F4 21r64r00               233 	ld	hl, #(_card_textures + 0x0064)
-      0001F7 36 98                  234 	ld	(hl), #0x98
-      0001F9 21r65r00               235 	ld	hl, #(_card_textures + 0x0065)
-      0001FC 36 98                  236 	ld	(hl), #0x98
-      0001FE 21r66r00               237 	ld	hl, #(_card_textures + 0x0066)
-      000201 36 A0                  238 	ld	(hl), #0xa0
-      000203 21r67r00               239 	ld	hl, #(_card_textures + 0x0067)
-      000206 36 A0                  240 	ld	(hl), #0xa0
-      000208 21r68r00               241 	ld	hl, #(_card_textures + 0x0068)
-      00020B 36 B8                  242 	ld	(hl), #0xb8
-      00020D 21r69r00               243 	ld	hl, #(_card_textures + 0x0069)
-      000210 36 B8                  244 	ld	(hl), #0xb8
-      000212 21r6Ar00               245 	ld	hl, #(_card_textures + 0x006a)
-      000215 36 A4                  246 	ld	(hl), #0xa4
-      000217 21r6Br00               247 	ld	hl, #(_card_textures + 0x006b)
-      00021A 36 A4                  248 	ld	(hl), #0xa4
-      00021C 21r6Cr00               249 	ld	hl, #(_card_textures + 0x006c)
-      00021F 36 98                  250 	ld	(hl), #0x98
-      000221 21r6Dr00               251 	ld	hl, #(_card_textures + 0x006d)
-      000224 36 98                  252 	ld	(hl), #0x98
-      000226 21r6Er00               253 	ld	hl, #(_card_textures + 0x006e)
-      000229 36 80                  254 	ld	(hl), #0x80
-      00022B 21r6Fr00               255 	ld	hl, #(_card_textures + 0x006f)
-      00022E 36 80                  256 	ld	(hl), #0x80
-      000230 21r70r00               257 	ld	hl, #(_card_textures + 0x0070)
-      000233 36 7F                  258 	ld	(hl), #0x7f
-      000235 21r71r00               259 	ld	hl, #(_card_textures + 0x0071)
-      000238 36 7F                  260 	ld	(hl), #0x7f
-      00023A 21r72r00               261 	ld	hl, #(_card_textures + 0x0072)
-      00023D 36 80                  262 	ld	(hl), #0x80
-      00023F 21r73r00               263 	ld	hl, #(_card_textures + 0x0073)
-      000242 36 80                  264 	ld	(hl), #0x80
-      000244 21r74r00               265 	ld	hl, #(_card_textures + 0x0074)
-      000247 36 B8                  266 	ld	(hl), #0xb8
-      000249 21r75r00               267 	ld	hl, #(_card_textures + 0x0075)
-      00024C 36 B8                  268 	ld	(hl), #0xb8
-      00024E 21r76r00               269 	ld	hl, #(_card_textures + 0x0076)
-      000251 36 88                  270 	ld	(hl), #0x88
-      000253 21r77r00               271 	ld	hl, #(_card_textures + 0x0077)
-      000256 36 88                  272 	ld	(hl), #0x88
-      000258 21r78r00               273 	ld	hl, #(_card_textures + 0x0078)
-      00025B 36 90                  274 	ld	(hl), #0x90
-      00025D 21r79r00               275 	ld	hl, #(_card_textures + 0x0079)
-      000260 36 90                  276 	ld	(hl), #0x90
-      000262 21r7Ar00               277 	ld	hl, #(_card_textures + 0x007a)
-      000265 36 90                  278 	ld	(hl), #0x90
-      000267 21r7Br00               279 	ld	hl, #(_card_textures + 0x007b)
-      00026A 36 90                  280 	ld	(hl), #0x90
-      00026C 21r7Cr00               281 	ld	hl, #(_card_textures + 0x007c)
-      00026F 36 90                  282 	ld	(hl), #0x90
-      000271 21r7Dr00               283 	ld	hl, #(_card_textures + 0x007d)
-      000274 36 90                  284 	ld	(hl), #0x90
-      000276 21r7Er00               285 	ld	hl, #(_card_textures + 0x007e)
-      000279 36 80                  286 	ld	(hl), #0x80
-      00027B 21r7Fr00               287 	ld	hl, #(_card_textures + 0x007f)
-      00027E 36 80                  288 	ld	(hl), #0x80
-      000280 21r80r00               289 	ld	hl, #(_card_textures + 0x0080)
-      000283 36 7F                  290 	ld	(hl), #0x7f
-      000285 21r81r00               291 	ld	hl, #(_card_textures + 0x0081)
-      000288 36 7F                  292 	ld	(hl), #0x7f
-      00028A 21r82r00               293 	ld	hl, #(_card_textures + 0x0082)
-      00028D 36 80                  294 	ld	(hl), #0x80
-      00028F 21r83r00               295 	ld	hl, #(_card_textures + 0x0083)
-      000292 36 80                  296 	ld	(hl), #0x80
-      000294 21r84r00               297 	ld	hl, #(_card_textures + 0x0084)
-      000297 36 B8                  298 	ld	(hl), #0xb8
-      000299 21r85r00               299 	ld	hl, #(_card_textures + 0x0085)
-      00029C 36 B8                  300 	ld	(hl), #0xb8
-      00029E 21r86r00               301 	ld	hl, #(_card_textures + 0x0086)
-      0002A1 36 A8                  302 	ld	(hl), #0xa8
-      0002A3 21r87r00               303 	ld	hl, #(_card_textures + 0x0087)
-      0002A6 36 A8                  304 	ld	(hl), #0xa8
-      0002A8 21r88r00               305 	ld	hl, #(_card_textures + 0x0088)
-      0002AB 36 B8                  306 	ld	(hl), #0xb8
-      0002AD 21r89r00               307 	ld	hl, #(_card_textures + 0x0089)
-      0002B0 36 B8                  308 	ld	(hl), #0xb8
-      0002B2 21r8Ar00               309 	ld	hl, #(_card_textures + 0x008a)
-      0002B5 36 A8                  310 	ld	(hl), #0xa8
-      0002B7 21r8Br00               311 	ld	hl, #(_card_textures + 0x008b)
-      0002BA 36 A8                  312 	ld	(hl), #0xa8
-      0002BC 21r8Cr00               313 	ld	hl, #(_card_textures + 0x008c)
-      0002BF 36 B8                  314 	ld	(hl), #0xb8
-      0002C1 21r8Dr00               315 	ld	hl, #(_card_textures + 0x008d)
-      0002C4 36 B8                  316 	ld	(hl), #0xb8
-      0002C6 21r8Er00               317 	ld	hl, #(_card_textures + 0x008e)
-      0002C9 36 80                  318 	ld	(hl), #0x80
-      0002CB 21r8Fr00               319 	ld	hl, #(_card_textures + 0x008f)
-      0002CE 36 80                  320 	ld	(hl), #0x80
-      0002D0 21r90r00               321 	ld	hl, #(_card_textures + 0x0090)
-      0002D3 36 7F                  322 	ld	(hl), #0x7f
-      0002D5 21r91r00               323 	ld	hl, #(_card_textures + 0x0091)
-      0002D8 36 7F                  324 	ld	(hl), #0x7f
-      0002DA 21r92r00               325 	ld	hl, #(_card_textures + 0x0092)
-      0002DD 36 80                  326 	ld	(hl), #0x80
-      0002DF 21r93r00               327 	ld	hl, #(_card_textures + 0x0093)
-      0002E2 36 80                  328 	ld	(hl), #0x80
-      0002E4 21r94r00               329 	ld	hl, #(_card_textures + 0x0094)
-      0002E7 36 B8                  330 	ld	(hl), #0xb8
-      0002E9 21r95r00               331 	ld	hl, #(_card_textures + 0x0095)
-      0002EC 36 B8                  332 	ld	(hl), #0xb8
-      0002EE 21r96r00               333 	ld	hl, #(_card_textures + 0x0096)
-      0002F1 36 A8                  334 	ld	(hl), #0xa8
-      0002F3 21r97r00               335 	ld	hl, #(_card_textures + 0x0097)
-      0002F6 36 A8                  336 	ld	(hl), #0xa8
-      0002F8 21r98r00               337 	ld	hl, #(_card_textures + 0x0098)
-      0002FB 36 B8                  338 	ld	(hl), #0xb8
-      0002FD 21r99r00               339 	ld	hl, #(_card_textures + 0x0099)
-      000300 36 B8                  340 	ld	(hl), #0xb8
-      000302 21r9Ar00               341 	ld	hl, #(_card_textures + 0x009a)
-      000305 36 88                  342 	ld	(hl), #0x88
-      000307 21r9Br00               343 	ld	hl, #(_card_textures + 0x009b)
-      00030A 36 88                  344 	ld	(hl), #0x88
-      00030C 21r9Cr00               345 	ld	hl, #(_card_textures + 0x009c)
-      00030F 36 88                  346 	ld	(hl), #0x88
-      000311 21r9Dr00               347 	ld	hl, #(_card_textures + 0x009d)
-      000314 36 88                  348 	ld	(hl), #0x88
-      000316 21r9Er00               349 	ld	hl, #(_card_textures + 0x009e)
-      000319 36 80                  350 	ld	(hl), #0x80
-      00031B 21r9Fr00               351 	ld	hl, #(_card_textures + 0x009f)
-      00031E 36 80                  352 	ld	(hl), #0x80
-      000320 21rA0r00               353 	ld	hl, #(_card_textures + 0x00a0)
-      000323 36 7F                  354 	ld	(hl), #0x7f
-      000325 21rA1r00               355 	ld	hl, #(_card_textures + 0x00a1)
-      000328 36 7F                  356 	ld	(hl), #0x7f
-      00032A 21rA2r00               357 	ld	hl, #(_card_textures + 0x00a2)
-      00032D 36 80                  358 	ld	(hl), #0x80
-      00032F 21rA3r00               359 	ld	hl, #(_card_textures + 0x00a3)
-      000332 36 80                  360 	ld	(hl), #0x80
-      000334 21rA4r00               361 	ld	hl, #(_card_textures + 0x00a4)
-      000337 36 AE                  362 	ld	(hl), #0xae
-      000339 21rA5r00               363 	ld	hl, #(_card_textures + 0x00a5)
-      00033C 36 AE                  364 	ld	(hl), #0xae
-      00033E 21rA6r00               365 	ld	hl, #(_card_textures + 0x00a6)
-      000341 36 AA                  366 	ld	(hl), #0xaa
-      000343 21rA7r00               367 	ld	hl, #(_card_textures + 0x00a7)
-      000346 36 AA                  368 	ld	(hl), #0xaa
-      000348 21rA8r00               369 	ld	hl, #(_card_textures + 0x00a8)
-      00034B 36 AA                  370 	ld	(hl), #0xaa
-      00034D 21rA9r00               371 	ld	hl, #(_card_textures + 0x00a9)
-      000350 36 AA                  372 	ld	(hl), #0xaa
-      000352 21rAAr00               373 	ld	hl, #(_card_textures + 0x00aa)
-      000355 36 AA                  374 	ld	(hl), #0xaa
-      000357 21rABr00               375 	ld	hl, #(_card_textures + 0x00ab)
-      00035A 36 AA                  376 	ld	(hl), #0xaa
-      00035C 21rACr00               377 	ld	hl, #(_card_textures + 0x00ac)
-      00035F 36 AE                  378 	ld	(hl), #0xae
-      000361 21rADr00               379 	ld	hl, #(_card_textures + 0x00ad)
-      000364 36 AE                  380 	ld	(hl), #0xae
-      000366 21rAEr00               381 	ld	hl, #(_card_textures + 0x00ae)
-      000369 36 80                  382 	ld	(hl), #0x80
-      00036B 21rAFr00               383 	ld	hl, #(_card_textures + 0x00af)
-      00036E 36 80                  384 	ld	(hl), #0x80
-      000370 21rB0r00               385 	ld	hl, #(_card_textures + 0x00b0)
-      000373 36 7F                  386 	ld	(hl), #0x7f
-      000375 21rB1r00               387 	ld	hl, #(_card_textures + 0x00b1)
-      000378 36 7F                  388 	ld	(hl), #0x7f
-      00037A 21rB2r00               389 	ld	hl, #(_card_textures + 0x00b2)
-      00037D 36 80                  390 	ld	(hl), #0x80
-      00037F 21rB3r00               391 	ld	hl, #(_card_textures + 0x00b3)
-      000382 36 80                  392 	ld	(hl), #0x80
-      000384 21rB4r00               393 	ld	hl, #(_card_textures + 0x00b4)
-      000387 36 BC                  394 	ld	(hl), #0xbc
-      000389 21rB5r00               395 	ld	hl, #(_card_textures + 0x00b5)
-      00038C 36 BC                  396 	ld	(hl), #0xbc
-      00038E 21rB6r00               397 	ld	hl, #(_card_textures + 0x00b6)
-      000391 36 88                  398 	ld	(hl), #0x88
-      000393 21rB7r00               399 	ld	hl, #(_card_textures + 0x00b7)
-      000396 36 88                  400 	ld	(hl), #0x88
-      000398 21rB8r00               401 	ld	hl, #(_card_textures + 0x00b8)
-      00039B 36 88                  402 	ld	(hl), #0x88
-      00039D 21rB9r00               403 	ld	hl, #(_card_textures + 0x00b9)
-      0003A0 36 88                  404 	ld	(hl), #0x88
-      0003A2 21rBAr00               405 	ld	hl, #(_card_textures + 0x00ba)
-      0003A5 36 A8                  406 	ld	(hl), #0xa8
-      0003A7 21rBBr00               407 	ld	hl, #(_card_textures + 0x00bb)
-      0003AA 36 A8                  408 	ld	(hl), #0xa8
-      0003AC 21rBCr00               409 	ld	hl, #(_card_textures + 0x00bc)
-      0003AF 36 B8                  410 	ld	(hl), #0xb8
-      0003B1 21rBDr00               411 	ld	hl, #(_card_textures + 0x00bd)
-      0003B4 36 B8                  412 	ld	(hl), #0xb8
-      0003B6 21rBEr00               413 	ld	hl, #(_card_textures + 0x00be)
-      0003B9 36 80                  414 	ld	(hl), #0x80
-      0003BB 21rBFr00               415 	ld	hl, #(_card_textures + 0x00bf)
-      0003BE 36 80                  416 	ld	(hl), #0x80
-      0003C0 21rC0r00               417 	ld	hl, #(_card_textures + 0x00c0)
-      0003C3 36 7F                  418 	ld	(hl), #0x7f
-      0003C5 21rC1r00               419 	ld	hl, #(_card_textures + 0x00c1)
-      0003C8 36 7F                  420 	ld	(hl), #0x7f
-      0003CA 21rC2r00               421 	ld	hl, #(_card_textures + 0x00c2)
-      0003CD 36 80                  422 	ld	(hl), #0x80
-      0003CF 21rC3r00               423 	ld	hl, #(_card_textures + 0x00c3)
-      0003D2 36 80                  424 	ld	(hl), #0x80
-      0003D4 21rC4r00               425 	ld	hl, #(_card_textures + 0x00c4)
-      0003D7 36 BC                  426 	ld	(hl), #0xbc
-      0003D9 21rC5r00               427 	ld	hl, #(_card_textures + 0x00c5)
-      0003DC 36 BC                  428 	ld	(hl), #0xbc
-      0003DE 21rC6r00               429 	ld	hl, #(_card_textures + 0x00c6)
-      0003E1 36 A4                  430 	ld	(hl), #0xa4
-      0003E3 21rC7r00               431 	ld	hl, #(_card_textures + 0x00c7)
-      0003E6 36 A4                  432 	ld	(hl), #0xa4
-      0003E8 21rC8r00               433 	ld	hl, #(_card_textures + 0x00c8)
-      0003EB 36 A4                  434 	ld	(hl), #0xa4
-      0003ED 21rC9r00               435 	ld	hl, #(_card_textures + 0x00c9)
-      0003F0 36 A4                  436 	ld	(hl), #0xa4
-      0003F2 21rCAr00               437 	ld	hl, #(_card_textures + 0x00ca)
-      0003F5 36 AC                  438 	ld	(hl), #0xac
-      0003F7 21rCBr00               439 	ld	hl, #(_card_textures + 0x00cb)
-      0003FA 36 AC                  440 	ld	(hl), #0xac
-      0003FC 21rCCr00               441 	ld	hl, #(_card_textures + 0x00cc)
-      0003FF 36 BC                  442 	ld	(hl), #0xbc
-      000401 21rCDr00               443 	ld	hl, #(_card_textures + 0x00cd)
-      000404 36 BC                  444 	ld	(hl), #0xbc
-      000406 21rCEr00               445 	ld	hl, #(_card_textures + 0x00ce)
-      000409 36 80                  446 	ld	(hl), #0x80
-      00040B 21rCFr00               447 	ld	hl, #(_card_textures + 0x00cf)
-      00040E 36 80                  448 	ld	(hl), #0x80
-      000410 21rD0r00               449 	ld	hl, #(_card_textures + 0x00d0)
-      000413 36 7F                  450 	ld	(hl), #0x7f
-      000415 21rD1r00               451 	ld	hl, #(_card_textures + 0x00d1)
-      000418 36 7F                  452 	ld	(hl), #0x7f
-      00041A 21rD2r00               453 	ld	hl, #(_card_textures + 0x00d2)
-      00041D 36 80                  454 	ld	(hl), #0x80
-      00041F 21rD3r00               455 	ld	hl, #(_card_textures + 0x00d3)
-      000422 36 80                  456 	ld	(hl), #0x80
-      000424 21rD4r00               457 	ld	hl, #(_card_textures + 0x00d4)
-      000427 36 A8                  458 	ld	(hl), #0xa8
-      000429 21rD5r00               459 	ld	hl, #(_card_textures + 0x00d5)
-      00042C 36 A8                  460 	ld	(hl), #0xa8
-      00042E 21rD6r00               461 	ld	hl, #(_card_textures + 0x00d6)
-      000431 36 A8                  462 	ld	(hl), #0xa8
-      000433 21rD7r00               463 	ld	hl, #(_card_textures + 0x00d7)
-      000436 36 A8                  464 	ld	(hl), #0xa8
-      000438 21rD8r00               465 	ld	hl, #(_card_textures + 0x00d8)
-      00043B 36 B0                  466 	ld	(hl), #0xb0
-      00043D 21rD9r00               467 	ld	hl, #(_card_textures + 0x00d9)
-      000440 36 B0                  468 	ld	(hl), #0xb0
-      000442 21rDAr00               469 	ld	hl, #(_card_textures + 0x00da)
-      000445 36 A8                  470 	ld	(hl), #0xa8
-      000447 21rDBr00               471 	ld	hl, #(_card_textures + 0x00db)
-      00044A 36 A8                  472 	ld	(hl), #0xa8
-      00044C 21rDCr00               473 	ld	hl, #(_card_textures + 0x00dc)
-      00044F 36 A8                  474 	ld	(hl), #0xa8
-      000451 21rDDr00               475 	ld	hl, #(_card_textures + 0x00dd)
-      000454 36 A8                  476 	ld	(hl), #0xa8
-      000456 21rDEr00               477 	ld	hl, #(_card_textures + 0x00de)
-      000459 36 80                  478 	ld	(hl), #0x80
-      00045B 21rDFr00               479 	ld	hl, #(_card_textures + 0x00df)
-      00045E 36 80                  480 	ld	(hl), #0x80
-      000460 21rE0r00               481 	ld	hl, #(_card_textures + 0x00e0)
-      000463 36 FE                  482 	ld	(hl), #0xfe
-      000465 21rE1r00               483 	ld	hl, #(_card_textures + 0x00e1)
-      000468 36 FE                  484 	ld	(hl), #0xfe
-      00046A 21rE2r00               485 	ld	hl, #(_card_textures + 0x00e2)
-      00046D 36 01                  486 	ld	(hl), #0x01
-      00046F 21rE3r00               487 	ld	hl, #(_card_textures + 0x00e3)
-      000472 36 01                  488 	ld	(hl), #0x01
-      000474 21rE4r00               489 	ld	hl, #(_card_textures + 0x00e4)
-      000477 36 11                  490 	ld	(hl), #0x11
-      000479 21rE5r00               491 	ld	hl, #(_card_textures + 0x00e5)
-      00047C 36 11                  492 	ld	(hl), #0x11
-      00047E 21rE6r00               493 	ld	hl, #(_card_textures + 0x00e6)
-      000481 36 39                  494 	ld	(hl), #0x39
-      000483 21rE7r00               495 	ld	hl, #(_card_textures + 0x00e7)
-      000486 36 39                  496 	ld	(hl), #0x39
-      000488 21rE8r00               497 	ld	hl, #(_card_textures + 0x00e8)
-      00048B 36 7D                  498 	ld	(hl), #0x7d
-      00048D 21rE9r00               499 	ld	hl, #(_card_textures + 0x00e9)
-      000490 36 7D                  500 	ld	(hl), #0x7d
-      000492 21rEAr00               501 	ld	hl, #(_card_textures + 0x00ea)
-      000495 36 7D                  502 	ld	(hl), #0x7d
-      000497 21rEBr00               503 	ld	hl, #(_card_textures + 0x00eb)
-      00049A 36 7D                  504 	ld	(hl), #0x7d
-      00049C 21rECr00               505 	ld	hl, #(_card_textures + 0x00ec)
-      00049F 36 11                  506 	ld	(hl), #0x11
-      0004A1 21rEDr00               507 	ld	hl, #(_card_textures + 0x00ed)
-      0004A4 36 11                  508 	ld	(hl), #0x11
-      0004A6 21rEEr00               509 	ld	hl, #(_card_textures + 0x00ee)
-      0004A9 36 39                  510 	ld	(hl), #0x39
-      0004AB 21rEFr00               511 	ld	hl, #(_card_textures + 0x00ef)
-      0004AE 36 39                  512 	ld	(hl), #0x39
-      0004B0 21rF0r00               513 	ld	hl, #(_card_textures + 0x00f0)
-      0004B3 36 FE                  514 	ld	(hl), #0xfe
-      0004B5 21rF1r00               515 	ld	hl, #(_card_textures + 0x00f1)
-      0004B8 36 FE                  516 	ld	(hl), #0xfe
-      0004BA 21rF2r00               517 	ld	hl, #(_card_textures + 0x00f2)
-      0004BD 36 01                  518 	ld	(hl), #0x01
-      0004BF 21rF3r00               519 	ld	hl, #(_card_textures + 0x00f3)
-      0004C2 36 01                  520 	ld	(hl), #0x01
-      0004C4 21rF4r00               521 	ld	hl, #(_card_textures + 0x00f4)
-      0004C7 36 39                  522 	ld	(hl), #0x39
-      0004C9 21rF5r00               523 	ld	hl, #(_card_textures + 0x00f5)
-      0004CC 36 39                  524 	ld	(hl), #0x39
-      0004CE 21rF6r00               525 	ld	hl, #(_card_textures + 0x00f6)
-      0004D1 36 55                  526 	ld	(hl), #0x55
-      0004D3 21rF7r00               527 	ld	hl, #(_card_textures + 0x00f7)
-      0004D6 36 55                  528 	ld	(hl), #0x55
-      0004D8 21rF8r00               529 	ld	hl, #(_card_textures + 0x00f8)
-      0004DB 36 7D                  530 	ld	(hl), #0x7d
-      0004DD 21rF9r00               531 	ld	hl, #(_card_textures + 0x00f9)
-      0004E0 36 7D                  532 	ld	(hl), #0x7d
-      0004E2 21rFAr00               533 	ld	hl, #(_card_textures + 0x00fa)
-      0004E5 36 55                  534 	ld	(hl), #0x55
-      0004E7 21rFBr00               535 	ld	hl, #(_card_textures + 0x00fb)
-      0004EA 36 55                  536 	ld	(hl), #0x55
-      0004EC 21rFCr00               537 	ld	hl, #(_card_textures + 0x00fc)
-      0004EF 36 11                  538 	ld	(hl), #0x11
-      0004F1 21rFDr00               539 	ld	hl, #(_card_textures + 0x00fd)
-      0004F4 36 11                  540 	ld	(hl), #0x11
-      0004F6 21rFEr00               541 	ld	hl, #(_card_textures + 0x00fe)
-      0004F9 36 01                  542 	ld	(hl), #0x01
-      0004FB 21rFFr00               543 	ld	hl, #(_card_textures + 0x00ff)
-      0004FE 36 01                  544 	ld	(hl), #0x01
-      000500 21r00r01               545 	ld	hl, #(_card_textures + 0x0100)
-      000503 36 FE                  546 	ld	(hl), #0xfe
-      000505 21r01r01               547 	ld	hl, #(_card_textures + 0x0101)
-      000508 36 FE                  548 	ld	(hl), #0xfe
-      00050A 21r02r01               549 	ld	hl, #(_card_textures + 0x0102)
-      00050D 36 01                  550 	ld	(hl), #0x01
-      00050F 21r03r01               551 	ld	hl, #(_card_textures + 0x0103)
-      000512 36 01                  552 	ld	(hl), #0x01
-      000514 21r04r01               553 	ld	hl, #(_card_textures + 0x0104)
-      000517 36 11                  554 	ld	(hl), #0x11
-      000519 21r05r01               555 	ld	hl, #(_card_textures + 0x0105)
-      00051C 36 11                  556 	ld	(hl), #0x11
-      00051E 21r06r01               557 	ld	hl, #(_card_textures + 0x0106)
-      000521 36 29                  558 	ld	(hl), #0x29
-      000523 21r07r01               559 	ld	hl, #(_card_textures + 0x0107)
-      000526 36 29                  560 	ld	(hl), #0x29
-      000528 21r08r01               561 	ld	hl, #(_card_textures + 0x0108)
-      00052B 36 45                  562 	ld	(hl), #0x45
-      00052D 21r09r01               563 	ld	hl, #(_card_textures + 0x0109)
-      000530 36 45                  564 	ld	(hl), #0x45
-      000532 21r0Ar01               565 	ld	hl, #(_card_textures + 0x010a)
-      000535 36 29                  566 	ld	(hl), #0x29
-      000537 21r0Br01               567 	ld	hl, #(_card_textures + 0x010b)
-      00053A 36 29                  568 	ld	(hl), #0x29
-      00053C 21r0Cr01               569 	ld	hl, #(_card_textures + 0x010c)
-      00053F 36 11                  570 	ld	(hl), #0x11
-      000541 21r0Dr01               571 	ld	hl, #(_card_textures + 0x010d)
-      000544 36 11                  572 	ld	(hl), #0x11
-      000546 21r0Er01               573 	ld	hl, #(_card_textures + 0x010e)
-      000549 36 01                  574 	ld	(hl), #0x01
-      00054B 21r0Fr01               575 	ld	hl, #(_card_textures + 0x010f)
-      00054E 36 01                  576 	ld	(hl), #0x01
-      000550 21r10r01               577 	ld	hl, #(_card_textures + 0x0110)
-      000553 36 FE                  578 	ld	(hl), #0xfe
-      000555 21r11r01               579 	ld	hl, #(_card_textures + 0x0111)
-      000558 36 FE                  580 	ld	(hl), #0xfe
-      00055A 21r12r01               581 	ld	hl, #(_card_textures + 0x0112)
-      00055D 36 01                  582 	ld	(hl), #0x01
-      00055F 21r13r01               583 	ld	hl, #(_card_textures + 0x0113)
-      000562 36 01                  584 	ld	(hl), #0x01
-      000564 21r14r01               585 	ld	hl, #(_card_textures + 0x0114)
-      000567 36 29                  586 	ld	(hl), #0x29
-      000569 21r15r01               587 	ld	hl, #(_card_textures + 0x0115)
-      00056C 36 29                  588 	ld	(hl), #0x29
-      00056E 21r16r01               589 	ld	hl, #(_card_textures + 0x0116)
-      000571 36 55                  590 	ld	(hl), #0x55
-      000573 21r17r01               591 	ld	hl, #(_card_textures + 0x0117)
-      000576 36 55                  592 	ld	(hl), #0x55
-      000578 21r18r01               593 	ld	hl, #(_card_textures + 0x0118)
-      00057B 36 45                  594 	ld	(hl), #0x45
-      00057D 21r19r01               595 	ld	hl, #(_card_textures + 0x0119)
-      000580 36 45                  596 	ld	(hl), #0x45
-      000582 21r1Ar01               597 	ld	hl, #(_card_textures + 0x011a)
-      000585 36 29                  598 	ld	(hl), #0x29
-      000587 21r1Br01               599 	ld	hl, #(_card_textures + 0x011b)
-      00058A 36 29                  600 	ld	(hl), #0x29
-      00058C 21r1Cr01               601 	ld	hl, #(_card_textures + 0x011c)
-      00058F 36 11                  602 	ld	(hl), #0x11
-      000591 21r1Dr01               603 	ld	hl, #(_card_textures + 0x011d)
-      000594 36 11                  604 	ld	(hl), #0x11
-      000596 21r1Er01               605 	ld	hl, #(_card_textures + 0x011e)
-      000599 36 01                  606 	ld	(hl), #0x01
-      00059B 21r1Fr01               607 	ld	hl, #(_card_textures + 0x011f)
-      00059E 36 01                  608 	ld	(hl), #0x01
-      0005A0 21r20r01               609 	ld	hl, #(_card_textures + 0x0120)
-      0005A3 36 7F                  610 	ld	(hl), #0x7f
-      0005A5 21r21r01               611 	ld	hl, #(_card_textures + 0x0121)
-      0005A8 36 7F                  612 	ld	(hl), #0x7f
-      0005AA 21r22r01               613 	ld	hl, #(_card_textures + 0x0122)
-      0005AD 36 80                  614 	ld	(hl), #0x80
-      0005AF 21r23r01               615 	ld	hl, #(_card_textures + 0x0123)
-      0005B2 36 80                  616 	ld	(hl), #0x80
-      0005B4 21r24r01               617 	ld	hl, #(_card_textures + 0x0124)
-      0005B7 36 80                  618 	ld	(hl), #0x80
-      0005B9 21r25r01               619 	ld	hl, #(_card_textures + 0x0125)
-      0005BC 36 80                  620 	ld	(hl), #0x80
-      0005BE 21r26r01               621 	ld	hl, #(_card_textures + 0x0126)
-      0005C1 36 80                  622 	ld	(hl), #0x80
-      0005C3 21r27r01               623 	ld	hl, #(_card_textures + 0x0127)
-      0005C6 36 80                  624 	ld	(hl), #0x80
-      0005C8 21r28r01               625 	ld	hl, #(_card_textures + 0x0128)
-      0005CB 36 80                  626 	ld	(hl), #0x80
-      0005CD 21r29r01               627 	ld	hl, #(_card_textures + 0x0129)
-      0005D0 36 80                  628 	ld	(hl), #0x80
-      0005D2 21r2Ar01               629 	ld	hl, #(_card_textures + 0x012a)
-      0005D5 36 80                  630 	ld	(hl), #0x80
-      0005D7 21r2Br01               631 	ld	hl, #(_card_textures + 0x012b)
-      0005DA 36 80                  632 	ld	(hl), #0x80
-      0005DC 21r2Cr01               633 	ld	hl, #(_card_textures + 0x012c)
-      0005DF 36 80                  634 	ld	(hl), #0x80
-      0005E1 21r2Dr01               635 	ld	hl, #(_card_textures + 0x012d)
-      0005E4 36 80                  636 	ld	(hl), #0x80
-      0005E6 21r2Er01               637 	ld	hl, #(_card_textures + 0x012e)
-      0005E9 36 80                  638 	ld	(hl), #0x80
-      0005EB 21r2Fr01               639 	ld	hl, #(_card_textures + 0x012f)
-      0005EE 36 80                  640 	ld	(hl), #0x80
-      0005F0 21r30r01               641 	ld	hl, #(_card_textures + 0x0130)
-      0005F3 36 FE                  642 	ld	(hl), #0xfe
-      0005F5 21r31r01               643 	ld	hl, #(_card_textures + 0x0131)
-      0005F8 36 FE                  644 	ld	(hl), #0xfe
-      0005FA 21r32r01               645 	ld	hl, #(_card_textures + 0x0132)
-      0005FD 36 01                  646 	ld	(hl), #0x01
-      0005FF 21r33r01               647 	ld	hl, #(_card_textures + 0x0133)
-      000602 36 01                  648 	ld	(hl), #0x01
-      000604 21r34r01               649 	ld	hl, #(_card_textures + 0x0134)
-      000607 36 01                  650 	ld	(hl), #0x01
-      000609 21r35r01               651 	ld	hl, #(_card_textures + 0x0135)
-      00060C 36 01                  652 	ld	(hl), #0x01
-      00060E 21r36r01               653 	ld	hl, #(_card_textures + 0x0136)
-      000611 36 01                  654 	ld	(hl), #0x01
-      000613 21r37r01               655 	ld	hl, #(_card_textures + 0x0137)
-      000616 36 01                  656 	ld	(hl), #0x01
-      000618 21r38r01               657 	ld	hl, #(_card_textures + 0x0138)
-      00061B 36 01                  658 	ld	(hl), #0x01
-      00061D 21r39r01               659 	ld	hl, #(_card_textures + 0x0139)
-      000620 36 01                  660 	ld	(hl), #0x01
-      000622 21r3Ar01               661 	ld	hl, #(_card_textures + 0x013a)
-      000625 36 01                  662 	ld	(hl), #0x01
-      000627 21r3Br01               663 	ld	hl, #(_card_textures + 0x013b)
-      00062A 36 01                  664 	ld	(hl), #0x01
-      00062C 21r3Cr01               665 	ld	hl, #(_card_textures + 0x013c)
-      00062F 36 01                  666 	ld	(hl), #0x01
-      000631 21r3Dr01               667 	ld	hl, #(_card_textures + 0x013d)
-      000634 36 01                  668 	ld	(hl), #0x01
-      000636 21r3Er01               669 	ld	hl, #(_card_textures + 0x013e)
-      000639 36 01                  670 	ld	(hl), #0x01
-      00063B 21r3Fr01               671 	ld	hl, #(_card_textures + 0x013f)
-      00063E 36 01                  672 	ld	(hl), #0x01
-      000640 21r40r01               673 	ld	hl, #(_card_textures + 0x0140)
-      000643 36 80                  674 	ld	(hl), #0x80
-      000645 21r41r01               675 	ld	hl, #(_card_textures + 0x0141)
-      000648 36 80                  676 	ld	(hl), #0x80
-      00064A 21r42r01               677 	ld	hl, #(_card_textures + 0x0142)
-      00064D 36 80                  678 	ld	(hl), #0x80
-      00064F 21r43r01               679 	ld	hl, #(_card_textures + 0x0143)
-      000652 36 80                  680 	ld	(hl), #0x80
-      000654 21r44r01               681 	ld	hl, #(_card_textures + 0x0144)
-      000657 36 80                  682 	ld	(hl), #0x80
-      000659 21r45r01               683 	ld	hl, #(_card_textures + 0x0145)
-      00065C 36 80                  684 	ld	(hl), #0x80
-      00065E 21r46r01               685 	ld	hl, #(_card_textures + 0x0146)
-      000661 36 80                  686 	ld	(hl), #0x80
-      000663 21r47r01               687 	ld	hl, #(_card_textures + 0x0147)
-      000666 36 80                  688 	ld	(hl), #0x80
-      000668 21r48r01               689 	ld	hl, #(_card_textures + 0x0148)
-      00066B 36 80                  690 	ld	(hl), #0x80
-      00066D 21r49r01               691 	ld	hl, #(_card_textures + 0x0149)
-      000670 36 80                  692 	ld	(hl), #0x80
-      000672 21r4Ar01               693 	ld	hl, #(_card_textures + 0x014a)
-      000675 36 80                  694 	ld	(hl), #0x80
-      000677 21r4Br01               695 	ld	hl, #(_card_textures + 0x014b)
-      00067A 36 80                  696 	ld	(hl), #0x80
-      00067C 21r4Cr01               697 	ld	hl, #(_card_textures + 0x014c)
-      00067F 36 80                  698 	ld	(hl), #0x80
-      000681 21r4Dr01               699 	ld	hl, #(_card_textures + 0x014d)
-      000684 36 80                  700 	ld	(hl), #0x80
-      000686 21r4Er01               701 	ld	hl, #(_card_textures + 0x014e)
-      000689 36 80                  702 	ld	(hl), #0x80
-      00068B 21r4Fr01               703 	ld	hl, #(_card_textures + 0x014f)
-      00068E 36 80                  704 	ld	(hl), #0x80
-      000690 21r50r01               705 	ld	hl, #(_card_textures + 0x0150)
-      000693 36 01                  706 	ld	(hl), #0x01
-      000695 21r51r01               707 	ld	hl, #(_card_textures + 0x0151)
-      000698 36 01                  708 	ld	(hl), #0x01
-      00069A 21r52r01               709 	ld	hl, #(_card_textures + 0x0152)
-      00069D 36 01                  710 	ld	(hl), #0x01
-      00069F 21r53r01               711 	ld	hl, #(_card_textures + 0x0153)
-      0006A2 36 01                  712 	ld	(hl), #0x01
-      0006A4 21r54r01               713 	ld	hl, #(_card_textures + 0x0154)
-      0006A7 36 01                  714 	ld	(hl), #0x01
-      0006A9 21r55r01               715 	ld	hl, #(_card_textures + 0x0155)
-      0006AC 36 01                  716 	ld	(hl), #0x01
-      0006AE 21r56r01               717 	ld	hl, #(_card_textures + 0x0156)
-      0006B1 36 01                  718 	ld	(hl), #0x01
-      0006B3 21r57r01               719 	ld	hl, #(_card_textures + 0x0157)
-      0006B6 36 01                  720 	ld	(hl), #0x01
-      0006B8 21r58r01               721 	ld	hl, #(_card_textures + 0x0158)
-      0006BB 36 01                  722 	ld	(hl), #0x01
-      0006BD 21r59r01               723 	ld	hl, #(_card_textures + 0x0159)
-      0006C0 36 01                  724 	ld	(hl), #0x01
-      0006C2 21r5Ar01               725 	ld	hl, #(_card_textures + 0x015a)
-      0006C5 36 01                  726 	ld	(hl), #0x01
-      0006C7 21r5Br01               727 	ld	hl, #(_card_textures + 0x015b)
-      0006CA 36 01                  728 	ld	(hl), #0x01
-      0006CC 21r5Cr01               729 	ld	hl, #(_card_textures + 0x015c)
-      0006CF 36 01                  730 	ld	(hl), #0x01
-      0006D1 21r5Dr01               731 	ld	hl, #(_card_textures + 0x015d)
-      0006D4 36 01                  732 	ld	(hl), #0x01
-      0006D6 21r5Er01               733 	ld	hl, #(_card_textures + 0x015e)
-      0006D9 36 01                  734 	ld	(hl), #0x01
-      0006DB 21r5Fr01               735 	ld	hl, #(_card_textures + 0x015f)
-      0006DE 36 01                  736 	ld	(hl), #0x01
-      0006E0 21r60r01               737 	ld	hl, #(_card_textures + 0x0160)
-      0006E3 36 80                  738 	ld	(hl), #0x80
-      0006E5 21r61r01               739 	ld	hl, #(_card_textures + 0x0161)
-      0006E8 36 80                  740 	ld	(hl), #0x80
-      0006EA 21r62r01               741 	ld	hl, #(_card_textures + 0x0162)
-      0006ED 36 80                  742 	ld	(hl), #0x80
-      0006EF 21r63r01               743 	ld	hl, #(_card_textures + 0x0163)
-      0006F2 36 80                  744 	ld	(hl), #0x80
-      0006F4 21r64r01               745 	ld	hl, #(_card_textures + 0x0164)
-      0006F7 36 80                  746 	ld	(hl), #0x80
-      0006F9 21r65r01               747 	ld	hl, #(_card_textures + 0x0165)
-      0006FC 36 80                  748 	ld	(hl), #0x80
-      0006FE 21r66r01               749 	ld	hl, #(_card_textures + 0x0166)
-      000701 36 80                  750 	ld	(hl), #0x80
-      000703 21r67r01               751 	ld	hl, #(_card_textures + 0x0167)
-      000706 36 80                  752 	ld	(hl), #0x80
-      000708 21r68r01               753 	ld	hl, #(_card_textures + 0x0168)
-      00070B 36 80                  754 	ld	(hl), #0x80
-      00070D 21r69r01               755 	ld	hl, #(_card_textures + 0x0169)
-      000710 36 80                  756 	ld	(hl), #0x80
-      000712 21r6Ar01               757 	ld	hl, #(_card_textures + 0x016a)
-      000715 36 80                  758 	ld	(hl), #0x80
-      000717 21r6Br01               759 	ld	hl, #(_card_textures + 0x016b)
-      00071A 36 80                  760 	ld	(hl), #0x80
-      00071C 21r6Cr01               761 	ld	hl, #(_card_textures + 0x016c)
-      00071F 36 80                  762 	ld	(hl), #0x80
-      000721 21r6Dr01               763 	ld	hl, #(_card_textures + 0x016d)
-      000724 36 80                  764 	ld	(hl), #0x80
-      000726 21r6Er01               765 	ld	hl, #(_card_textures + 0x016e)
-      000729 36 7F                  766 	ld	(hl), #0x7f
-      00072B 21r6Fr01               767 	ld	hl, #(_card_textures + 0x016f)
-      00072E 36 7F                  768 	ld	(hl), #0x7f
-      000730 21r70r01               769 	ld	hl, #(_card_textures + 0x0170)
-      000733 36 01                  770 	ld	(hl), #0x01
-      000735 21r71r01               771 	ld	hl, #(_card_textures + 0x0171)
-      000738 36 01                  772 	ld	(hl), #0x01
-      00073A 21r72r01               773 	ld	hl, #(_card_textures + 0x0172)
-      00073D 36 01                  774 	ld	(hl), #0x01
-      00073F 21r73r01               775 	ld	hl, #(_card_textures + 0x0173)
-      000742 36 01                  776 	ld	(hl), #0x01
-      000744 21r74r01               777 	ld	hl, #(_card_textures + 0x0174)
-      000747 36 01                  778 	ld	(hl), #0x01
-      000749 21r75r01               779 	ld	hl, #(_card_textures + 0x0175)
-      00074C 36 01                  780 	ld	(hl), #0x01
-      00074E 21r76r01               781 	ld	hl, #(_card_textures + 0x0176)
-      000751 36 01                  782 	ld	(hl), #0x01
-      000753 21r77r01               783 	ld	hl, #(_card_textures + 0x0177)
-      000756 36 01                  784 	ld	(hl), #0x01
-      000758 21r78r01               785 	ld	hl, #(_card_textures + 0x0178)
-      00075B 36 01                  786 	ld	(hl), #0x01
-      00075D 21r79r01               787 	ld	hl, #(_card_textures + 0x0179)
-      000760 36 01                  788 	ld	(hl), #0x01
-      000762 21r7Ar01               789 	ld	hl, #(_card_textures + 0x017a)
-      000765 36 01                  790 	ld	(hl), #0x01
-      000767 21r7Br01               791 	ld	hl, #(_card_textures + 0x017b)
-      00076A 36 01                  792 	ld	(hl), #0x01
-      00076C 21r7Cr01               793 	ld	hl, #(_card_textures + 0x017c)
-      00076F 36 01                  794 	ld	(hl), #0x01
-      000771 21r7Dr01               795 	ld	hl, #(_card_textures + 0x017d)
-      000774 36 01                  796 	ld	(hl), #0x01
-      000776 21r7Er01               797 	ld	hl, #(_card_textures + 0x017e)
-      000779 36 FE                  798 	ld	(hl), #0xfe
-      00077B 21r7Fr01               799 	ld	hl, #(_card_textures + 0x017f)
-      00077E 36 FE                  800 	ld	(hl), #0xfe
-      000780 21r80r01               801 	ld	hl, #(_card_textures + 0x0180)
-      000783 36 7F                  802 	ld	(hl), #0x7f
-      000785 21r81r01               803 	ld	hl, #(_card_textures + 0x0181)
-      000788 36 7F                  804 	ld	(hl), #0x7f
-      00078A 21r82r01               805 	ld	hl, #(_card_textures + 0x0182)
-      00078D 36 FF                  806 	ld	(hl), #0xff
-      00078F 21r83r01               807 	ld	hl, #(_card_textures + 0x0183)
-      000792 36 80                  808 	ld	(hl), #0x80
-      000794 21r84r01               809 	ld	hl, #(_card_textures + 0x0184)
-      000797 36 D5                  810 	ld	(hl), #0xd5
-      000799 21r85r01               811 	ld	hl, #(_card_textures + 0x0185)
-      00079C 36 AA                  812 	ld	(hl), #0xaa
-      00079E 21r86r01               813 	ld	hl, #(_card_textures + 0x0186)
-      0007A1 36 EA                  814 	ld	(hl), #0xea
-      0007A3 21r87r01               815 	ld	hl, #(_card_textures + 0x0187)
-      0007A6 36 95                  816 	ld	(hl), #0x95
-      0007A8 21r88r01               817 	ld	hl, #(_card_textures + 0x0188)
-      0007AB 36 D5                  818 	ld	(hl), #0xd5
-      0007AD 21r89r01               819 	ld	hl, #(_card_textures + 0x0189)
-      0007B0 36 AA                  820 	ld	(hl), #0xaa
-      0007B2 21r8Ar01               821 	ld	hl, #(_card_textures + 0x018a)
-      0007B5 36 EA                  822 	ld	(hl), #0xea
-      0007B7 21r8Br01               823 	ld	hl, #(_card_textures + 0x018b)
-      0007BA 36 95                  824 	ld	(hl), #0x95
-      0007BC 21r8Cr01               825 	ld	hl, #(_card_textures + 0x018c)
-      0007BF 36 D5                  826 	ld	(hl), #0xd5
-      0007C1 21r8Dr01               827 	ld	hl, #(_card_textures + 0x018d)
-      0007C4 36 AA                  828 	ld	(hl), #0xaa
-      0007C6 21r8Er01               829 	ld	hl, #(_card_textures + 0x018e)
-      0007C9 36 EA                  830 	ld	(hl), #0xea
-      0007CB 21r8Fr01               831 	ld	hl, #(_card_textures + 0x018f)
-      0007CE 36 95                  832 	ld	(hl), #0x95
-      0007D0 21r90r01               833 	ld	hl, #(_card_textures + 0x0190)
-      0007D3 36 FE                  834 	ld	(hl), #0xfe
-      0007D5 21r91r01               835 	ld	hl, #(_card_textures + 0x0191)
-      0007D8 36 FE                  836 	ld	(hl), #0xfe
-      0007DA 21r92r01               837 	ld	hl, #(_card_textures + 0x0192)
-      0007DD 36 FF                  838 	ld	(hl), #0xff
-      0007DF 21r93r01               839 	ld	hl, #(_card_textures + 0x0193)
-      0007E2 36 01                  840 	ld	(hl), #0x01
-      0007E4 21r94r01               841 	ld	hl, #(_card_textures + 0x0194)
-      0007E7 36 57                  842 	ld	(hl), #0x57
-      0007E9 21r95r01               843 	ld	hl, #(_card_textures + 0x0195)
-      0007EC 36 A9                  844 	ld	(hl), #0xa9
-      0007EE 21r96r01               845 	ld	hl, #(_card_textures + 0x0196)
-      0007F1 36 AB                  846 	ld	(hl), #0xab
-      0007F3 21r97r01               847 	ld	hl, #(_card_textures + 0x0197)
-      0007F6 36 55                  848 	ld	(hl), #0x55
-      0007F8 21r98r01               849 	ld	hl, #(_card_textures + 0x0198)
-      0007FB 36 57                  850 	ld	(hl), #0x57
-      0007FD 21r99r01               851 	ld	hl, #(_card_textures + 0x0199)
-      000800 36 A9                  852 	ld	(hl), #0xa9
-      000802 21r9Ar01               853 	ld	hl, #(_card_textures + 0x019a)
-      000805 36 AB                  854 	ld	(hl), #0xab
-      000807 21r9Br01               855 	ld	hl, #(_card_textures + 0x019b)
-      00080A 36 55                  856 	ld	(hl), #0x55
-      00080C 21r9Cr01               857 	ld	hl, #(_card_textures + 0x019c)
-      00080F 36 57                  858 	ld	(hl), #0x57
-      000811 21r9Dr01               859 	ld	hl, #(_card_textures + 0x019d)
-      000814 36 A9                  860 	ld	(hl), #0xa9
-      000816 21r9Er01               861 	ld	hl, #(_card_textures + 0x019e)
-      000819 36 AB                  862 	ld	(hl), #0xab
-      00081B 21r9Fr01               863 	ld	hl, #(_card_textures + 0x019f)
-      00081E 36 55                  864 	ld	(hl), #0x55
-      000820 21rA0r01               865 	ld	hl, #(_card_textures + 0x01a0)
-      000823 36 D5                  866 	ld	(hl), #0xd5
-      000825 21rA1r01               867 	ld	hl, #(_card_textures + 0x01a1)
-      000828 36 AA                  868 	ld	(hl), #0xaa
-      00082A 21rA2r01               869 	ld	hl, #(_card_textures + 0x01a2)
-      00082D 36 EA                  870 	ld	(hl), #0xea
-      00082F 21rA3r01               871 	ld	hl, #(_card_textures + 0x01a3)
-      000832 36 95                  872 	ld	(hl), #0x95
-      000834 21rA4r01               873 	ld	hl, #(_card_textures + 0x01a4)
-      000837 36 D5                  874 	ld	(hl), #0xd5
-      000839 21rA5r01               875 	ld	hl, #(_card_textures + 0x01a5)
-      00083C 36 AA                  876 	ld	(hl), #0xaa
-      00083E 21rA6r01               877 	ld	hl, #(_card_textures + 0x01a6)
-      000841 36 EA                  878 	ld	(hl), #0xea
-      000843 21rA7r01               879 	ld	hl, #(_card_textures + 0x01a7)
-      000846 36 95                  880 	ld	(hl), #0x95
-      000848 21rA8r01               881 	ld	hl, #(_card_textures + 0x01a8)
-      00084B 36 D5                  882 	ld	(hl), #0xd5
-      00084D 21rA9r01               883 	ld	hl, #(_card_textures + 0x01a9)
-      000850 36 AA                  884 	ld	(hl), #0xaa
-      000852 21rAAr01               885 	ld	hl, #(_card_textures + 0x01aa)
-      000855 36 EA                  886 	ld	(hl), #0xea
-      000857 21rABr01               887 	ld	hl, #(_card_textures + 0x01ab)
-      00085A 36 95                  888 	ld	(hl), #0x95
-      00085C 21rACr01               889 	ld	hl, #(_card_textures + 0x01ac)
-      00085F 36 D5                  890 	ld	(hl), #0xd5
-      000861 21rADr01               891 	ld	hl, #(_card_textures + 0x01ad)
-      000864 36 AA                  892 	ld	(hl), #0xaa
-      000866 21rAEr01               893 	ld	hl, #(_card_textures + 0x01ae)
-      000869 36 EA                  894 	ld	(hl), #0xea
-      00086B 21rAFr01               895 	ld	hl, #(_card_textures + 0x01af)
-      00086E 36 95                  896 	ld	(hl), #0x95
-      000870 21rB0r01               897 	ld	hl, #(_card_textures + 0x01b0)
-      000873 36 57                  898 	ld	(hl), #0x57
-      000875 21rB1r01               899 	ld	hl, #(_card_textures + 0x01b1)
-      000878 36 A9                  900 	ld	(hl), #0xa9
-      00087A 21rB2r01               901 	ld	hl, #(_card_textures + 0x01b2)
-      00087D 36 AB                  902 	ld	(hl), #0xab
-      00087F 21rB3r01               903 	ld	hl, #(_card_textures + 0x01b3)
-      000882 36 55                  904 	ld	(hl), #0x55
-      000884 21rB4r01               905 	ld	hl, #(_card_textures + 0x01b4)
-      000887 36 57                  906 	ld	(hl), #0x57
-      000889 21rB5r01               907 	ld	hl, #(_card_textures + 0x01b5)
-      00088C 36 A9                  908 	ld	(hl), #0xa9
-      00088E 21rB6r01               909 	ld	hl, #(_card_textures + 0x01b6)
-      000891 36 AB                  910 	ld	(hl), #0xab
-      000893 21rB7r01               911 	ld	hl, #(_card_textures + 0x01b7)
-      000896 36 55                  912 	ld	(hl), #0x55
-      000898 21rB8r01               913 	ld	hl, #(_card_textures + 0x01b8)
-      00089B 36 57                  914 	ld	(hl), #0x57
-      00089D 21rB9r01               915 	ld	hl, #(_card_textures + 0x01b9)
-      0008A0 36 A9                  916 	ld	(hl), #0xa9
-      0008A2 21rBAr01               917 	ld	hl, #(_card_textures + 0x01ba)
-      0008A5 36 AB                  918 	ld	(hl), #0xab
-      0008A7 21rBBr01               919 	ld	hl, #(_card_textures + 0x01bb)
-      0008AA 36 55                  920 	ld	(hl), #0x55
-      0008AC 21rBCr01               921 	ld	hl, #(_card_textures + 0x01bc)
-      0008AF 36 57                  922 	ld	(hl), #0x57
-      0008B1 21rBDr01               923 	ld	hl, #(_card_textures + 0x01bd)
-      0008B4 36 A9                  924 	ld	(hl), #0xa9
-      0008B6 21rBEr01               925 	ld	hl, #(_card_textures + 0x01be)
-      0008B9 36 AB                  926 	ld	(hl), #0xab
-      0008BB 21rBFr01               927 	ld	hl, #(_card_textures + 0x01bf)
-      0008BE 36 55                  928 	ld	(hl), #0x55
-      0008C0 21rC0r01               929 	ld	hl, #(_card_textures + 0x01c0)
-      0008C3 36 D5                  930 	ld	(hl), #0xd5
-      0008C5 21rC1r01               931 	ld	hl, #(_card_textures + 0x01c1)
-      0008C8 36 AA                  932 	ld	(hl), #0xaa
-      0008CA 21rC2r01               933 	ld	hl, #(_card_textures + 0x01c2)
-      0008CD 36 EA                  934 	ld	(hl), #0xea
-      0008CF 21rC3r01               935 	ld	hl, #(_card_textures + 0x01c3)
-      0008D2 36 95                  936 	ld	(hl), #0x95
-      0008D4 21rC4r01               937 	ld	hl, #(_card_textures + 0x01c4)
-      0008D7 36 D5                  938 	ld	(hl), #0xd5
-      0008D9 21rC5r01               939 	ld	hl, #(_card_textures + 0x01c5)
-      0008DC 36 AA                  940 	ld	(hl), #0xaa
-      0008DE 21rC6r01               941 	ld	hl, #(_card_textures + 0x01c6)
-      0008E1 36 EA                  942 	ld	(hl), #0xea
-      0008E3 21rC7r01               943 	ld	hl, #(_card_textures + 0x01c7)
-      0008E6 36 95                  944 	ld	(hl), #0x95
-      0008E8 21rC8r01               945 	ld	hl, #(_card_textures + 0x01c8)
-      0008EB 36 D5                  946 	ld	(hl), #0xd5
-      0008ED 21rC9r01               947 	ld	hl, #(_card_textures + 0x01c9)
-      0008F0 36 AA                  948 	ld	(hl), #0xaa
-      0008F2 21rCAr01               949 	ld	hl, #(_card_textures + 0x01ca)
-      0008F5 36 EA                  950 	ld	(hl), #0xea
-      0008F7 21rCBr01               951 	ld	hl, #(_card_textures + 0x01cb)
-      0008FA 36 95                  952 	ld	(hl), #0x95
-      0008FC 21rCCr01               953 	ld	hl, #(_card_textures + 0x01cc)
-      0008FF 36 FF                  954 	ld	(hl), #0xff
-      000901 21rCDr01               955 	ld	hl, #(_card_textures + 0x01cd)
-      000904 36 80                  956 	ld	(hl), #0x80
-      000906 21rCEr01               957 	ld	hl, #(_card_textures + 0x01ce)
-      000909 36 7F                  958 	ld	(hl), #0x7f
-      00090B 21rCFr01               959 	ld	hl, #(_card_textures + 0x01cf)
-      00090E 36 7F                  960 	ld	(hl), #0x7f
-      000910 21rD0r01               961 	ld	hl, #(_card_textures + 0x01d0)
-      000913 36 57                  962 	ld	(hl), #0x57
-      000915 21rD1r01               963 	ld	hl, #(_card_textures + 0x01d1)
-      000918 36 A9                  964 	ld	(hl), #0xa9
-      00091A 21rD2r01               965 	ld	hl, #(_card_textures + 0x01d2)
-      00091D 36 AB                  966 	ld	(hl), #0xab
-      00091F 21rD3r01               967 	ld	hl, #(_card_textures + 0x01d3)
-      000922 36 55                  968 	ld	(hl), #0x55
-      000924 21rD4r01               969 	ld	hl, #(_card_textures + 0x01d4)
-      000927 36 57                  970 	ld	(hl), #0x57
-      000929 21rD5r01               971 	ld	hl, #(_card_textures + 0x01d5)
-      00092C 36 A9                  972 	ld	(hl), #0xa9
-      00092E 21rD6r01               973 	ld	hl, #(_card_textures + 0x01d6)
-      000931 36 AB                  974 	ld	(hl), #0xab
-      000933 21rD7r01               975 	ld	hl, #(_card_textures + 0x01d7)
-      000936 36 55                  976 	ld	(hl), #0x55
-      000938 21rD8r01               977 	ld	hl, #(_card_textures + 0x01d8)
-      00093B 36 57                  978 	ld	(hl), #0x57
-      00093D 21rD9r01               979 	ld	hl, #(_card_textures + 0x01d9)
-      000940 36 A9                  980 	ld	(hl), #0xa9
-      000942 21rDAr01               981 	ld	hl, #(_card_textures + 0x01da)
-      000945 36 AB                  982 	ld	(hl), #0xab
-      000947 21rDBr01               983 	ld	hl, #(_card_textures + 0x01db)
-      00094A 36 55                  984 	ld	(hl), #0x55
-      00094C 21rDCr01               985 	ld	hl, #(_card_textures + 0x01dc)
-      00094F 36 FF                  986 	ld	(hl), #0xff
-      000951 21rDDr01               987 	ld	hl, #(_card_textures + 0x01dd)
-      000954 36 01                  988 	ld	(hl), #0x01
-      000956 21rDEr01               989 	ld	hl, #(_card_textures + 0x01de)
-      000959 36 FE                  990 	ld	(hl), #0xfe
-      00095B 21rDFr01               991 	ld	hl, #(_card_textures + 0x01df)
-      00095E 36 FE                  992 	ld	(hl), #0xfe
-      000960 21rE0r01               993 	ld	hl, #(_card_textures + 0x01e0)
-      000963 36 01                  994 	ld	(hl), #0x01
-      000965 21rE1r01               995 	ld	hl, #(_card_textures + 0x01e1)
-      000968 36 01                  996 	ld	(hl), #0x01
-      00096A 21rE2r01               997 	ld	hl, #(_card_textures + 0x01e2)
-      00096D 36 25                  998 	ld	(hl), #0x25
-      00096F 21rE3r01               999 	ld	hl, #(_card_textures + 0x01e3)
-      000972 36 25                 1000 	ld	(hl), #0x25
-      000974 21rE4r01              1001 	ld	hl, #(_card_textures + 0x01e4)
-      000977 36 25                 1002 	ld	(hl), #0x25
-      000979 21rE5r01              1003 	ld	hl, #(_card_textures + 0x01e5)
-      00097C 36 25                 1004 	ld	(hl), #0x25
-      00097E 21rE6r01              1005 	ld	hl, #(_card_textures + 0x01e6)
-      000981 36 3D                 1006 	ld	(hl), #0x3d
-      000983 21rE7r01              1007 	ld	hl, #(_card_textures + 0x01e7)
-      000986 36 3D                 1008 	ld	(hl), #0x3d
-      000988 21rE8r01              1009 	ld	hl, #(_card_textures + 0x01e8)
-      00098B 36 25                 1010 	ld	(hl), #0x25
-      00098D 21rE9r01              1011 	ld	hl, #(_card_textures + 0x01e9)
-      000990 36 25                 1012 	ld	(hl), #0x25
-      000992 21rEAr01              1013 	ld	hl, #(_card_textures + 0x01ea)
-      000995 36 19                 1014 	ld	(hl), #0x19
-      000997 21rEBr01              1015 	ld	hl, #(_card_textures + 0x01eb)
-      00099A 36 19                 1016 	ld	(hl), #0x19
-      00099C 21rECr01              1017 	ld	hl, #(_card_textures + 0x01ec)
-      00099F 36 01                 1018 	ld	(hl), #0x01
-      0009A1 21rEDr01              1019 	ld	hl, #(_card_textures + 0x01ed)
-      0009A4 36 01                 1020 	ld	(hl), #0x01
-      0009A6 21rEEr01              1021 	ld	hl, #(_card_textures + 0x01ee)
-      0009A9 36 FE                 1022 	ld	(hl), #0xfe
-      0009AB 21rEFr01              1023 	ld	hl, #(_card_textures + 0x01ef)
-      0009AE 36 FE                 1024 	ld	(hl), #0xfe
-      0009B0 21rF0r01              1025 	ld	hl, #(_card_textures + 0x01f0)
-      0009B3 36 01                 1026 	ld	(hl), #0x01
-      0009B5 21rF1r01              1027 	ld	hl, #(_card_textures + 0x01f1)
-      0009B8 36 01                 1028 	ld	(hl), #0x01
-      0009BA 21rF2r01              1029 	ld	hl, #(_card_textures + 0x01f2)
-      0009BD 36 3D                 1030 	ld	(hl), #0x3d
-      0009BF 21rF3r01              1031 	ld	hl, #(_card_textures + 0x01f3)
-      0009C2 36 3D                 1032 	ld	(hl), #0x3d
-      0009C4 21rF4r01              1033 	ld	hl, #(_card_textures + 0x01f4)
-      0009C7 36 09                 1034 	ld	(hl), #0x09
-      0009C9 21rF5r01              1035 	ld	hl, #(_card_textures + 0x01f5)
-      0009CC 36 09                 1036 	ld	(hl), #0x09
-      0009CE 21rF6r01              1037 	ld	hl, #(_card_textures + 0x01f6)
-      0009D1 36 11                 1038 	ld	(hl), #0x11
-      0009D3 21rF7r01              1039 	ld	hl, #(_card_textures + 0x01f7)
-      0009D6 36 11                 1040 	ld	(hl), #0x11
-      0009D8 21rF8r01              1041 	ld	hl, #(_card_textures + 0x01f8)
-      0009DB 36 25                 1042 	ld	(hl), #0x25
-      0009DD 21rF9r01              1043 	ld	hl, #(_card_textures + 0x01f9)
-      0009E0 36 25                 1044 	ld	(hl), #0x25
-      0009E2 21rFAr01              1045 	ld	hl, #(_card_textures + 0x01fa)
-      0009E5 36 19                 1046 	ld	(hl), #0x19
-      0009E7 21rFBr01              1047 	ld	hl, #(_card_textures + 0x01fb)
-      0009EA 36 19                 1048 	ld	(hl), #0x19
-      0009EC 21rFCr01              1049 	ld	hl, #(_card_textures + 0x01fc)
-      0009EF 36 01                 1050 	ld	(hl), #0x01
-      0009F1 21rFDr01              1051 	ld	hl, #(_card_textures + 0x01fd)
-      0009F4 36 01                 1052 	ld	(hl), #0x01
-      0009F6 21rFEr01              1053 	ld	hl, #(_card_textures + 0x01fe)
-      0009F9 36 FE                 1054 	ld	(hl), #0xfe
-      0009FB 21rFFr01              1055 	ld	hl, #(_card_textures + 0x01ff)
-      0009FE 36 FE                 1056 	ld	(hl), #0xfe
-      000A00 21r00r02              1057 	ld	hl, #(_card_textures + 0x0200)
-      000A03 36 01                 1058 	ld	(hl), #0x01
-      000A05 21r01r02              1059 	ld	hl, #(_card_textures + 0x0201)
-      000A08 36 01                 1060 	ld	(hl), #0x01
-      000A0A 21r02r02              1061 	ld	hl, #(_card_textures + 0x0202)
-      000A0D 36 1D                 1062 	ld	(hl), #0x1d
-      000A0F 21r03r02              1063 	ld	hl, #(_card_textures + 0x0203)
-      000A12 36 1D                 1064 	ld	(hl), #0x1d
-      000A14 21r04r02              1065 	ld	hl, #(_card_textures + 0x0204)
-      000A17 36 21                 1066 	ld	(hl), #0x21
-      000A19 21r05r02              1067 	ld	hl, #(_card_textures + 0x0205)
-      000A1C 36 21                 1068 	ld	(hl), #0x21
-      000A1E 21r06r02              1069 	ld	hl, #(_card_textures + 0x0206)
-      000A21 36 19                 1070 	ld	(hl), #0x19
-      000A23 21r07r02              1071 	ld	hl, #(_card_textures + 0x0207)
-      000A26 36 19                 1072 	ld	(hl), #0x19
-      000A28 21r08r02              1073 	ld	hl, #(_card_textures + 0x0208)
-      000A2B 36 21                 1074 	ld	(hl), #0x21
-      000A2D 21r09r02              1075 	ld	hl, #(_card_textures + 0x0209)
-      000A30 36 21                 1076 	ld	(hl), #0x21
-      000A32 21r0Ar02              1077 	ld	hl, #(_card_textures + 0x020a)
-      000A35 36 1D                 1078 	ld	(hl), #0x1d
-      000A37 21r0Br02              1079 	ld	hl, #(_card_textures + 0x020b)
-      000A3A 36 1D                 1080 	ld	(hl), #0x1d
-      000A3C 21r0Cr02              1081 	ld	hl, #(_card_textures + 0x020c)
-      000A3F 36 01                 1082 	ld	(hl), #0x01
-      000A41 21r0Dr02              1083 	ld	hl, #(_card_textures + 0x020d)
-      000A44 36 01                 1084 	ld	(hl), #0x01
-      000A46 21r0Er02              1085 	ld	hl, #(_card_textures + 0x020e)
-      000A49 36 FE                 1086 	ld	(hl), #0xfe
-      000A4B 21r0Fr02              1087 	ld	hl, #(_card_textures + 0x020f)
-      000A4E 36 FE                 1088 	ld	(hl), #0xfe
-      000A50 21r10r02              1089 	ld	hl, #(_card_textures + 0x0210)
-      000A53 36 01                 1090 	ld	(hl), #0x01
-      000A55 21r11r02              1091 	ld	hl, #(_card_textures + 0x0211)
-      000A58 36 01                 1092 	ld	(hl), #0x01
-      000A5A 21r12r02              1093 	ld	hl, #(_card_textures + 0x0212)
-      000A5D 36 11                 1094 	ld	(hl), #0x11
-      000A5F 21r13r02              1095 	ld	hl, #(_card_textures + 0x0213)
-      000A62 36 11                 1096 	ld	(hl), #0x11
-      000A64 21r14r02              1097 	ld	hl, #(_card_textures + 0x0214)
-      000A67 36 3D                 1098 	ld	(hl), #0x3d
-      000A69 21r15r02              1099 	ld	hl, #(_card_textures + 0x0215)
-      000A6C 36 3D                 1100 	ld	(hl), #0x3d
-      000A6E 21r16r02              1101 	ld	hl, #(_card_textures + 0x0216)
-      000A71 36 15                 1102 	ld	(hl), #0x15
-      000A73 21r17r02              1103 	ld	hl, #(_card_textures + 0x0217)
-      000A76 36 15                 1104 	ld	(hl), #0x15
-      000A78 21r18r02              1105 	ld	hl, #(_card_textures + 0x0218)
-      000A7B 36 19                 1106 	ld	(hl), #0x19
-      000A7D 21r19r02              1107 	ld	hl, #(_card_textures + 0x0219)
-      000A80 36 19                 1108 	ld	(hl), #0x19
-      000A82 21r1Ar02              1109 	ld	hl, #(_card_textures + 0x021a)
-      000A85 36 11                 1110 	ld	(hl), #0x11
-      000A87 21r1Br02              1111 	ld	hl, #(_card_textures + 0x021b)
-      000A8A 36 11                 1112 	ld	(hl), #0x11
-      000A8C 21r1Cr02              1113 	ld	hl, #(_card_textures + 0x021c)
-      000A8F 36 01                 1114 	ld	(hl), #0x01
-      000A91 21r1Dr02              1115 	ld	hl, #(_card_textures + 0x021d)
-      000A94 36 01                 1116 	ld	(hl), #0x01
-      000A96 21r1Er02              1117 	ld	hl, #(_card_textures + 0x021e)
-      000A99 36 FE                 1118 	ld	(hl), #0xfe
-      000A9B 21r1Fr02              1119 	ld	hl, #(_card_textures + 0x021f)
-      000A9E 36 FE                 1120 	ld	(hl), #0xfe
-      000AA0 21r20r02              1121 	ld	hl, #(_card_textures + 0x0220)
-      000AA3 36 01                 1122 	ld	(hl), #0x01
-      000AA5 21r21r02              1123 	ld	hl, #(_card_textures + 0x0221)
-      000AA8 36 01                 1124 	ld	(hl), #0x01
-      000AAA 21r22r02              1125 	ld	hl, #(_card_textures + 0x0222)
-      000AAD 36 1D                 1126 	ld	(hl), #0x1d
-      000AAF 21r23r02              1127 	ld	hl, #(_card_textures + 0x0223)
-      000AB2 36 1D                 1128 	ld	(hl), #0x1d
-      000AB4 21r24r02              1129 	ld	hl, #(_card_textures + 0x0224)
-      000AB7 36 21                 1130 	ld	(hl), #0x21
-      000AB9 21r25r02              1131 	ld	hl, #(_card_textures + 0x0225)
-      000ABC 36 21                 1132 	ld	(hl), #0x21
-      000ABE 21r26r02              1133 	ld	hl, #(_card_textures + 0x0226)
-      000AC1 36 1D                 1134 	ld	(hl), #0x1d
-      000AC3 21r27r02              1135 	ld	hl, #(_card_textures + 0x0227)
-      000AC6 36 1D                 1136 	ld	(hl), #0x1d
-      000AC8 21r28r02              1137 	ld	hl, #(_card_textures + 0x0228)
-      000ACB 36 05                 1138 	ld	(hl), #0x05
-      000ACD 21r29r02              1139 	ld	hl, #(_card_textures + 0x0229)
-      000AD0 36 05                 1140 	ld	(hl), #0x05
-      000AD2 21r2Ar02              1141 	ld	hl, #(_card_textures + 0x022a)
-      000AD5 36 3D                 1142 	ld	(hl), #0x3d
-      000AD7 21r2Br02              1143 	ld	hl, #(_card_textures + 0x022b)
-      000ADA 36 3D                 1144 	ld	(hl), #0x3d
-      000ADC 21r2Cr02              1145 	ld	hl, #(_card_textures + 0x022c)
-      000ADF 36 01                 1146 	ld	(hl), #0x01
-      000AE1 21r2Dr02              1147 	ld	hl, #(_card_textures + 0x022d)
-      000AE4 36 01                 1148 	ld	(hl), #0x01
-      000AE6 21r2Er02              1149 	ld	hl, #(_card_textures + 0x022e)
-      000AE9 36 FE                 1150 	ld	(hl), #0xfe
-      000AEB 21r2Fr02              1151 	ld	hl, #(_card_textures + 0x022f)
-      000AEE 36 FE                 1152 	ld	(hl), #0xfe
-      000AF0 21r30r02              1153 	ld	hl, #(_card_textures + 0x0230)
-      000AF3 36 01                 1154 	ld	(hl), #0x01
-      000AF5 21r31r02              1155 	ld	hl, #(_card_textures + 0x0231)
-      000AF8 36 01                 1156 	ld	(hl), #0x01
-      000AFA 21r32r02              1157 	ld	hl, #(_card_textures + 0x0232)
-      000AFD 36 19                 1158 	ld	(hl), #0x19
-      000AFF 21r33r02              1159 	ld	hl, #(_card_textures + 0x0233)
-      000B02 36 19                 1160 	ld	(hl), #0x19
-      000B04 21r34r02              1161 	ld	hl, #(_card_textures + 0x0234)
-      000B07 36 25                 1162 	ld	(hl), #0x25
-      000B09 21r35r02              1163 	ld	hl, #(_card_textures + 0x0235)
-      000B0C 36 25                 1164 	ld	(hl), #0x25
-      000B0E 21r36r02              1165 	ld	hl, #(_card_textures + 0x0236)
-      000B11 36 1D                 1166 	ld	(hl), #0x1d
-      000B13 21r37r02              1167 	ld	hl, #(_card_textures + 0x0237)
-      000B16 36 1D                 1168 	ld	(hl), #0x1d
-      000B18 21r38r02              1169 	ld	hl, #(_card_textures + 0x0238)
-      000B1B 36 05                 1170 	ld	(hl), #0x05
-      000B1D 21r39r02              1171 	ld	hl, #(_card_textures + 0x0239)
-      000B20 36 05                 1172 	ld	(hl), #0x05
-      000B22 21r3Ar02              1173 	ld	hl, #(_card_textures + 0x023a)
-      000B25 36 19                 1174 	ld	(hl), #0x19
-      000B27 21r3Br02              1175 	ld	hl, #(_card_textures + 0x023b)
-      000B2A 36 19                 1176 	ld	(hl), #0x19
-      000B2C 21r3Cr02              1177 	ld	hl, #(_card_textures + 0x023c)
-      000B2F 36 01                 1178 	ld	(hl), #0x01
-      000B31 21r3Dr02              1179 	ld	hl, #(_card_textures + 0x023d)
-      000B34 36 01                 1180 	ld	(hl), #0x01
-      000B36 21r3Er02              1181 	ld	hl, #(_card_textures + 0x023e)
-      000B39 36 FE                 1182 	ld	(hl), #0xfe
-      000B3B 21r3Fr02              1183 	ld	hl, #(_card_textures + 0x023f)
-      000B3E 36 FE                 1184 	ld	(hl), #0xfe
-      000B40 21r40r02              1185 	ld	hl, #(_card_textures + 0x0240)
-      000B43 36 01                 1186 	ld	(hl), #0x01
-      000B45 21r41r02              1187 	ld	hl, #(_card_textures + 0x0241)
-      000B48 36 01                 1188 	ld	(hl), #0x01
-      000B4A 21r42r02              1189 	ld	hl, #(_card_textures + 0x0242)
-      000B4D 36 09                 1190 	ld	(hl), #0x09
-      000B4F 21r43r02              1191 	ld	hl, #(_card_textures + 0x0243)
-      000B52 36 09                 1192 	ld	(hl), #0x09
-      000B54 21r44r02              1193 	ld	hl, #(_card_textures + 0x0244)
-      000B57 36 09                 1194 	ld	(hl), #0x09
-      000B59 21r45r02              1195 	ld	hl, #(_card_textures + 0x0245)
-      000B5C 36 09                 1196 	ld	(hl), #0x09
-      000B5E 21r46r02              1197 	ld	hl, #(_card_textures + 0x0246)
-      000B61 36 09                 1198 	ld	(hl), #0x09
-      000B63 21r47r02              1199 	ld	hl, #(_card_textures + 0x0247)
-      000B66 36 09                 1200 	ld	(hl), #0x09
-      000B68 21r48r02              1201 	ld	hl, #(_card_textures + 0x0248)
-      000B6B 36 11                 1202 	ld	(hl), #0x11
-      000B6D 21r49r02              1203 	ld	hl, #(_card_textures + 0x0249)
-      000B70 36 11                 1204 	ld	(hl), #0x11
-      000B72 21r4Ar02              1205 	ld	hl, #(_card_textures + 0x024a)
-      000B75 36 1D                 1206 	ld	(hl), #0x1d
-      000B77 21r4Br02              1207 	ld	hl, #(_card_textures + 0x024b)
-      000B7A 36 1D                 1208 	ld	(hl), #0x1d
-      000B7C 21r4Cr02              1209 	ld	hl, #(_card_textures + 0x024c)
-      000B7F 36 01                 1210 	ld	(hl), #0x01
-      000B81 21r4Dr02              1211 	ld	hl, #(_card_textures + 0x024d)
-      000B84 36 01                 1212 	ld	(hl), #0x01
-      000B86 21r4Er02              1213 	ld	hl, #(_card_textures + 0x024e)
-      000B89 36 FE                 1214 	ld	(hl), #0xfe
-      000B8B 21r4Fr02              1215 	ld	hl, #(_card_textures + 0x024f)
-      000B8E 36 FE                 1216 	ld	(hl), #0xfe
-      000B90 21r50r02              1217 	ld	hl, #(_card_textures + 0x0250)
-      000B93 36 01                 1218 	ld	(hl), #0x01
-      000B95 21r51r02              1219 	ld	hl, #(_card_textures + 0x0251)
-      000B98 36 01                 1220 	ld	(hl), #0x01
-      000B9A 21r52r02              1221 	ld	hl, #(_card_textures + 0x0252)
-      000B9D 36 1D                 1222 	ld	(hl), #0x1d
-      000B9F 21r53r02              1223 	ld	hl, #(_card_textures + 0x0253)
-      000BA2 36 1D                 1224 	ld	(hl), #0x1d
-      000BA4 21r54r02              1225 	ld	hl, #(_card_textures + 0x0254)
-      000BA7 36 15                 1226 	ld	(hl), #0x15
-      000BA9 21r55r02              1227 	ld	hl, #(_card_textures + 0x0255)
-      000BAC 36 15                 1228 	ld	(hl), #0x15
-      000BAE 21r56r02              1229 	ld	hl, #(_card_textures + 0x0256)
-      000BB1 36 1D                 1230 	ld	(hl), #0x1d
-      000BB3 21r57r02              1231 	ld	hl, #(_card_textures + 0x0257)
-      000BB6 36 1D                 1232 	ld	(hl), #0x1d
-      000BB8 21r58r02              1233 	ld	hl, #(_card_textures + 0x0258)
-      000BBB 36 15                 1234 	ld	(hl), #0x15
-      000BBD 21r59r02              1235 	ld	hl, #(_card_textures + 0x0259)
-      000BC0 36 15                 1236 	ld	(hl), #0x15
-      000BC2 21r5Ar02              1237 	ld	hl, #(_card_textures + 0x025a)
-      000BC5 36 1D                 1238 	ld	(hl), #0x1d
-      000BC7 21r5Br02              1239 	ld	hl, #(_card_textures + 0x025b)
-      000BCA 36 1D                 1240 	ld	(hl), #0x1d
-      000BCC 21r5Cr02              1241 	ld	hl, #(_card_textures + 0x025c)
-      000BCF 36 01                 1242 	ld	(hl), #0x01
-      000BD1 21r5Dr02              1243 	ld	hl, #(_card_textures + 0x025d)
-      000BD4 36 01                 1244 	ld	(hl), #0x01
-      000BD6 21r5Er02              1245 	ld	hl, #(_card_textures + 0x025e)
-      000BD9 36 FE                 1246 	ld	(hl), #0xfe
-      000BDB 21r5Fr02              1247 	ld	hl, #(_card_textures + 0x025f)
-      000BDE 36 FE                 1248 	ld	(hl), #0xfe
-      000BE0 21r60r02              1249 	ld	hl, #(_card_textures + 0x0260)
-      000BE3 36 01                 1250 	ld	(hl), #0x01
-      000BE5 21r61r02              1251 	ld	hl, #(_card_textures + 0x0261)
-      000BE8 36 01                 1252 	ld	(hl), #0x01
-      000BEA 21r62r02              1253 	ld	hl, #(_card_textures + 0x0262)
-      000BED 36 11                 1254 	ld	(hl), #0x11
-      000BEF 21r63r02              1255 	ld	hl, #(_card_textures + 0x0263)
-      000BF2 36 11                 1256 	ld	(hl), #0x11
-      000BF4 21r64r02              1257 	ld	hl, #(_card_textures + 0x0264)
-      000BF7 36 11                 1258 	ld	(hl), #0x11
-      000BF9 21r65r02              1259 	ld	hl, #(_card_textures + 0x0265)
-      000BFC 36 11                 1260 	ld	(hl), #0x11
-      000BFE 21r66r02              1261 	ld	hl, #(_card_textures + 0x0266)
-      000C01 36 1D                 1262 	ld	(hl), #0x1d
-      000C03 21r67r02              1263 	ld	hl, #(_card_textures + 0x0267)
-      000C06 36 1D                 1264 	ld	(hl), #0x1d
-      000C08 21r68r02              1265 	ld	hl, #(_card_textures + 0x0268)
-      000C0B 36 15                 1266 	ld	(hl), #0x15
-      000C0D 21r69r02              1267 	ld	hl, #(_card_textures + 0x0269)
-      000C10 36 15                 1268 	ld	(hl), #0x15
-      000C12 21r6Ar02              1269 	ld	hl, #(_card_textures + 0x026a)
-      000C15 36 1D                 1270 	ld	(hl), #0x1d
-      000C17 21r6Br02              1271 	ld	hl, #(_card_textures + 0x026b)
-      000C1A 36 1D                 1272 	ld	(hl), #0x1d
-      000C1C 21r6Cr02              1273 	ld	hl, #(_card_textures + 0x026c)
-      000C1F 36 01                 1274 	ld	(hl), #0x01
-      000C21 21r6Dr02              1275 	ld	hl, #(_card_textures + 0x026d)
-      000C24 36 01                 1276 	ld	(hl), #0x01
-      000C26 21r6Er02              1277 	ld	hl, #(_card_textures + 0x026e)
-      000C29 36 FE                 1278 	ld	(hl), #0xfe
-      000C2B 21r6Fr02              1279 	ld	hl, #(_card_textures + 0x026f)
-      000C2E 36 FE                 1280 	ld	(hl), #0xfe
-      000C30 21r70r02              1281 	ld	hl, #(_card_textures + 0x0270)
-      000C33 36 01                 1282 	ld	(hl), #0x01
-      000C35 21r71r02              1283 	ld	hl, #(_card_textures + 0x0271)
-      000C38 36 01                 1284 	ld	(hl), #0x01
-      000C3A 21r72r02              1285 	ld	hl, #(_card_textures + 0x0272)
-      000C3D 36 75                 1286 	ld	(hl), #0x75
-      000C3F 21r73r02              1287 	ld	hl, #(_card_textures + 0x0273)
-      000C42 36 75                 1288 	ld	(hl), #0x75
-      000C44 21r74r02              1289 	ld	hl, #(_card_textures + 0x0274)
-      000C47 36 55                 1290 	ld	(hl), #0x55
-      000C49 21r75r02              1291 	ld	hl, #(_card_textures + 0x0275)
-      000C4C 36 55                 1292 	ld	(hl), #0x55
-      000C4E 21r76r02              1293 	ld	hl, #(_card_textures + 0x0276)
-      000C51 36 55                 1294 	ld	(hl), #0x55
-      000C53 21r77r02              1295 	ld	hl, #(_card_textures + 0x0277)
-      000C56 36 55                 1296 	ld	(hl), #0x55
-      000C58 21r78r02              1297 	ld	hl, #(_card_textures + 0x0278)
-      000C5B 36 55                 1298 	ld	(hl), #0x55
-      000C5D 21r79r02              1299 	ld	hl, #(_card_textures + 0x0279)
-      000C60 36 55                 1300 	ld	(hl), #0x55
-      000C62 21r7Ar02              1301 	ld	hl, #(_card_textures + 0x027a)
-      000C65 36 75                 1302 	ld	(hl), #0x75
-      000C67 21r7Br02              1303 	ld	hl, #(_card_textures + 0x027b)
-      000C6A 36 75                 1304 	ld	(hl), #0x75
-      000C6C 21r7Cr02              1305 	ld	hl, #(_card_textures + 0x027c)
-      000C6F 36 01                 1306 	ld	(hl), #0x01
-      000C71 21r7Dr02              1307 	ld	hl, #(_card_textures + 0x027d)
-      000C74 36 01                 1308 	ld	(hl), #0x01
-      000C76 21r7Er02              1309 	ld	hl, #(_card_textures + 0x027e)
-      000C79 36 FE                 1310 	ld	(hl), #0xfe
-      000C7B 21r7Fr02              1311 	ld	hl, #(_card_textures + 0x027f)
-      000C7E 36 FE                 1312 	ld	(hl), #0xfe
-      000C80 21r80r02              1313 	ld	hl, #(_card_textures + 0x0280)
-      000C83 36 01                 1314 	ld	(hl), #0x01
-      000C85 21r81r02              1315 	ld	hl, #(_card_textures + 0x0281)
-      000C88 36 01                 1316 	ld	(hl), #0x01
-      000C8A 21r82r02              1317 	ld	hl, #(_card_textures + 0x0282)
-      000C8D 36 1D                 1318 	ld	(hl), #0x1d
-      000C8F 21r83r02              1319 	ld	hl, #(_card_textures + 0x0283)
-      000C92 36 1D                 1320 	ld	(hl), #0x1d
-      000C94 21r84r02              1321 	ld	hl, #(_card_textures + 0x0284)
-      000C97 36 15                 1322 	ld	(hl), #0x15
-      000C99 21r85r02              1323 	ld	hl, #(_card_textures + 0x0285)
-      000C9C 36 15                 1324 	ld	(hl), #0x15
-      000C9E 21r86r02              1325 	ld	hl, #(_card_textures + 0x0286)
-      000CA1 36 11                 1326 	ld	(hl), #0x11
-      000CA3 21r87r02              1327 	ld	hl, #(_card_textures + 0x0287)
-      000CA6 36 11                 1328 	ld	(hl), #0x11
-      000CA8 21r88r02              1329 	ld	hl, #(_card_textures + 0x0288)
-      000CAB 36 11                 1330 	ld	(hl), #0x11
-      000CAD 21r89r02              1331 	ld	hl, #(_card_textures + 0x0289)
-      000CB0 36 11                 1332 	ld	(hl), #0x11
-      000CB2 21r8Ar02              1333 	ld	hl, #(_card_textures + 0x028a)
-      000CB5 36 3D                 1334 	ld	(hl), #0x3d
-      000CB7 21r8Br02              1335 	ld	hl, #(_card_textures + 0x028b)
-      000CBA 36 3D                 1336 	ld	(hl), #0x3d
-      000CBC 21r8Cr02              1337 	ld	hl, #(_card_textures + 0x028c)
-      000CBF 36 01                 1338 	ld	(hl), #0x01
-      000CC1 21r8Dr02              1339 	ld	hl, #(_card_textures + 0x028d)
-      000CC4 36 01                 1340 	ld	(hl), #0x01
-      000CC6 21r8Er02              1341 	ld	hl, #(_card_textures + 0x028e)
-      000CC9 36 FE                 1342 	ld	(hl), #0xfe
-      000CCB 21r8Fr02              1343 	ld	hl, #(_card_textures + 0x028f)
-      000CCE 36 FE                 1344 	ld	(hl), #0xfe
-      000CD0 21r90r02              1345 	ld	hl, #(_card_textures + 0x0290)
-      000CD3 36 01                 1346 	ld	(hl), #0x01
-      000CD5 21r91r02              1347 	ld	hl, #(_card_textures + 0x0291)
-      000CD8 36 01                 1348 	ld	(hl), #0x01
-      000CDA 21r92r02              1349 	ld	hl, #(_card_textures + 0x0292)
-      000CDD 36 3D                 1350 	ld	(hl), #0x3d
-      000CDF 21r93r02              1351 	ld	hl, #(_card_textures + 0x0293)
-      000CE2 36 3D                 1352 	ld	(hl), #0x3d
-      000CE4 21r94r02              1353 	ld	hl, #(_card_textures + 0x0294)
-      000CE7 36 35                 1354 	ld	(hl), #0x35
-      000CE9 21r95r02              1355 	ld	hl, #(_card_textures + 0x0295)
-      000CEC 36 35                 1356 	ld	(hl), #0x35
-      000CEE 21r96r02              1357 	ld	hl, #(_card_textures + 0x0296)
-      000CF1 36 25                 1358 	ld	(hl), #0x25
-      000CF3 21r97r02              1359 	ld	hl, #(_card_textures + 0x0297)
-      000CF6 36 25                 1360 	ld	(hl), #0x25
-      000CF8 21r98r02              1361 	ld	hl, #(_card_textures + 0x0298)
-      000CFB 36 25                 1362 	ld	(hl), #0x25
-      000CFD 21r99r02              1363 	ld	hl, #(_card_textures + 0x0299)
-      000D00 36 25                 1364 	ld	(hl), #0x25
-      000D02 21r9Ar02              1365 	ld	hl, #(_card_textures + 0x029a)
-      000D05 36 3D                 1366 	ld	(hl), #0x3d
-      000D07 21r9Br02              1367 	ld	hl, #(_card_textures + 0x029b)
-      000D0A 36 3D                 1368 	ld	(hl), #0x3d
-      000D0C 21r9Cr02              1369 	ld	hl, #(_card_textures + 0x029c)
-      000D0F 36 01                 1370 	ld	(hl), #0x01
-      000D11 21r9Dr02              1371 	ld	hl, #(_card_textures + 0x029d)
-      000D14 36 01                 1372 	ld	(hl), #0x01
-      000D16 21r9Er02              1373 	ld	hl, #(_card_textures + 0x029e)
-      000D19 36 FE                 1374 	ld	(hl), #0xfe
-      000D1B 21r9Fr02              1375 	ld	hl, #(_card_textures + 0x029f)
-      000D1E 36 FE                 1376 	ld	(hl), #0xfe
-      000D20 21rA0r02              1377 	ld	hl, #(_card_textures + 0x02a0)
-      000D23 36 01                 1378 	ld	(hl), #0x01
-      000D25 21rA1r02              1379 	ld	hl, #(_card_textures + 0x02a1)
-      000D28 36 01                 1380 	ld	(hl), #0x01
-      000D2A 21rA2r02              1381 	ld	hl, #(_card_textures + 0x02a2)
-      000D2D 36 15                 1382 	ld	(hl), #0x15
-      000D2F 21rA3r02              1383 	ld	hl, #(_card_textures + 0x02a3)
-      000D32 36 15                 1384 	ld	(hl), #0x15
-      000D34 21rA4r02              1385 	ld	hl, #(_card_textures + 0x02a4)
-      000D37 36 15                 1386 	ld	(hl), #0x15
-      000D39 21rA5r02              1387 	ld	hl, #(_card_textures + 0x02a5)
-      000D3C 36 15                 1388 	ld	(hl), #0x15
-      000D3E 21rA6r02              1389 	ld	hl, #(_card_textures + 0x02a6)
-      000D41 36 0D                 1390 	ld	(hl), #0x0d
-      000D43 21rA7r02              1391 	ld	hl, #(_card_textures + 0x02a7)
-      000D46 36 0D                 1392 	ld	(hl), #0x0d
-      000D48 21rA8r02              1393 	ld	hl, #(_card_textures + 0x02a8)
-      000D4B 36 15                 1394 	ld	(hl), #0x15
-      000D4D 21rA9r02              1395 	ld	hl, #(_card_textures + 0x02a9)
-      000D50 36 15                 1396 	ld	(hl), #0x15
-      000D52 21rAAr02              1397 	ld	hl, #(_card_textures + 0x02aa)
-      000D55 36 15                 1398 	ld	(hl), #0x15
-      000D57 21rABr02              1399 	ld	hl, #(_card_textures + 0x02ab)
-      000D5A 36 15                 1400 	ld	(hl), #0x15
-      000D5C 21rACr02              1401 	ld	hl, #(_card_textures + 0x02ac)
-      000D5F 36 01                 1402 	ld	(hl), #0x01
-      000D61 21rADr02              1403 	ld	hl, #(_card_textures + 0x02ad)
-      000D64 36 01                 1404 	ld	(hl), #0x01
-      000D66 21rAEr02              1405 	ld	hl, #(_card_textures + 0x02ae)
-      000D69 36 FE                 1406 	ld	(hl), #0xfe
-      000D6B 21rAFr02              1407 	ld	hl, #(_card_textures + 0x02af)
-      000D6E 36 FE                 1408 	ld	(hl), #0xfe
-      000D70 21rB0r02              1409 	ld	hl, #(_card_textures + 0x02b0)
-      000D73 36 9C                 1410 	ld	(hl), #0x9c
-      000D75 21rB1r02              1411 	ld	hl, #(_card_textures + 0x02b1)
-      000D78 36 9C                 1412 	ld	(hl), #0x9c
-      000D7A 21rB2r02              1413 	ld	hl, #(_card_textures + 0x02b2)
-      000D7D 36 88                 1414 	ld	(hl), #0x88
-      000D7F 21rB3r02              1415 	ld	hl, #(_card_textures + 0x02b3)
-      000D82 36 88                 1416 	ld	(hl), #0x88
-      000D84 21rB4r02              1417 	ld	hl, #(_card_textures + 0x02b4)
-      000D87 36 BE                 1418 	ld	(hl), #0xbe
-      000D89 21rB5r02              1419 	ld	hl, #(_card_textures + 0x02b5)
-      000D8C 36 BE                 1420 	ld	(hl), #0xbe
-      000D8E 21rB6r02              1421 	ld	hl, #(_card_textures + 0x02b6)
-      000D91 36 BE                 1422 	ld	(hl), #0xbe
-      000D93 21rB7r02              1423 	ld	hl, #(_card_textures + 0x02b7)
-      000D96 36 BE                 1424 	ld	(hl), #0xbe
-      000D98 21rB8r02              1425 	ld	hl, #(_card_textures + 0x02b8)
-      000D9B 36 9C                 1426 	ld	(hl), #0x9c
-      000D9D 21rB9r02              1427 	ld	hl, #(_card_textures + 0x02b9)
-      000DA0 36 9C                 1428 	ld	(hl), #0x9c
-      000DA2 21rBAr02              1429 	ld	hl, #(_card_textures + 0x02ba)
-      000DA5 36 88                 1430 	ld	(hl), #0x88
-      000DA7 21rBBr02              1431 	ld	hl, #(_card_textures + 0x02bb)
-      000DAA 36 88                 1432 	ld	(hl), #0x88
-      000DAC 21rBCr02              1433 	ld	hl, #(_card_textures + 0x02bc)
-      000DAF 36 80                 1434 	ld	(hl), #0x80
-      000DB1 21rBDr02              1435 	ld	hl, #(_card_textures + 0x02bd)
-      000DB4 36 80                 1436 	ld	(hl), #0x80
-      000DB6 21rBEr02              1437 	ld	hl, #(_card_textures + 0x02be)
-      000DB9 36 7F                 1438 	ld	(hl), #0x7f
-      000DBB 21rBFr02              1439 	ld	hl, #(_card_textures + 0x02bf)
-      000DBE 36 7F                 1440 	ld	(hl), #0x7f
-      000DC0 21rC0r02              1441 	ld	hl, #(_card_textures + 0x02c0)
-      000DC3 36 80                 1442 	ld	(hl), #0x80
-      000DC5 21rC1r02              1443 	ld	hl, #(_card_textures + 0x02c1)
-      000DC8 36 80                 1444 	ld	(hl), #0x80
-      000DCA 21rC2r02              1445 	ld	hl, #(_card_textures + 0x02c2)
-      000DCD 36 88                 1446 	ld	(hl), #0x88
-      000DCF 21rC3r02              1447 	ld	hl, #(_card_textures + 0x02c3)
-      000DD2 36 88                 1448 	ld	(hl), #0x88
-      000DD4 21rC4r02              1449 	ld	hl, #(_card_textures + 0x02c4)
-      000DD7 36 AA                 1450 	ld	(hl), #0xaa
-      000DD9 21rC5r02              1451 	ld	hl, #(_card_textures + 0x02c5)
-      000DDC 36 AA                 1452 	ld	(hl), #0xaa
-      000DDE 21rC6r02              1453 	ld	hl, #(_card_textures + 0x02c6)
-      000DE1 36 BE                 1454 	ld	(hl), #0xbe
-      000DE3 21rC7r02              1455 	ld	hl, #(_card_textures + 0x02c7)
-      000DE6 36 BE                 1456 	ld	(hl), #0xbe
-      000DE8 21rC8r02              1457 	ld	hl, #(_card_textures + 0x02c8)
-      000DEB 36 AA                 1458 	ld	(hl), #0xaa
-      000DED 21rC9r02              1459 	ld	hl, #(_card_textures + 0x02c9)
-      000DF0 36 AA                 1460 	ld	(hl), #0xaa
-      000DF2 21rCAr02              1461 	ld	hl, #(_card_textures + 0x02ca)
-      000DF5 36 9C                 1462 	ld	(hl), #0x9c
-      000DF7 21rCBr02              1463 	ld	hl, #(_card_textures + 0x02cb)
-      000DFA 36 9C                 1464 	ld	(hl), #0x9c
-      000DFC 21rCCr02              1465 	ld	hl, #(_card_textures + 0x02cc)
-      000DFF 36 80                 1466 	ld	(hl), #0x80
-      000E01 21rCDr02              1467 	ld	hl, #(_card_textures + 0x02cd)
-      000E04 36 80                 1468 	ld	(hl), #0x80
-      000E06 21rCEr02              1469 	ld	hl, #(_card_textures + 0x02ce)
-      000E09 36 7F                 1470 	ld	(hl), #0x7f
-      000E0B 21rCFr02              1471 	ld	hl, #(_card_textures + 0x02cf)
-      000E0E 36 7F                 1472 	ld	(hl), #0x7f
-      000E10 21rD0r02              1473 	ld	hl, #(_card_textures + 0x02d0)
-      000E13 36 80                 1474 	ld	(hl), #0x80
-      000E15 21rD1r02              1475 	ld	hl, #(_card_textures + 0x02d1)
-      000E18 36 80                 1476 	ld	(hl), #0x80
-      000E1A 21rD2r02              1477 	ld	hl, #(_card_textures + 0x02d2)
-      000E1D 36 88                 1478 	ld	(hl), #0x88
-      000E1F 21rD3r02              1479 	ld	hl, #(_card_textures + 0x02d3)
-      000E22 36 88                 1480 	ld	(hl), #0x88
-      000E24 21rD4r02              1481 	ld	hl, #(_card_textures + 0x02d4)
-      000E27 36 94                 1482 	ld	(hl), #0x94
-      000E29 21rD5r02              1483 	ld	hl, #(_card_textures + 0x02d5)
-      000E2C 36 94                 1484 	ld	(hl), #0x94
-      000E2E 21rD6r02              1485 	ld	hl, #(_card_textures + 0x02d6)
-      000E31 36 A2                 1486 	ld	(hl), #0xa2
-      000E33 21rD7r02              1487 	ld	hl, #(_card_textures + 0x02d7)
-      000E36 36 A2                 1488 	ld	(hl), #0xa2
-      000E38 21rD8r02              1489 	ld	hl, #(_card_textures + 0x02d8)
-      000E3B 36 94                 1490 	ld	(hl), #0x94
-      000E3D 21rD9r02              1491 	ld	hl, #(_card_textures + 0x02d9)
-      000E40 36 94                 1492 	ld	(hl), #0x94
-      000E42 21rDAr02              1493 	ld	hl, #(_card_textures + 0x02da)
-      000E45 36 88                 1494 	ld	(hl), #0x88
-      000E47 21rDBr02              1495 	ld	hl, #(_card_textures + 0x02db)
-      000E4A 36 88                 1496 	ld	(hl), #0x88
-      000E4C 21rDCr02              1497 	ld	hl, #(_card_textures + 0x02dc)
-      000E4F 36 80                 1498 	ld	(hl), #0x80
-      000E51 21rDDr02              1499 	ld	hl, #(_card_textures + 0x02dd)
-      000E54 36 80                 1500 	ld	(hl), #0x80
-      000E56 21rDEr02              1501 	ld	hl, #(_card_textures + 0x02de)
-      000E59 36 7F                 1502 	ld	(hl), #0x7f
-      000E5B 21rDFr02              1503 	ld	hl, #(_card_textures + 0x02df)
-      000E5E 36 7F                 1504 	ld	(hl), #0x7f
-      000E60 21rE0r02              1505 	ld	hl, #(_card_textures + 0x02e0)
-      000E63 36 80                 1506 	ld	(hl), #0x80
-      000E65 21rE1r02              1507 	ld	hl, #(_card_textures + 0x02e1)
-      000E68 36 80                 1508 	ld	(hl), #0x80
-      000E6A 21rE2r02              1509 	ld	hl, #(_card_textures + 0x02e2)
-      000E6D 36 88                 1510 	ld	(hl), #0x88
-      000E6F 21rE3r02              1511 	ld	hl, #(_card_textures + 0x02e3)
-      000E72 36 88                 1512 	ld	(hl), #0x88
-      000E74 21rE4r02              1513 	ld	hl, #(_card_textures + 0x02e4)
-      000E77 36 94                 1514 	ld	(hl), #0x94
-      000E79 21rE5r02              1515 	ld	hl, #(_card_textures + 0x02e5)
-      000E7C 36 94                 1516 	ld	(hl), #0x94
-      000E7E 21rE6r02              1517 	ld	hl, #(_card_textures + 0x02e6)
-      000E81 36 A2                 1518 	ld	(hl), #0xa2
-      000E83 21rE7r02              1519 	ld	hl, #(_card_textures + 0x02e7)
-      000E86 36 A2                 1520 	ld	(hl), #0xa2
-      000E88 21rE8r02              1521 	ld	hl, #(_card_textures + 0x02e8)
-      000E8B 36 AA                 1522 	ld	(hl), #0xaa
-      000E8D 21rE9r02              1523 	ld	hl, #(_card_textures + 0x02e9)
-      000E90 36 AA                 1524 	ld	(hl), #0xaa
-      000E92 21rEAr02              1525 	ld	hl, #(_card_textures + 0x02ea)
-      000E95 36 94                 1526 	ld	(hl), #0x94
-      000E97 21rEBr02              1527 	ld	hl, #(_card_textures + 0x02eb)
-      000E9A 36 94                 1528 	ld	(hl), #0x94
-      000E9C 21rECr02              1529 	ld	hl, #(_card_textures + 0x02ec)
-      000E9F 36 80                 1530 	ld	(hl), #0x80
-      000EA1 21rEDr02              1531 	ld	hl, #(_card_textures + 0x02ed)
-      000EA4 36 80                 1532 	ld	(hl), #0x80
-      000EA6 21rEEr02              1533 	ld	hl, #(_card_textures + 0x02ee)
-      000EA9 36 7F                 1534 	ld	(hl), #0x7f
-      000EAB 21rEFr02              1535 	ld	hl, #(_card_textures + 0x02ef)
-      000EAE 36 7F                 1536 	ld	(hl), #0x7f
-                                   1537 ;--------------------------------------------------------
-                                   1538 ; Home
-                                   1539 ;--------------------------------------------------------
-                                   1540 	.area _HOME
-                                   1541 	.area _HOME
-                                   1542 ;--------------------------------------------------------
-                                   1543 ; code
-                                   1544 ;--------------------------------------------------------
-                                   1545 	.area _CODE
-                                   1546 	.area _CODE
-                                   1547 	.area _CABS (ABS)
+                                     30 ;--------------------------------------------------------
+                                     31 ; Home
+                                     32 ;--------------------------------------------------------
+                                     33 	.area _HOME
+                                     34 	.area _HOME
+                                     35 ;--------------------------------------------------------
+                                     36 ; code
+                                     37 ;--------------------------------------------------------
+                                     38 	.area _CODE
+                                     39 	.area _CODE
+      000000                         40 _card_textures:
+      000000 00                      41 	.db #0x00	; 0
+      000001 00                      42 	.db #0x00	; 0
+      000002 00                      43 	.db #0x00	; 0
+      000003 00                      44 	.db #0x00	; 0
+      000004 00                      45 	.db #0x00	; 0
+      000005 00                      46 	.db #0x00	; 0
+      000006 00                      47 	.db #0x00	; 0
+      000007 00                      48 	.db #0x00	; 0
+      000008 00                      49 	.db #0x00	; 0
+      000009 00                      50 	.db #0x00	; 0
+      00000A 00                      51 	.db #0x00	; 0
+      00000B 00                      52 	.db #0x00	; 0
+      00000C 00                      53 	.db #0x00	; 0
+      00000D 00                      54 	.db #0x00	; 0
+      00000E 00                      55 	.db #0x00	; 0
+      00000F 00                      56 	.db #0x00	; 0
+      000010 7F                      57 	.db #0x7f	; 127
+      000011 7F                      58 	.db #0x7f	; 127
+      000012 80                      59 	.db #0x80	; 128
+      000013 80                      60 	.db #0x80	; 128
+      000014 98                      61 	.db #0x98	; 152
+      000015 98                      62 	.db #0x98	; 152
+      000016 A4                      63 	.db #0xa4	; 164
+      000017 A4                      64 	.db #0xa4	; 164
+      000018 BC                      65 	.db #0xbc	; 188
+      000019 BC                      66 	.db #0xbc	; 188
+      00001A A4                      67 	.db #0xa4	; 164
+      00001B A4                      68 	.db #0xa4	; 164
+      00001C A4                      69 	.db #0xa4	; 164
+      00001D A4                      70 	.db #0xa4	; 164
+      00001E 80                      71 	.db #0x80	; 128
+      00001F 80                      72 	.db #0x80	; 128
+      000020 7F                      73 	.db #0x7f	; 127
+      000021 7F                      74 	.db #0x7f	; 127
+      000022 80                      75 	.db #0x80	; 128
+      000023 80                      76 	.db #0x80	; 128
+      000024 98                      77 	.db #0x98	; 152
+      000025 98                      78 	.db #0x98	; 152
+      000026 A4                      79 	.db #0xa4	; 164
+      000027 A4                      80 	.db #0xa4	; 164
+      000028 88                      81 	.db #0x88	; 136
+      000029 88                      82 	.db #0x88	; 136
+      00002A 90                      83 	.db #0x90	; 144
+      00002B 90                      84 	.db #0x90	; 144
+      00002C BC                      85 	.db #0xbc	; 188
+      00002D BC                      86 	.db #0xbc	; 188
+      00002E 80                      87 	.db #0x80	; 128
+      00002F 80                      88 	.db #0x80	; 128
+      000030 7F                      89 	.db #0x7f	; 127
+      000031 7F                      90 	.db #0x7f	; 127
+      000032 80                      91 	.db #0x80	; 128
+      000033 80                      92 	.db #0x80	; 128
+      000034 B8                      93 	.db #0xb8	; 184
+      000035 B8                      94 	.db #0xb8	; 184
+      000036 84                      95 	.db #0x84	; 132
+      000037 84                      96 	.db #0x84	; 132
+      000038 98                      97 	.db #0x98	; 152
+      000039 98                      98 	.db #0x98	; 152
+      00003A 84                      99 	.db #0x84	; 132
+      00003B 84                     100 	.db #0x84	; 132
+      00003C B8                     101 	.db #0xb8	; 184
+      00003D B8                     102 	.db #0xb8	; 184
+      00003E 80                     103 	.db #0x80	; 128
+      00003F 80                     104 	.db #0x80	; 128
+      000040 7F                     105 	.db #0x7f	; 127
+      000041 7F                     106 	.db #0x7f	; 127
+      000042 80                     107 	.db #0x80	; 128
+      000043 80                     108 	.db #0x80	; 128
+      000044 88                     109 	.db #0x88	; 136
+      000045 88                     110 	.db #0x88	; 136
+      000046 98                     111 	.db #0x98	; 152
+      000047 98                     112 	.db #0x98	; 152
+      000048 A8                     113 	.db #0xa8	; 168
+      000049 A8                     114 	.db #0xa8	; 168
+      00004A BC                     115 	.db #0xbc	; 188
+      00004B BC                     116 	.db #0xbc	; 188
+      00004C 88                     117 	.db #0x88	; 136
+      00004D 88                     118 	.db #0x88	; 136
+      00004E 80                     119 	.db #0x80	; 128
+      00004F 80                     120 	.db #0x80	; 128
+      000050 7F                     121 	.db #0x7f	; 127
+      000051 7F                     122 	.db #0x7f	; 127
+      000052 80                     123 	.db #0x80	; 128
+      000053 80                     124 	.db #0x80	; 128
+      000054 BC                     125 	.db #0xbc	; 188
+      000055 BC                     126 	.db #0xbc	; 188
+      000056 A0                     127 	.db #0xa0	; 160
+      000057 A0                     128 	.db #0xa0	; 160
+      000058 B8                     129 	.db #0xb8	; 184
+      000059 B8                     130 	.db #0xb8	; 184
+      00005A 84                     131 	.db #0x84	; 132
+      00005B 84                     132 	.db #0x84	; 132
+      00005C B8                     133 	.db #0xb8	; 184
+      00005D B8                     134 	.db #0xb8	; 184
+      00005E 80                     135 	.db #0x80	; 128
+      00005F 80                     136 	.db #0x80	; 128
+      000060 7F                     137 	.db #0x7f	; 127
+      000061 7F                     138 	.db #0x7f	; 127
+      000062 80                     139 	.db #0x80	; 128
+      000063 80                     140 	.db #0x80	; 128
+      000064 98                     141 	.db #0x98	; 152
+      000065 98                     142 	.db #0x98	; 152
+      000066 A0                     143 	.db #0xa0	; 160
+      000067 A0                     144 	.db #0xa0	; 160
+      000068 B8                     145 	.db #0xb8	; 184
+      000069 B8                     146 	.db #0xb8	; 184
+      00006A A4                     147 	.db #0xa4	; 164
+      00006B A4                     148 	.db #0xa4	; 164
+      00006C 98                     149 	.db #0x98	; 152
+      00006D 98                     150 	.db #0x98	; 152
+      00006E 80                     151 	.db #0x80	; 128
+      00006F 80                     152 	.db #0x80	; 128
+      000070 7F                     153 	.db #0x7f	; 127
+      000071 7F                     154 	.db #0x7f	; 127
+      000072 80                     155 	.db #0x80	; 128
+      000073 80                     156 	.db #0x80	; 128
+      000074 B8                     157 	.db #0xb8	; 184
+      000075 B8                     158 	.db #0xb8	; 184
+      000076 88                     159 	.db #0x88	; 136
+      000077 88                     160 	.db #0x88	; 136
+      000078 90                     161 	.db #0x90	; 144
+      000079 90                     162 	.db #0x90	; 144
+      00007A 90                     163 	.db #0x90	; 144
+      00007B 90                     164 	.db #0x90	; 144
+      00007C 90                     165 	.db #0x90	; 144
+      00007D 90                     166 	.db #0x90	; 144
+      00007E 80                     167 	.db #0x80	; 128
+      00007F 80                     168 	.db #0x80	; 128
+      000080 7F                     169 	.db #0x7f	; 127
+      000081 7F                     170 	.db #0x7f	; 127
+      000082 80                     171 	.db #0x80	; 128
+      000083 80                     172 	.db #0x80	; 128
+      000084 B8                     173 	.db #0xb8	; 184
+      000085 B8                     174 	.db #0xb8	; 184
+      000086 A8                     175 	.db #0xa8	; 168
+      000087 A8                     176 	.db #0xa8	; 168
+      000088 B8                     177 	.db #0xb8	; 184
+      000089 B8                     178 	.db #0xb8	; 184
+      00008A A8                     179 	.db #0xa8	; 168
+      00008B A8                     180 	.db #0xa8	; 168
+      00008C B8                     181 	.db #0xb8	; 184
+      00008D B8                     182 	.db #0xb8	; 184
+      00008E 80                     183 	.db #0x80	; 128
+      00008F 80                     184 	.db #0x80	; 128
+      000090 7F                     185 	.db #0x7f	; 127
+      000091 7F                     186 	.db #0x7f	; 127
+      000092 80                     187 	.db #0x80	; 128
+      000093 80                     188 	.db #0x80	; 128
+      000094 B8                     189 	.db #0xb8	; 184
+      000095 B8                     190 	.db #0xb8	; 184
+      000096 A8                     191 	.db #0xa8	; 168
+      000097 A8                     192 	.db #0xa8	; 168
+      000098 B8                     193 	.db #0xb8	; 184
+      000099 B8                     194 	.db #0xb8	; 184
+      00009A 88                     195 	.db #0x88	; 136
+      00009B 88                     196 	.db #0x88	; 136
+      00009C 88                     197 	.db #0x88	; 136
+      00009D 88                     198 	.db #0x88	; 136
+      00009E 80                     199 	.db #0x80	; 128
+      00009F 80                     200 	.db #0x80	; 128
+      0000A0 7F                     201 	.db #0x7f	; 127
+      0000A1 7F                     202 	.db #0x7f	; 127
+      0000A2 80                     203 	.db #0x80	; 128
+      0000A3 80                     204 	.db #0x80	; 128
+      0000A4 AE                     205 	.db #0xae	; 174
+      0000A5 AE                     206 	.db #0xae	; 174
+      0000A6 AA                     207 	.db #0xaa	; 170
+      0000A7 AA                     208 	.db #0xaa	; 170
+      0000A8 AA                     209 	.db #0xaa	; 170
+      0000A9 AA                     210 	.db #0xaa	; 170
+      0000AA AA                     211 	.db #0xaa	; 170
+      0000AB AA                     212 	.db #0xaa	; 170
+      0000AC AE                     213 	.db #0xae	; 174
+      0000AD AE                     214 	.db #0xae	; 174
+      0000AE 80                     215 	.db #0x80	; 128
+      0000AF 80                     216 	.db #0x80	; 128
+      0000B0 7F                     217 	.db #0x7f	; 127
+      0000B1 7F                     218 	.db #0x7f	; 127
+      0000B2 80                     219 	.db #0x80	; 128
+      0000B3 80                     220 	.db #0x80	; 128
+      0000B4 BC                     221 	.db #0xbc	; 188
+      0000B5 BC                     222 	.db #0xbc	; 188
+      0000B6 88                     223 	.db #0x88	; 136
+      0000B7 88                     224 	.db #0x88	; 136
+      0000B8 88                     225 	.db #0x88	; 136
+      0000B9 88                     226 	.db #0x88	; 136
+      0000BA A8                     227 	.db #0xa8	; 168
+      0000BB A8                     228 	.db #0xa8	; 168
+      0000BC B8                     229 	.db #0xb8	; 184
+      0000BD B8                     230 	.db #0xb8	; 184
+      0000BE 80                     231 	.db #0x80	; 128
+      0000BF 80                     232 	.db #0x80	; 128
+      0000C0 7F                     233 	.db #0x7f	; 127
+      0000C1 7F                     234 	.db #0x7f	; 127
+      0000C2 80                     235 	.db #0x80	; 128
+      0000C3 80                     236 	.db #0x80	; 128
+      0000C4 BC                     237 	.db #0xbc	; 188
+      0000C5 BC                     238 	.db #0xbc	; 188
+      0000C6 A4                     239 	.db #0xa4	; 164
+      0000C7 A4                     240 	.db #0xa4	; 164
+      0000C8 A4                     241 	.db #0xa4	; 164
+      0000C9 A4                     242 	.db #0xa4	; 164
+      0000CA AC                     243 	.db #0xac	; 172
+      0000CB AC                     244 	.db #0xac	; 172
+      0000CC BC                     245 	.db #0xbc	; 188
+      0000CD BC                     246 	.db #0xbc	; 188
+      0000CE 80                     247 	.db #0x80	; 128
+      0000CF 80                     248 	.db #0x80	; 128
+      0000D0 7F                     249 	.db #0x7f	; 127
+      0000D1 7F                     250 	.db #0x7f	; 127
+      0000D2 80                     251 	.db #0x80	; 128
+      0000D3 80                     252 	.db #0x80	; 128
+      0000D4 A8                     253 	.db #0xa8	; 168
+      0000D5 A8                     254 	.db #0xa8	; 168
+      0000D6 A8                     255 	.db #0xa8	; 168
+      0000D7 A8                     256 	.db #0xa8	; 168
+      0000D8 B0                     257 	.db #0xb0	; 176
+      0000D9 B0                     258 	.db #0xb0	; 176
+      0000DA A8                     259 	.db #0xa8	; 168
+      0000DB A8                     260 	.db #0xa8	; 168
+      0000DC A8                     261 	.db #0xa8	; 168
+      0000DD A8                     262 	.db #0xa8	; 168
+      0000DE 80                     263 	.db #0x80	; 128
+      0000DF 80                     264 	.db #0x80	; 128
+      0000E0 FE                     265 	.db #0xfe	; 254
+      0000E1 FE                     266 	.db #0xfe	; 254
+      0000E2 01                     267 	.db #0x01	; 1
+      0000E3 01                     268 	.db #0x01	; 1
+      0000E4 11                     269 	.db #0x11	; 17
+      0000E5 11                     270 	.db #0x11	; 17
+      0000E6 39                     271 	.db #0x39	; 57	'9'
+      0000E7 39                     272 	.db #0x39	; 57	'9'
+      0000E8 7D                     273 	.db #0x7d	; 125
+      0000E9 7D                     274 	.db #0x7d	; 125
+      0000EA 7D                     275 	.db #0x7d	; 125
+      0000EB 7D                     276 	.db #0x7d	; 125
+      0000EC 11                     277 	.db #0x11	; 17
+      0000ED 11                     278 	.db #0x11	; 17
+      0000EE 39                     279 	.db #0x39	; 57	'9'
+      0000EF 39                     280 	.db #0x39	; 57	'9'
+      0000F0 FE                     281 	.db #0xfe	; 254
+      0000F1 FE                     282 	.db #0xfe	; 254
+      0000F2 01                     283 	.db #0x01	; 1
+      0000F3 01                     284 	.db #0x01	; 1
+      0000F4 39                     285 	.db #0x39	; 57	'9'
+      0000F5 39                     286 	.db #0x39	; 57	'9'
+      0000F6 55                     287 	.db #0x55	; 85	'U'
+      0000F7 55                     288 	.db #0x55	; 85	'U'
+      0000F8 7D                     289 	.db #0x7d	; 125
+      0000F9 7D                     290 	.db #0x7d	; 125
+      0000FA 55                     291 	.db #0x55	; 85	'U'
+      0000FB 55                     292 	.db #0x55	; 85	'U'
+      0000FC 11                     293 	.db #0x11	; 17
+      0000FD 11                     294 	.db #0x11	; 17
+      0000FE 01                     295 	.db #0x01	; 1
+      0000FF 01                     296 	.db #0x01	; 1
+      000100 FE                     297 	.db #0xfe	; 254
+      000101 FE                     298 	.db #0xfe	; 254
+      000102 01                     299 	.db #0x01	; 1
+      000103 01                     300 	.db #0x01	; 1
+      000104 11                     301 	.db #0x11	; 17
+      000105 11                     302 	.db #0x11	; 17
+      000106 29                     303 	.db #0x29	; 41
+      000107 29                     304 	.db #0x29	; 41
+      000108 45                     305 	.db #0x45	; 69	'E'
+      000109 45                     306 	.db #0x45	; 69	'E'
+      00010A 29                     307 	.db #0x29	; 41
+      00010B 29                     308 	.db #0x29	; 41
+      00010C 11                     309 	.db #0x11	; 17
+      00010D 11                     310 	.db #0x11	; 17
+      00010E 01                     311 	.db #0x01	; 1
+      00010F 01                     312 	.db #0x01	; 1
+      000110 FE                     313 	.db #0xfe	; 254
+      000111 FE                     314 	.db #0xfe	; 254
+      000112 01                     315 	.db #0x01	; 1
+      000113 01                     316 	.db #0x01	; 1
+      000114 29                     317 	.db #0x29	; 41
+      000115 29                     318 	.db #0x29	; 41
+      000116 55                     319 	.db #0x55	; 85	'U'
+      000117 55                     320 	.db #0x55	; 85	'U'
+      000118 45                     321 	.db #0x45	; 69	'E'
+      000119 45                     322 	.db #0x45	; 69	'E'
+      00011A 29                     323 	.db #0x29	; 41
+      00011B 29                     324 	.db #0x29	; 41
+      00011C 11                     325 	.db #0x11	; 17
+      00011D 11                     326 	.db #0x11	; 17
+      00011E 01                     327 	.db #0x01	; 1
+      00011F 01                     328 	.db #0x01	; 1
+      000120 7F                     329 	.db #0x7f	; 127
+      000121 7F                     330 	.db #0x7f	; 127
+      000122 80                     331 	.db #0x80	; 128
+      000123 80                     332 	.db #0x80	; 128
+      000124 80                     333 	.db #0x80	; 128
+      000125 80                     334 	.db #0x80	; 128
+      000126 80                     335 	.db #0x80	; 128
+      000127 80                     336 	.db #0x80	; 128
+      000128 80                     337 	.db #0x80	; 128
+      000129 80                     338 	.db #0x80	; 128
+      00012A 80                     339 	.db #0x80	; 128
+      00012B 80                     340 	.db #0x80	; 128
+      00012C 80                     341 	.db #0x80	; 128
+      00012D 80                     342 	.db #0x80	; 128
+      00012E 80                     343 	.db #0x80	; 128
+      00012F 80                     344 	.db #0x80	; 128
+      000130 FE                     345 	.db #0xfe	; 254
+      000131 FE                     346 	.db #0xfe	; 254
+      000132 01                     347 	.db #0x01	; 1
+      000133 01                     348 	.db #0x01	; 1
+      000134 01                     349 	.db #0x01	; 1
+      000135 01                     350 	.db #0x01	; 1
+      000136 01                     351 	.db #0x01	; 1
+      000137 01                     352 	.db #0x01	; 1
+      000138 01                     353 	.db #0x01	; 1
+      000139 01                     354 	.db #0x01	; 1
+      00013A 01                     355 	.db #0x01	; 1
+      00013B 01                     356 	.db #0x01	; 1
+      00013C 01                     357 	.db #0x01	; 1
+      00013D 01                     358 	.db #0x01	; 1
+      00013E 01                     359 	.db #0x01	; 1
+      00013F 01                     360 	.db #0x01	; 1
+      000140 80                     361 	.db #0x80	; 128
+      000141 80                     362 	.db #0x80	; 128
+      000142 80                     363 	.db #0x80	; 128
+      000143 80                     364 	.db #0x80	; 128
+      000144 80                     365 	.db #0x80	; 128
+      000145 80                     366 	.db #0x80	; 128
+      000146 80                     367 	.db #0x80	; 128
+      000147 80                     368 	.db #0x80	; 128
+      000148 80                     369 	.db #0x80	; 128
+      000149 80                     370 	.db #0x80	; 128
+      00014A 80                     371 	.db #0x80	; 128
+      00014B 80                     372 	.db #0x80	; 128
+      00014C 80                     373 	.db #0x80	; 128
+      00014D 80                     374 	.db #0x80	; 128
+      00014E 80                     375 	.db #0x80	; 128
+      00014F 80                     376 	.db #0x80	; 128
+      000150 01                     377 	.db #0x01	; 1
+      000151 01                     378 	.db #0x01	; 1
+      000152 01                     379 	.db #0x01	; 1
+      000153 01                     380 	.db #0x01	; 1
+      000154 01                     381 	.db #0x01	; 1
+      000155 01                     382 	.db #0x01	; 1
+      000156 01                     383 	.db #0x01	; 1
+      000157 01                     384 	.db #0x01	; 1
+      000158 01                     385 	.db #0x01	; 1
+      000159 01                     386 	.db #0x01	; 1
+      00015A 01                     387 	.db #0x01	; 1
+      00015B 01                     388 	.db #0x01	; 1
+      00015C 01                     389 	.db #0x01	; 1
+      00015D 01                     390 	.db #0x01	; 1
+      00015E 01                     391 	.db #0x01	; 1
+      00015F 01                     392 	.db #0x01	; 1
+      000160 80                     393 	.db #0x80	; 128
+      000161 80                     394 	.db #0x80	; 128
+      000162 80                     395 	.db #0x80	; 128
+      000163 80                     396 	.db #0x80	; 128
+      000164 80                     397 	.db #0x80	; 128
+      000165 80                     398 	.db #0x80	; 128
+      000166 80                     399 	.db #0x80	; 128
+      000167 80                     400 	.db #0x80	; 128
+      000168 80                     401 	.db #0x80	; 128
+      000169 80                     402 	.db #0x80	; 128
+      00016A 80                     403 	.db #0x80	; 128
+      00016B 80                     404 	.db #0x80	; 128
+      00016C 80                     405 	.db #0x80	; 128
+      00016D 80                     406 	.db #0x80	; 128
+      00016E 7F                     407 	.db #0x7f	; 127
+      00016F 7F                     408 	.db #0x7f	; 127
+      000170 01                     409 	.db #0x01	; 1
+      000171 01                     410 	.db #0x01	; 1
+      000172 01                     411 	.db #0x01	; 1
+      000173 01                     412 	.db #0x01	; 1
+      000174 01                     413 	.db #0x01	; 1
+      000175 01                     414 	.db #0x01	; 1
+      000176 01                     415 	.db #0x01	; 1
+      000177 01                     416 	.db #0x01	; 1
+      000178 01                     417 	.db #0x01	; 1
+      000179 01                     418 	.db #0x01	; 1
+      00017A 01                     419 	.db #0x01	; 1
+      00017B 01                     420 	.db #0x01	; 1
+      00017C 01                     421 	.db #0x01	; 1
+      00017D 01                     422 	.db #0x01	; 1
+      00017E FE                     423 	.db #0xfe	; 254
+      00017F FE                     424 	.db #0xfe	; 254
+      000180 7F                     425 	.db #0x7f	; 127
+      000181 7F                     426 	.db #0x7f	; 127
+      000182 FF                     427 	.db #0xff	; 255
+      000183 80                     428 	.db #0x80	; 128
+      000184 D5                     429 	.db #0xd5	; 213
+      000185 AA                     430 	.db #0xaa	; 170
+      000186 EA                     431 	.db #0xea	; 234
+      000187 95                     432 	.db #0x95	; 149
+      000188 D5                     433 	.db #0xd5	; 213
+      000189 AA                     434 	.db #0xaa	; 170
+      00018A EA                     435 	.db #0xea	; 234
+      00018B 95                     436 	.db #0x95	; 149
+      00018C D5                     437 	.db #0xd5	; 213
+      00018D AA                     438 	.db #0xaa	; 170
+      00018E EA                     439 	.db #0xea	; 234
+      00018F 95                     440 	.db #0x95	; 149
+      000190 FE                     441 	.db #0xfe	; 254
+      000191 FE                     442 	.db #0xfe	; 254
+      000192 FF                     443 	.db #0xff	; 255
+      000193 01                     444 	.db #0x01	; 1
+      000194 57                     445 	.db #0x57	; 87	'W'
+      000195 A9                     446 	.db #0xa9	; 169
+      000196 AB                     447 	.db #0xab	; 171
+      000197 55                     448 	.db #0x55	; 85	'U'
+      000198 57                     449 	.db #0x57	; 87	'W'
+      000199 A9                     450 	.db #0xa9	; 169
+      00019A AB                     451 	.db #0xab	; 171
+      00019B 55                     452 	.db #0x55	; 85	'U'
+      00019C 57                     453 	.db #0x57	; 87	'W'
+      00019D A9                     454 	.db #0xa9	; 169
+      00019E AB                     455 	.db #0xab	; 171
+      00019F 55                     456 	.db #0x55	; 85	'U'
+      0001A0 D5                     457 	.db #0xd5	; 213
+      0001A1 AA                     458 	.db #0xaa	; 170
+      0001A2 EA                     459 	.db #0xea	; 234
+      0001A3 95                     460 	.db #0x95	; 149
+      0001A4 D5                     461 	.db #0xd5	; 213
+      0001A5 AA                     462 	.db #0xaa	; 170
+      0001A6 EA                     463 	.db #0xea	; 234
+      0001A7 95                     464 	.db #0x95	; 149
+      0001A8 D5                     465 	.db #0xd5	; 213
+      0001A9 AA                     466 	.db #0xaa	; 170
+      0001AA EA                     467 	.db #0xea	; 234
+      0001AB 95                     468 	.db #0x95	; 149
+      0001AC D5                     469 	.db #0xd5	; 213
+      0001AD AA                     470 	.db #0xaa	; 170
+      0001AE EA                     471 	.db #0xea	; 234
+      0001AF 95                     472 	.db #0x95	; 149
+      0001B0 57                     473 	.db #0x57	; 87	'W'
+      0001B1 A9                     474 	.db #0xa9	; 169
+      0001B2 AB                     475 	.db #0xab	; 171
+      0001B3 55                     476 	.db #0x55	; 85	'U'
+      0001B4 57                     477 	.db #0x57	; 87	'W'
+      0001B5 A9                     478 	.db #0xa9	; 169
+      0001B6 AB                     479 	.db #0xab	; 171
+      0001B7 55                     480 	.db #0x55	; 85	'U'
+      0001B8 57                     481 	.db #0x57	; 87	'W'
+      0001B9 A9                     482 	.db #0xa9	; 169
+      0001BA AB                     483 	.db #0xab	; 171
+      0001BB 55                     484 	.db #0x55	; 85	'U'
+      0001BC 57                     485 	.db #0x57	; 87	'W'
+      0001BD A9                     486 	.db #0xa9	; 169
+      0001BE AB                     487 	.db #0xab	; 171
+      0001BF 55                     488 	.db #0x55	; 85	'U'
+      0001C0 D5                     489 	.db #0xd5	; 213
+      0001C1 AA                     490 	.db #0xaa	; 170
+      0001C2 EA                     491 	.db #0xea	; 234
+      0001C3 95                     492 	.db #0x95	; 149
+      0001C4 D5                     493 	.db #0xd5	; 213
+      0001C5 AA                     494 	.db #0xaa	; 170
+      0001C6 EA                     495 	.db #0xea	; 234
+      0001C7 95                     496 	.db #0x95	; 149
+      0001C8 D5                     497 	.db #0xd5	; 213
+      0001C9 AA                     498 	.db #0xaa	; 170
+      0001CA EA                     499 	.db #0xea	; 234
+      0001CB 95                     500 	.db #0x95	; 149
+      0001CC FF                     501 	.db #0xff	; 255
+      0001CD 80                     502 	.db #0x80	; 128
+      0001CE 7F                     503 	.db #0x7f	; 127
+      0001CF 7F                     504 	.db #0x7f	; 127
+      0001D0 57                     505 	.db #0x57	; 87	'W'
+      0001D1 A9                     506 	.db #0xa9	; 169
+      0001D2 AB                     507 	.db #0xab	; 171
+      0001D3 55                     508 	.db #0x55	; 85	'U'
+      0001D4 57                     509 	.db #0x57	; 87	'W'
+      0001D5 A9                     510 	.db #0xa9	; 169
+      0001D6 AB                     511 	.db #0xab	; 171
+      0001D7 55                     512 	.db #0x55	; 85	'U'
+      0001D8 57                     513 	.db #0x57	; 87	'W'
+      0001D9 A9                     514 	.db #0xa9	; 169
+      0001DA AB                     515 	.db #0xab	; 171
+      0001DB 55                     516 	.db #0x55	; 85	'U'
+      0001DC FF                     517 	.db #0xff	; 255
+      0001DD 01                     518 	.db #0x01	; 1
+      0001DE FE                     519 	.db #0xfe	; 254
+      0001DF FE                     520 	.db #0xfe	; 254
+      0001E0 01                     521 	.db #0x01	; 1
+      0001E1 01                     522 	.db #0x01	; 1
+      0001E2 25                     523 	.db #0x25	; 37
+      0001E3 25                     524 	.db #0x25	; 37
+      0001E4 25                     525 	.db #0x25	; 37
+      0001E5 25                     526 	.db #0x25	; 37
+      0001E6 3D                     527 	.db #0x3d	; 61
+      0001E7 3D                     528 	.db #0x3d	; 61
+      0001E8 25                     529 	.db #0x25	; 37
+      0001E9 25                     530 	.db #0x25	; 37
+      0001EA 19                     531 	.db #0x19	; 25
+      0001EB 19                     532 	.db #0x19	; 25
+      0001EC 01                     533 	.db #0x01	; 1
+      0001ED 01                     534 	.db #0x01	; 1
+      0001EE FE                     535 	.db #0xfe	; 254
+      0001EF FE                     536 	.db #0xfe	; 254
+      0001F0 01                     537 	.db #0x01	; 1
+      0001F1 01                     538 	.db #0x01	; 1
+      0001F2 3D                     539 	.db #0x3d	; 61
+      0001F3 3D                     540 	.db #0x3d	; 61
+      0001F4 09                     541 	.db #0x09	; 9
+      0001F5 09                     542 	.db #0x09	; 9
+      0001F6 11                     543 	.db #0x11	; 17
+      0001F7 11                     544 	.db #0x11	; 17
+      0001F8 25                     545 	.db #0x25	; 37
+      0001F9 25                     546 	.db #0x25	; 37
+      0001FA 19                     547 	.db #0x19	; 25
+      0001FB 19                     548 	.db #0x19	; 25
+      0001FC 01                     549 	.db #0x01	; 1
+      0001FD 01                     550 	.db #0x01	; 1
+      0001FE FE                     551 	.db #0xfe	; 254
+      0001FF FE                     552 	.db #0xfe	; 254
+      000200 01                     553 	.db #0x01	; 1
+      000201 01                     554 	.db #0x01	; 1
+      000202 1D                     555 	.db #0x1d	; 29
+      000203 1D                     556 	.db #0x1d	; 29
+      000204 21                     557 	.db #0x21	; 33
+      000205 21                     558 	.db #0x21	; 33
+      000206 19                     559 	.db #0x19	; 25
+      000207 19                     560 	.db #0x19	; 25
+      000208 21                     561 	.db #0x21	; 33
+      000209 21                     562 	.db #0x21	; 33
+      00020A 1D                     563 	.db #0x1d	; 29
+      00020B 1D                     564 	.db #0x1d	; 29
+      00020C 01                     565 	.db #0x01	; 1
+      00020D 01                     566 	.db #0x01	; 1
+      00020E FE                     567 	.db #0xfe	; 254
+      00020F FE                     568 	.db #0xfe	; 254
+      000210 01                     569 	.db #0x01	; 1
+      000211 01                     570 	.db #0x01	; 1
+      000212 11                     571 	.db #0x11	; 17
+      000213 11                     572 	.db #0x11	; 17
+      000214 3D                     573 	.db #0x3d	; 61
+      000215 3D                     574 	.db #0x3d	; 61
+      000216 15                     575 	.db #0x15	; 21
+      000217 15                     576 	.db #0x15	; 21
+      000218 19                     577 	.db #0x19	; 25
+      000219 19                     578 	.db #0x19	; 25
+      00021A 11                     579 	.db #0x11	; 17
+      00021B 11                     580 	.db #0x11	; 17
+      00021C 01                     581 	.db #0x01	; 1
+      00021D 01                     582 	.db #0x01	; 1
+      00021E FE                     583 	.db #0xfe	; 254
+      00021F FE                     584 	.db #0xfe	; 254
+      000220 01                     585 	.db #0x01	; 1
+      000221 01                     586 	.db #0x01	; 1
+      000222 1D                     587 	.db #0x1d	; 29
+      000223 1D                     588 	.db #0x1d	; 29
+      000224 21                     589 	.db #0x21	; 33
+      000225 21                     590 	.db #0x21	; 33
+      000226 1D                     591 	.db #0x1d	; 29
+      000227 1D                     592 	.db #0x1d	; 29
+      000228 05                     593 	.db #0x05	; 5
+      000229 05                     594 	.db #0x05	; 5
+      00022A 3D                     595 	.db #0x3d	; 61
+      00022B 3D                     596 	.db #0x3d	; 61
+      00022C 01                     597 	.db #0x01	; 1
+      00022D 01                     598 	.db #0x01	; 1
+      00022E FE                     599 	.db #0xfe	; 254
+      00022F FE                     600 	.db #0xfe	; 254
+      000230 01                     601 	.db #0x01	; 1
+      000231 01                     602 	.db #0x01	; 1
+      000232 19                     603 	.db #0x19	; 25
+      000233 19                     604 	.db #0x19	; 25
+      000234 25                     605 	.db #0x25	; 37
+      000235 25                     606 	.db #0x25	; 37
+      000236 1D                     607 	.db #0x1d	; 29
+      000237 1D                     608 	.db #0x1d	; 29
+      000238 05                     609 	.db #0x05	; 5
+      000239 05                     610 	.db #0x05	; 5
+      00023A 19                     611 	.db #0x19	; 25
+      00023B 19                     612 	.db #0x19	; 25
+      00023C 01                     613 	.db #0x01	; 1
+      00023D 01                     614 	.db #0x01	; 1
+      00023E FE                     615 	.db #0xfe	; 254
+      00023F FE                     616 	.db #0xfe	; 254
+      000240 01                     617 	.db #0x01	; 1
+      000241 01                     618 	.db #0x01	; 1
+      000242 09                     619 	.db #0x09	; 9
+      000243 09                     620 	.db #0x09	; 9
+      000244 09                     621 	.db #0x09	; 9
+      000245 09                     622 	.db #0x09	; 9
+      000246 09                     623 	.db #0x09	; 9
+      000247 09                     624 	.db #0x09	; 9
+      000248 11                     625 	.db #0x11	; 17
+      000249 11                     626 	.db #0x11	; 17
+      00024A 1D                     627 	.db #0x1d	; 29
+      00024B 1D                     628 	.db #0x1d	; 29
+      00024C 01                     629 	.db #0x01	; 1
+      00024D 01                     630 	.db #0x01	; 1
+      00024E FE                     631 	.db #0xfe	; 254
+      00024F FE                     632 	.db #0xfe	; 254
+      000250 01                     633 	.db #0x01	; 1
+      000251 01                     634 	.db #0x01	; 1
+      000252 1D                     635 	.db #0x1d	; 29
+      000253 1D                     636 	.db #0x1d	; 29
+      000254 15                     637 	.db #0x15	; 21
+      000255 15                     638 	.db #0x15	; 21
+      000256 1D                     639 	.db #0x1d	; 29
+      000257 1D                     640 	.db #0x1d	; 29
+      000258 15                     641 	.db #0x15	; 21
+      000259 15                     642 	.db #0x15	; 21
+      00025A 1D                     643 	.db #0x1d	; 29
+      00025B 1D                     644 	.db #0x1d	; 29
+      00025C 01                     645 	.db #0x01	; 1
+      00025D 01                     646 	.db #0x01	; 1
+      00025E FE                     647 	.db #0xfe	; 254
+      00025F FE                     648 	.db #0xfe	; 254
+      000260 01                     649 	.db #0x01	; 1
+      000261 01                     650 	.db #0x01	; 1
+      000262 11                     651 	.db #0x11	; 17
+      000263 11                     652 	.db #0x11	; 17
+      000264 11                     653 	.db #0x11	; 17
+      000265 11                     654 	.db #0x11	; 17
+      000266 1D                     655 	.db #0x1d	; 29
+      000267 1D                     656 	.db #0x1d	; 29
+      000268 15                     657 	.db #0x15	; 21
+      000269 15                     658 	.db #0x15	; 21
+      00026A 1D                     659 	.db #0x1d	; 29
+      00026B 1D                     660 	.db #0x1d	; 29
+      00026C 01                     661 	.db #0x01	; 1
+      00026D 01                     662 	.db #0x01	; 1
+      00026E FE                     663 	.db #0xfe	; 254
+      00026F FE                     664 	.db #0xfe	; 254
+      000270 01                     665 	.db #0x01	; 1
+      000271 01                     666 	.db #0x01	; 1
+      000272 75                     667 	.db #0x75	; 117	'u'
+      000273 75                     668 	.db #0x75	; 117	'u'
+      000274 55                     669 	.db #0x55	; 85	'U'
+      000275 55                     670 	.db #0x55	; 85	'U'
+      000276 55                     671 	.db #0x55	; 85	'U'
+      000277 55                     672 	.db #0x55	; 85	'U'
+      000278 55                     673 	.db #0x55	; 85	'U'
+      000279 55                     674 	.db #0x55	; 85	'U'
+      00027A 75                     675 	.db #0x75	; 117	'u'
+      00027B 75                     676 	.db #0x75	; 117	'u'
+      00027C 01                     677 	.db #0x01	; 1
+      00027D 01                     678 	.db #0x01	; 1
+      00027E FE                     679 	.db #0xfe	; 254
+      00027F FE                     680 	.db #0xfe	; 254
+      000280 01                     681 	.db #0x01	; 1
+      000281 01                     682 	.db #0x01	; 1
+      000282 1D                     683 	.db #0x1d	; 29
+      000283 1D                     684 	.db #0x1d	; 29
+      000284 15                     685 	.db #0x15	; 21
+      000285 15                     686 	.db #0x15	; 21
+      000286 11                     687 	.db #0x11	; 17
+      000287 11                     688 	.db #0x11	; 17
+      000288 11                     689 	.db #0x11	; 17
+      000289 11                     690 	.db #0x11	; 17
+      00028A 3D                     691 	.db #0x3d	; 61
+      00028B 3D                     692 	.db #0x3d	; 61
+      00028C 01                     693 	.db #0x01	; 1
+      00028D 01                     694 	.db #0x01	; 1
+      00028E FE                     695 	.db #0xfe	; 254
+      00028F FE                     696 	.db #0xfe	; 254
+      000290 01                     697 	.db #0x01	; 1
+      000291 01                     698 	.db #0x01	; 1
+      000292 3D                     699 	.db #0x3d	; 61
+      000293 3D                     700 	.db #0x3d	; 61
+      000294 35                     701 	.db #0x35	; 53	'5'
+      000295 35                     702 	.db #0x35	; 53	'5'
+      000296 25                     703 	.db #0x25	; 37
+      000297 25                     704 	.db #0x25	; 37
+      000298 25                     705 	.db #0x25	; 37
+      000299 25                     706 	.db #0x25	; 37
+      00029A 3D                     707 	.db #0x3d	; 61
+      00029B 3D                     708 	.db #0x3d	; 61
+      00029C 01                     709 	.db #0x01	; 1
+      00029D 01                     710 	.db #0x01	; 1
+      00029E FE                     711 	.db #0xfe	; 254
+      00029F FE                     712 	.db #0xfe	; 254
+      0002A0 01                     713 	.db #0x01	; 1
+      0002A1 01                     714 	.db #0x01	; 1
+      0002A2 15                     715 	.db #0x15	; 21
+      0002A3 15                     716 	.db #0x15	; 21
+      0002A4 15                     717 	.db #0x15	; 21
+      0002A5 15                     718 	.db #0x15	; 21
+      0002A6 0D                     719 	.db #0x0d	; 13
+      0002A7 0D                     720 	.db #0x0d	; 13
+      0002A8 15                     721 	.db #0x15	; 21
+      0002A9 15                     722 	.db #0x15	; 21
+      0002AA 15                     723 	.db #0x15	; 21
+      0002AB 15                     724 	.db #0x15	; 21
+      0002AC 01                     725 	.db #0x01	; 1
+      0002AD 01                     726 	.db #0x01	; 1
+      0002AE FE                     727 	.db #0xfe	; 254
+      0002AF FE                     728 	.db #0xfe	; 254
+      0002B0 9C                     729 	.db #0x9c	; 156
+      0002B1 9C                     730 	.db #0x9c	; 156
+      0002B2 88                     731 	.db #0x88	; 136
+      0002B3 88                     732 	.db #0x88	; 136
+      0002B4 BE                     733 	.db #0xbe	; 190
+      0002B5 BE                     734 	.db #0xbe	; 190
+      0002B6 BE                     735 	.db #0xbe	; 190
+      0002B7 BE                     736 	.db #0xbe	; 190
+      0002B8 9C                     737 	.db #0x9c	; 156
+      0002B9 9C                     738 	.db #0x9c	; 156
+      0002BA 88                     739 	.db #0x88	; 136
+      0002BB 88                     740 	.db #0x88	; 136
+      0002BC 80                     741 	.db #0x80	; 128
+      0002BD 80                     742 	.db #0x80	; 128
+      0002BE 7F                     743 	.db #0x7f	; 127
+      0002BF 7F                     744 	.db #0x7f	; 127
+      0002C0 80                     745 	.db #0x80	; 128
+      0002C1 80                     746 	.db #0x80	; 128
+      0002C2 88                     747 	.db #0x88	; 136
+      0002C3 88                     748 	.db #0x88	; 136
+      0002C4 AA                     749 	.db #0xaa	; 170
+      0002C5 AA                     750 	.db #0xaa	; 170
+      0002C6 BE                     751 	.db #0xbe	; 190
+      0002C7 BE                     752 	.db #0xbe	; 190
+      0002C8 AA                     753 	.db #0xaa	; 170
+      0002C9 AA                     754 	.db #0xaa	; 170
+      0002CA 9C                     755 	.db #0x9c	; 156
+      0002CB 9C                     756 	.db #0x9c	; 156
+      0002CC 80                     757 	.db #0x80	; 128
+      0002CD 80                     758 	.db #0x80	; 128
+      0002CE 7F                     759 	.db #0x7f	; 127
+      0002CF 7F                     760 	.db #0x7f	; 127
+      0002D0 80                     761 	.db #0x80	; 128
+      0002D1 80                     762 	.db #0x80	; 128
+      0002D2 88                     763 	.db #0x88	; 136
+      0002D3 88                     764 	.db #0x88	; 136
+      0002D4 94                     765 	.db #0x94	; 148
+      0002D5 94                     766 	.db #0x94	; 148
+      0002D6 A2                     767 	.db #0xa2	; 162
+      0002D7 A2                     768 	.db #0xa2	; 162
+      0002D8 94                     769 	.db #0x94	; 148
+      0002D9 94                     770 	.db #0x94	; 148
+      0002DA 88                     771 	.db #0x88	; 136
+      0002DB 88                     772 	.db #0x88	; 136
+      0002DC 80                     773 	.db #0x80	; 128
+      0002DD 80                     774 	.db #0x80	; 128
+      0002DE 7F                     775 	.db #0x7f	; 127
+      0002DF 7F                     776 	.db #0x7f	; 127
+      0002E0 80                     777 	.db #0x80	; 128
+      0002E1 80                     778 	.db #0x80	; 128
+      0002E2 88                     779 	.db #0x88	; 136
+      0002E3 88                     780 	.db #0x88	; 136
+      0002E4 94                     781 	.db #0x94	; 148
+      0002E5 94                     782 	.db #0x94	; 148
+      0002E6 A2                     783 	.db #0xa2	; 162
+      0002E7 A2                     784 	.db #0xa2	; 162
+      0002E8 AA                     785 	.db #0xaa	; 170
+      0002E9 AA                     786 	.db #0xaa	; 170
+      0002EA 94                     787 	.db #0x94	; 148
+      0002EB 94                     788 	.db #0x94	; 148
+      0002EC 80                     789 	.db #0x80	; 128
+      0002ED 80                     790 	.db #0x80	; 128
+      0002EE 7F                     791 	.db #0x7f	; 127
+      0002EF 7F                     792 	.db #0x7f	; 127
+                                    793 	.area _CABS (ABS)

@@ -26,6 +26,6 @@
 /* Bank of tiles. */
 #define card_texturesBank 0
 /* Start of tile array. */
-extern unsigned char card_textures[];
+extern const unsigned char card_textures[];
 
 /* End of CARDS.H */

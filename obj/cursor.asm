@@ -9,6 +9,7 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _cursor_frames
+	.globl _cursor_frame_4
 	.globl _cursor_frame_3
 	.globl _cursor_frame_2
 	.globl _cursor_frame_1
@@ -257,8 +258,38 @@ _cursor_frame_3:
 	.db #0x00	;  0
 	.db #0x00	; 0
 	.db #0x00	; 0
+_cursor_frame_4:
+	.db #0x10	;  16
+	.db #0x08	;  8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	;  0
+	.db #0x08	;  8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x08	;  8
+	.db #0xf8	; -8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	;  0
+	.db #0x08	;  8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x08	;  8
+	.db #0xf8	; -8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	;  0
+	.db #0x08	;  8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x80	; -128
+	.db #0x00	;  0
+	.db #0x00	; 0
+	.db #0x00	; 0
 _cursor_frames:
 	.dw _cursor_frame_1
 	.dw _cursor_frame_2
 	.dw _cursor_frame_3
+	.dw _cursor_frame_4
 	.area _CABS (ABS)

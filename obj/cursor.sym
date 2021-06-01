@@ -10,15 +10,17 @@ Symbol Table
   0 _cursor_frame_1                                                000080 GR
   0 _cursor_frame_2                                                00009C GR
   0 _cursor_frame_3                                                0000B8 GR
-  0 _cursor_frames                                                 0000D4 GR
+  0 _cursor_frame_4                                                0000D4 GR
+  0 _cursor_frames                                                 0000F0 GR
   0 _cursor_textures                                               000000 GR
+
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size     DA   flags    0
+   0 _CODE                                      size     F8   flags    0
    1 _DATA                                      size      0   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0

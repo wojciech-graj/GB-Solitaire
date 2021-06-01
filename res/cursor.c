@@ -2,6 +2,8 @@
 #include <gb/gb.h>
 #include <gb/metasprites.h>
 
+#include "cursor.h"
+
 const unsigned char cursor_textures[] =
 {
 	0x66,0x19,0x80,0x00,0x80,0x00,0x00,0x80,
@@ -40,8 +42,15 @@ const metasprite_t cursor_frame_3[] = {
 	{8, -8, 6, 0}, {0, 8, 7, 0},
 	{metasprite_end}
 };
-const metasprite_t * const cursor_frames[3] = {
+const metasprite_t cursor_frame_4[] = {
+	{16, 8, 0, 0}, {0, 8, 0, 0},
+	{8, -8, 0, 0}, {0, 8, 0, 0},
+	{8, -8, 0, 0}, {0, 8, 0, 0},
+	{metasprite_end}
+};
+const metasprite_t * const cursor_frames[4] = {
 	cursor_frame_1,
 	cursor_frame_2,
 	cursor_frame_3,
+	cursor_frame_4,
 };

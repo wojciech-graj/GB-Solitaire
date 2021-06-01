@@ -1,14 +1,15 @@
 XL3
-H 7 areas 6 global symbols
+H 7 areas 7 global symbols
 M cursor
 O -mgbz80
 S .__.ABS. Def000000
-A _CODE size DA flags 0 addr 0
-S _cursor_frames Def0000D4
+A _CODE size F8 flags 0 addr 0
+S _cursor_frames Def0000F0
 S _cursor_textures Def000000
 S _cursor_frame_1 Def000080
 S _cursor_frame_2 Def00009C
 S _cursor_frame_3 Def0000B8
+S _cursor_frame_4 Def0000D4
 A _DATA size 0 flags 0 addr 0
 A _DABS size 0 flags 8 addr 0
 A _HOME size 0 flags 0 addr 0
@@ -63,5 +64,15 @@ T D2 00 00 00 00
 R 00 00 00 00
 T D4 00 00
 R 00 00 00 00
-T D4 00 00 80 00 9C 00 B8 00
+T D4 00 00 10 08 00 00 00 08 00 00 08 F8 00 00 00
+R 00 00 00 00
+T E1 00 00 08 00 00 08 F8 00 00 00 08 00 00 80 00
+R 00 00 00 00
+T EE 00 00 00 00
+R 00 00 00 00
+T F0 00 00
+R 00 00 00 00
+T F0 00 00 80 00 9C 00 B8 00
 R 00 00 00 00 00 03 00 00 00 05 00 00 00 07 00 00
+T F6 00 00 D4 00
+R 00 00 00 00 00 03 00 00

@@ -8,11 +8,9 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _cursor_frames
-	.globl _cursor_frame_4
-	.globl _cursor_frame_3
-	.globl _cursor_frame_2
-	.globl _cursor_frame_1
+	.globl _cursor_metasprites
+	.globl _cursor_metasprite_2
+	.globl _cursor_metasprite_1
 	.globl _cursor_textures
 ;--------------------------------------------------------
 ; special function registers
@@ -171,7 +169,7 @@ _cursor_textures:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-_cursor_frame_1:
+_cursor_metasprite_1:
 	.db #0x10	;  16
 	.db #0x08	;  8
 	.db #0x00	; 0
@@ -200,7 +198,7 @@ _cursor_frame_1:
 	.db #0x00	;  0
 	.db #0x00	; 0
 	.db #0x00	; 0
-_cursor_frame_2:
+_cursor_metasprite_2:
 	.db #0x10	;  16
 	.db #0x08	;  8
 	.db #0x00	; 0
@@ -229,67 +227,7 @@ _cursor_frame_2:
 	.db #0x00	;  0
 	.db #0x00	; 0
 	.db #0x00	; 0
-_cursor_frame_3:
-	.db #0x10	;  16
-	.db #0x08	;  8
-	.db #0x02	; 2
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x03	; 3
-	.db #0x00	; 0
-	.db #0x08	;  8
-	.db #0xf8	; -8
-	.db #0x04	; 4
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x05	; 5
-	.db #0x00	; 0
-	.db #0x08	;  8
-	.db #0xf8	; -8
-	.db #0x06	; 6
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x07	; 7
-	.db #0x00	; 0
-	.db #0x80	; -128
-	.db #0x00	;  0
-	.db #0x00	; 0
-	.db #0x00	; 0
-_cursor_frame_4:
-	.db #0x10	;  16
-	.db #0x08	;  8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x08	;  8
-	.db #0xf8	; -8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x08	;  8
-	.db #0xf8	; -8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	;  0
-	.db #0x08	;  8
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x80	; -128
-	.db #0x00	;  0
-	.db #0x00	; 0
-	.db #0x00	; 0
-_cursor_frames:
-	.dw _cursor_frame_1
-	.dw _cursor_frame_2
-	.dw _cursor_frame_3
-	.dw _cursor_frame_4
+_cursor_metasprites:
+	.dw _cursor_metasprite_1
+	.dw _cursor_metasprite_2
 	.area _CABS (ABS)

@@ -4,7 +4,10 @@
 #include <rand.h>
 
 #include "../res/cursor.h"
-#include "../res/cards.h"
+#include "../res/card.h"
+#include "../res/regular_metasprite.h"
+
+//TODO: sprite z-order
 
 #define SCOREBAR_HEIGHT 3u
 
@@ -13,33 +16,43 @@
 
 #define PILE_IDX_DECK 10u
 
-#define OFFSET_BKG_NONE     0
-#define OFFSET_BKG_RANK     1u
-#define OFFSET_BKG_SUIT     (OFFSET_BKG_RANK + 13u)
-#define OFFSET_BKG_BLANK    (OFFSET_BKG_SUIT + 4u)
-#define OFFSET_BKG_BACK     (OFFSET_BKG_BLANK + 6u)
-#define OFFSET_BKG_RANK_ROT (OFFSET_BKG_BACK + 6u)
-#define OFFSET_BKG_SUIT_ROT (OFFSET_BKG_RANK_ROT + 13u)
+#define SIZEOF_TILE 16u
 
-#define SPRITE_CURSOR 0
-#define SPRITE_HAND   6u
+#define DEAL_TARGET_FRAMES 15
+
+#define OFFSET_BKG_NONE     0
+#define OFFSET_BKG_CARD     1u
+#define OFFSET_BKG_RANK     (OFFSET_BKG_CARD + OFFSET_CARD_RANK)
+#define OFFSET_BKG_SUIT     (OFFSET_BKG_CARD + OFFSET_CARD_SUIT)
+#define OFFSET_BKG_BLANK    (OFFSET_BKG_CARD + OFFSET_CARD_BLANK)
+#define OFFSET_BKG_BACK     (OFFSET_BKG_CARD + OFFSET_CARD_BACK)
+#define OFFSET_BKG_RANK_ROT (OFFSET_BKG_CARD + OFFSET_CARD_RANK_ROT)
+#define OFFSET_BKG_SUIT_ROT (OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT)
 
 #define OFFSET_SPRITE_NONE   0
 #define OFFSET_SPRITE_CURSOR 1u
+#define OFFSET_SPRITE_FRAME  (OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME)
+#define OFFSET_SPRITE_HAND   (OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_HAND)
+#define OFFSET_SPRITE_BACK   (OFFSET_SPRITE_CURSOR + N_CURSOR)
 
-#define OFFSET_SUIT    4u
-#define OFFSET_VISIBLE 6u
+#define SPRITE_FRAME   0
+#define SPRITE_HAND    (SPRITE_FRAME + N_SPRITE_FRAME)
+#define SPRITE_DYNAMIC (SPRITE_HAND + N_SPRITE_HAND)
 
-#define BITMASK_RANK    0b00001111
-#define BITMASK_SUIT    0b00110000
-#define BITMASK_VISIBLE 0b01000000
+#define BIT_OFFSET_DATA_RANK    0
+#define BIT_OFFSET_DATA_SUIT    4u
+#define BIT_OFFSET_DATA_VISIBLE 6u
+
+#define BITMASK_DATA_RANK    0b00001111
+#define BITMASK_DATA_SUIT    0b00110000
+#define BITMASK_DATA_VISIBLE 0b01000000
+
+#define RANK(data)    (data & BITMASK_DATA_RANK)
+#define SUIT(data)    ((data & BITMASK_DATA_SUIT) >> BIT_OFFSET_DATA_SUIT)
+#define VISIBLE(data) (data & BITMASK_DATA_VISIBLE)
 
 #define BITMASK_REDRAW_CURSOR 0b00000001
 #define BITMASK_REDRAW_HAND   0b00000010
-
-#define RANK(data)    (data & BITMASK_RANK)
-#define SUIT(data)    ((data & BITMASK_SUIT) >> OFFSET_SUIT)
-#define VISIBLE(data) (data & BITMASK_VISIBLE)
 
 #define IDX_PTR(arr, idx) (arr + idx)
 
@@ -70,10 +83,29 @@ typedef struct Cursor {
 	UINT8 redraw;
 } Cursor;
 
+typedef struct DynamicMetaSprite {
+	INT8 src[2];
+	INT16 dist[2];
+	INT8 target_frames;
+	INT8 elapsed_frames;
+
+	metasprite_t const *metasprite;
+	UINT8 metasprite_offset;
+
+	UINT8 data;
+	void (*callback)(void);
+} DynamicMetaSprite;
+
 Card deck[104];
 Pile piles[10];
 UINT8 top_card_idx;
+
 UINT16 score = 500;
+
+DynamicMetaSprite dynamic_metasprite = {
+	.target_frames = -1,
+	.elapsed_frames = 0,
+};
 
 Cursor cursor = {
 	.held_card = NULL,
@@ -86,6 +118,16 @@ Cursor cursor = {
 	.redraw = BITMASK_REDRAW_CURSOR,
 };
 
+void metasprite_2x3_hide(UINT8 sprite)
+{
+	move_metasprite(metasprite_same_2x3,
+		OFFSET_SPRITE_NONE,
+		sprite,
+		0,
+		0
+	);
+}
+
 //Sets cards in deck, shuffles them, then deals
 void init_deck(void)
 {
@@ -97,7 +139,7 @@ void init_deck(void)
 	for (suit = 0; suit < 4u; suit++) {
 		for (rank = 0; rank < 13u; rank++) {
 			for (i = 0; i < 2u; i++) {
-				card->data = rank | (suit << OFFSET_SUIT);
+				card->data = rank | (suit << BIT_OFFSET_DATA_SUIT);
 				card++;
 			}
 		}
@@ -119,7 +161,7 @@ void init_deck(void)
 		card++;
 	}
 	for (; i < 104u; i++) {
-		card->data |= BITMASK_VISIBLE;
+		card->data |= BITMASK_DATA_VISIBLE;
 		card->next_card = NULL;
 		card++;
 	}
@@ -236,6 +278,37 @@ inline void cursor_grab_stack(void)
 	}
 }
 
+void dynamic_metasprite_deal_callback(void)
+{
+	Pile *pile = IDX_PTR(piles, dynamic_metasprite.data);
+	draw_pile(pile->top, dynamic_metasprite.data, pile->height);
+	if (dynamic_metasprite.data == 9u) {
+		dynamic_metasprite.target_frames = -1;
+		metasprite_2x3_hide(SPRITE_DYNAMIC);
+		return;
+	}
+	pile++;
+	dynamic_metasprite.data++;
+	dynamic_metasprite.dist[0] += 16;
+	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height) * 8;
+	dynamic_metasprite.elapsed_frames = 0;
+}
+
+void dynamic_metasprite_deal(void)
+{
+	Pile *pile = IDX_PTR(piles, 0);
+	dynamic_metasprite.src[0] = 0;
+	dynamic_metasprite.src[1] = 0;
+	dynamic_metasprite.dist[0] = 0;
+	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height) * 8;
+	dynamic_metasprite.elapsed_frames = 0;
+	dynamic_metasprite.target_frames = DEAL_TARGET_FRAMES;
+	dynamic_metasprite.metasprite = metasprite_sequential_2x3;
+	dynamic_metasprite.metasprite_offset = OFFSET_SPRITE_BACK;
+	dynamic_metasprite.data = 0;
+	dynamic_metasprite.callback = &dynamic_metasprite_deal_callback;
+}
+
 inline void deal(void)
 {
 	UINT8 i;
@@ -250,8 +323,8 @@ inline void deal(void)
 	Card *deck_top = IDX_PTR(deck, top_card_idx);
 	for (i = 0; i < 10u; i++) {
 		pile->top->next_card = deck_top;
+		pile->top = deck_top;
 		pile->height++;
-		draw_pile(deck_top, i, pile->height);
 		deck_top++;
 		pile++;
 	}
@@ -259,6 +332,8 @@ inline void deal(void)
 
 	if (top_card_idx == 104u)
 		draw_card(0, 0, OFFSET_BKG_BLANK);
+
+	dynamic_metasprite_deal();
 }
 
 void pile_append_cursor_stack(Pile *pile)
@@ -275,7 +350,7 @@ void pile_append_cursor_stack(Pile *pile)
 	pile->height += cursor.held_stack_size;
 	cursor.held_card = NULL;
 	if (cursor.card_to_show && cursor.hand_pile_idx != cursor.pile_idx)
-		cursor.card_to_show->data |= BITMASK_VISIBLE;
+		cursor.card_to_show->data |= BITMASK_DATA_VISIBLE;
 	cursor.card_to_show = NULL;
 	cursor.height = pile->height;
 	cursor.redraw |= BITMASK_REDRAW_CURSOR;
@@ -347,7 +422,7 @@ inline void input_process(void)
 	prev_input = input;
 }
 
-inline void cursor_anim_process(void)
+inline void cursor_process(void)
 {
 	cursor.anim_ctr++;
 	cursor.anim_ctr &= (1u << (CURSOR_PERIOD + 1u)) - 1u;
@@ -359,37 +434,72 @@ inline void cursor_anim_process(void)
 	if (cursor.redraw & BITMASK_REDRAW_CURSOR) {
 		cursor.redraw &= ~BITMASK_REDRAW_CURSOR;
 		if (cursor.pile_idx == PILE_IDX_DECK)
-			move_metasprite(cursor_frames[cursor.anim_frame], OFFSET_SPRITE_CURSOR, SPRITE_CURSOR, 0, 0);
+			move_metasprite(cursor_metasprites[cursor.anim_frame],
+				OFFSET_SPRITE_FRAME,
+				SPRITE_FRAME,
+				0,
+				0
+			);
 		else
-			move_metasprite(cursor_frames[cursor.anim_frame], OFFSET_SPRITE_CURSOR, SPRITE_CURSOR, cursor.pile_idx << 4u, SCOREBAR_HEIGHT * 8u  + (cursor.height << 3u));
+			move_metasprite(cursor_metasprites[cursor.anim_frame],
+				OFFSET_SPRITE_FRAME,
+				SPRITE_FRAME,
+				cursor.pile_idx << 4u,
+				SCOREBAR_HEIGHT * 8u  + (cursor.height << 3u)
+			);
 	}
 	if (cursor.redraw & BITMASK_REDRAW_HAND) {
 		cursor.redraw &= ~BITMASK_REDRAW_HAND;
 		if (cursor.held_card)
-			move_metasprite(cursor_frames[CURSOR_FRAME_HAND], OFFSET_SPRITE_CURSOR, SPRITE_HAND, cursor.hand_pile_idx << 4u, SCOREBAR_HEIGHT * 8u + (piles[cursor.hand_pile_idx].height << 3u));
+			move_metasprite(metasprite_sequential_2x3,
+				OFFSET_SPRITE_HAND,
+				SPRITE_HAND,
+				cursor.hand_pile_idx << 4u,
+				SCOREBAR_HEIGHT * 8u + (piles[cursor.hand_pile_idx].height << 3u)
+			);
 		else
-			move_metasprite(cursor_frames[CURSOR_FRAME_BLANK], OFFSET_SPRITE_NONE, 6, SPRITE_HAND, 0);
+			metasprite_2x3_hide(SPRITE_HAND);
 	}
+}
+
+inline void dynamic_metasprite_process(void)
+{
+	if (dynamic_metasprite.elapsed_frames >= dynamic_metasprite.target_frames)
+		return;
+
+	dynamic_metasprite.elapsed_frames++;
+	move_metasprite(dynamic_metasprite.metasprite,
+		dynamic_metasprite.metasprite_offset,
+		SPRITE_DYNAMIC,
+		dynamic_metasprite.src[0] + (dynamic_metasprite.dist[0] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames),
+		dynamic_metasprite.src[1] + (dynamic_metasprite.dist[1] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames)
+	);
+	if (dynamic_metasprite.elapsed_frames == dynamic_metasprite.target_frames
+		&& dynamic_metasprite.callback)
+		dynamic_metasprite.callback();
 }
 
 void main(void)
 {
 	initrand(DIV_REG);
 
-	set_bkg_data(0, 47u, card_textures);
+	set_bkg_data(OFFSET_BKG_CARD, N_CARD, card_textures);
 
 	init_deck();
 
 	draw_background();
 	SHOW_BKG;
 
-	set_sprite_data(OFFSET_SPRITE_CURSOR, 8, cursor_textures);
+	set_sprite_data(OFFSET_SPRITE_CURSOR, N_CURSOR, cursor_textures);
+	set_sprite_data(OFFSET_SPRITE_BACK, N_CARD_BACK, IDX_PTR(card_textures, SIZEOF_TILE * OFFSET_CARD_BACK));
 	SHOW_SPRITES;
 
 	while (1) {
 		input_process();
 
-		cursor_anim_process();
+		cursor_process();
+
+		dynamic_metasprite_process();
 
 		wait_vbl_done();
 	}

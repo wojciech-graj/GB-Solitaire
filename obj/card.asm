@@ -2,7 +2,7 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 4.1.0 #12072 (Linux)
 ;--------------------------------------------------------
-	.module cards
+	.module card
 	.optsdcc -mgbz80
 	
 ;--------------------------------------------------------
@@ -38,22 +38,6 @@
 	.area _CODE
 	.area _CODE
 _card_textures:
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
-	.db #0x00	; 0
 	.db #0x7f	; 127
 	.db #0x7f	; 127
 	.db #0x80	; 128

@@ -13,24 +13,33 @@ Symbol Table
     ___current_metasprite                                          ****** GX
     ___memcpy                                                      ****** GX
     ___move_metasprite                                             ****** GX
+    ___sdcc_call_hl                                                ****** GX
+    __divsint                                                      ****** GX
     __moduchar                                                     ****** GX
+    __mulint                                                       ****** GX
     _card_textures                                                 ****** GX
-  1 _cursor                                                        00016D GR
-  0 _cursor_adjust_height                                          000427 GR
-    _cursor_frames                                                 ****** GX
+  1 _cursor                                                        00017B GR
+  0 _cursor_adjust_height                                          000445 GR
+    _cursor_metasprites                                            ****** GX
     _cursor_textures                                               ****** GX
   1 _deck                                                          000000 GR
-  0 _draw_background                                               0003E2 GR
-  0 _draw_card                                                     000371 GR
-  0 _draw_pile                                                     0001FE GR
+  0 _draw_background                                               000400 GR
+  0 _draw_card                                                     00038F GR
+  0 _draw_pile                                                     00021C GR
+  1 _dynamic_metasprite                                            00016D GR
+  0 _dynamic_metasprite_deal                                       0004F8 GR
+  0 _dynamic_metasprite_deal_callback                              000463 GR
     _get_bkg_xy_addr                                               ****** GX
-  0 _init_deck                                                     000000 GR
+  0 _init_deck                                                     00001E GR
     _initrand                                                      ****** GX
-  1 _input_process_prev_input_65536_171                            000178 R
+  1 _input_process_prev_input_65536_182                            000186 R
     _joypad                                                        ****** GX
-  0 _main                                                          000538 GR
-  1 _main_prev_input_327680_223                                    000179 R
-  0 _pile_append_cursor_stack                                      000445 GR
+  0 _main                                                          000634 GR
+  1 _main_prev_input_327680_236                                    000187 R
+  0 _metasprite_2x3_hide                                           000000 GR
+    _metasprite_same_2x3                                           ****** GX
+    _metasprite_sequential_2x3                                     ****** GX
+  0 _pile_append_cursor_stack                                      000541 GR
   1 _piles                                                         000138 GR
     _rand                                                          ****** GX
   1 _score                                                         00016B GR
@@ -45,11 +54,11 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    9D7   flags    0
-   1 _DATA                                      size    17A   flags    0
+   0 _CODE                                      size    B6C   flags    0
+   1 _DATA                                      size    188   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0
-   4 _GSINIT                                    size     3C   flags    0
+   4 _GSINIT                                    size     46   flags    0
    5 _GSFINAL                                   size      0   flags    0
    6 _CABS                                      size      0   flags    8
 

@@ -18,44 +18,53 @@ Symbol Table
     __moduchar                                                     ****** GX
     __mulint                                                       ****** GX
     _card_textures                                                 ****** GX
-  1 _cursor                                                        00017B GR
-  0 _cursor_adjust_height                                          000445 GR
+  1 _cursor                                                        000182 GR
+  0 _cursor_adjust_height                                          0003FF GR
     _cursor_metasprites                                            ****** GX
     _cursor_textures                                               ****** GX
   1 _deck                                                          000000 GR
-  0 _draw_background                                               000400 GR
-  0 _draw_card                                                     00038F GR
-  0 _draw_pile                                                     00021C GR
-  1 _dynamic_metasprite                                            00016D GR
-  0 _dynamic_metasprite_deal                                       0004F8 GR
-  0 _dynamic_metasprite_deal_callback                              000463 GR
-    _get_bkg_xy_addr                                               ****** GX
+  0 _draw_background                                               0003BA GR
+  0 _draw_card_bottom                                              000288 GR
+  0 _draw_card_top                                                 00021C GR
+  0 _draw_pile                                                     0002E5 GR
+  0 _draw_sequential_card                                          000349 GR
+  1 _dynamic_metasprite                                            00016E GR
+  0 _dynamic_metasprite_deal                                       0004B9 GR
+  0 _dynamic_metasprite_deal_callback                              00041D GR
+  0 _dynamic_metasprite_fold                                       000790 GR
+  0 _dynamic_metasprite_fold_callback                              00069D GR
+  0 _dynamic_metasprite_move_stack_callback                        000643 GR
+  0 _dynamic_metasprite_unfold_callback                            00054F GR
+  1 _flags                                                         00016B GR
   0 _init_deck                                                     00001E GR
     _initrand                                                      ****** GX
-  1 _input_process_prev_input_65536_182                            000186 R
+  1 _input_process_prev_input_65536_215                            00018C R
     _joypad                                                        ****** GX
-  0 _main                                                          000634 GR
-  1 _main_prev_input_327680_236                                    000187 R
+  0 _main                                                          000958 GR
+  1 _main_prev_input_327680_269                                    00018D R
   0 _metasprite_2x3_hide                                           000000 GR
+    _metasprite_custom_2x3                                         ****** GX
     _metasprite_same_2x3                                           ****** GX
     _metasprite_sequential_2x3                                     ****** GX
-  0 _pile_append_cursor_stack                                      000541 GR
+  0 _pile_append_cursor_stack                                      000813 GR
   1 _piles                                                         000138 GR
     _rand                                                          ****** GX
-  1 _score                                                         00016B GR
+  1 _score                                                         00016C GR
     _set_bkg_data                                                  ****** GX
     _set_bkg_tile_xy                                               ****** GX
+  0 _set_metasprite_card                                           00050C GR
     _set_sprite_data                                               ****** GX
   1 _top_card_idx                                                  00016A GR
     _wait_vbl_done                                                 ****** GX
+
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    B6C   flags    0
-   1 _DATA                                      size    188   flags    0
+   0 _CODE                                      size    E99   flags    0
+   1 _DATA                                      size    18E   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0
    4 _GSINIT                                    size     46   flags    0

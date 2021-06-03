@@ -16,3 +16,10 @@ const metasprite_t metasprite_same_2x3[] = {
 	{8, -8, 0, 0}, {0, 8, 0, 0},
 	{metasprite_end}
 };
+
+metasprite_t metasprite_custom_2x3[] = {
+	{16, 8, 0, 0}, {0, 8, 0, 0},
+	{8, -8, 0, 0}, {0, 8, 0, 0},
+	{8, -8, 0, 0}, {0, 8, 0, 0},
+	{metasprite_end}
+};

@@ -29,6 +29,7 @@
 #define OFFSET_BKG_BACK     (OFFSET_BKG_CARD + OFFSET_CARD_BACK)
 #define OFFSET_BKG_RANK_ROT (OFFSET_BKG_CARD + OFFSET_CARD_RANK_ROT)
 #define OFFSET_BKG_SUIT_ROT (OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT)
+#define OFFSET_BKG_OUTLINE  (OFFSET_BKG_CARD + OFFSET_CARD_OUTLINE)
 
 #define OFFSET_SPRITE_NONE     0
 #define OFFSET_SPRITE_CURSOR   1u
@@ -41,6 +42,7 @@
 #define OFFSET_SPRITE_BACK     (OFFSET_SPRITE_CARD + OFFSET_CARD_BACK)
 #define OFFSET_SPRITE_RANK_ROT (OFFSET_SPRITE_CARD + OFFSET_CARD_RANK_ROT)
 #define OFFSET_SPRITE_SUIT_ROT (OFFSET_SPRITE_CARD + OFFSET_CARD_SUIT_ROT)
+#define OFFSET_SPRITE_OUTLINE  (OFFSET_SPRITE_CARD + OFFSET_CARD_OUTLINE)
 
 #define SPRITE_FRAME   0
 #define SPRITE_HAND    (SPRITE_FRAME + N_SPRITE_FRAME)
@@ -101,9 +103,7 @@ typedef struct DynamicMetaSprite {
 	metasprite_t const * metasprite;
 	UINT8 metasprite_offset;
 
-	UINT8 data_0;
-	UINT8 data_1;
-	UINT8 data_2;
+	UINT8 data[4];
 	void *data_ptr;
 
 	void (*callback)(void);
@@ -185,10 +185,10 @@ void init_deck(void)
 		pile->base = card;
 		if (i < 4u) {
 			pile->top = IDX_PTR(deck, 50u + i);
-			pile->height = 5u;
+			pile->height = 6u;
 		} else {
 			pile->top = IDX_PTR(deck, 40u + i);
-			pile->height = 4u;
+			pile->height = 5u;
 		}
 
 		card++;
@@ -233,6 +233,8 @@ void draw_pile(Card *card, UINT8 pile_idx, UINT8 height)
 {
 	pile_idx <<= 1;
 	height += SCOREBAR_HEIGHT;
+	if (!card)
+		return;
 	while (1) {
 		draw_card_top(pile_idx, height, card->data);
 		if (!card->next_card) {
@@ -242,8 +244,6 @@ void draw_pile(Card *card, UINT8 pile_idx, UINT8 height)
 		height++;
 		card = card->next_card;
 	}
-
-	height += 2u;
 }
 
 void draw_sequential_card(const UINT8 x, const UINT8 y, const UINT8 bkg_offset)
@@ -270,8 +270,19 @@ void draw_background(void)
 void cursor_adjust_height(void)
 {
 	Pile *pile = IDX_PTR(piles, cursor.pile_idx);
-	if (cursor.height > pile->height)
-		cursor.height = pile->height;
+	if (cursor.height >= pile->height)
+		cursor.height = pile->height - !!pile->height;
+}
+
+UINT8 is_stack_coherent(Card *card)
+{
+	while (card->next_card) {
+		UINT8 prev_data = card->data;
+		card = card->next_card;
+		if (prev_data != card->data + 1u)
+			return 0;
+	}
+	return 1u;
 }
 
 inline void cursor_grab_stack(void)
@@ -282,21 +293,13 @@ inline void cursor_grab_stack(void)
 	for (i = 1; i < cursor.height; i++)
 		top = top->next_card;
 	Card *stack = cursor.height ? top->next_card : top;
-	if (!VISIBLE(stack->data))
+	if (!(VISIBLE(stack->data) && is_stack_coherent(stack)))
 		return;
-
-	Card *card = stack;
-	while (card->next_card) {
-		UINT8 prev_data = card->data;
-		card = card->next_card;
-		if (prev_data != card->data + 1u)
-			return;
-	}
 
 	cursor.held_card = stack;
 	cursor.hand_pile_idx = cursor.pile_idx;
-	cursor.held_stack_size = pile->height - cursor.height + !!cursor.height;//NOTE: this is somewhat jank and may cause problems
-	pile->height = cursor.height - !!cursor.height;
+	cursor.held_stack_size = pile->height - cursor.height;
+	pile->height = cursor.height;
 	if (cursor.height) {
 		pile->top = top;
 		top->next_card = NULL;
@@ -310,18 +313,20 @@ inline void cursor_grab_stack(void)
 
 void dynamic_metasprite_deal_callback(void)
 {
-	Pile *pile = IDX_PTR(piles, dynamic_metasprite.data_0);
-	draw_pile(pile->top, dynamic_metasprite.data_0, pile->height);
-	if (dynamic_metasprite.data_0 == 9u) {
+	Pile *pile = IDX_PTR(piles, dynamic_metasprite.data[0]);
+	draw_card(dynamic_metasprite.data[0] * 2u, SCOREBAR_HEIGHT + pile->height - 1u, pile->top->data);
+	if (dynamic_metasprite.data[0] == 9u) {
+		if (top_card_idx == 104u)
+			draw_sequential_card(0, 0, OFFSET_BKG_OUTLINE);
 		metasprite_2x3_hide(SPRITE_DYNAMIC);
 		flags &= ~FLAG_PLAYING_ANIMATION;
 		dynamic_metasprite.target_frames = -1;
 		return;
 	}
 	pile++;
-	dynamic_metasprite.data_0++;
+	dynamic_metasprite.data[0]++;
 	dynamic_metasprite.dist[0] += 16;
-	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height) * 8;
+	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height - 1u) * 8;
 	dynamic_metasprite.elapsed_frames = 0;
 }
 
@@ -331,12 +336,12 @@ void dynamic_metasprite_deal(void)
 	dynamic_metasprite.src[0] = 0;
 	dynamic_metasprite.src[1] = 0;
 	dynamic_metasprite.dist[0] = 0;
-	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height) * 8;
+	dynamic_metasprite.dist[1] = (INT16)(SCOREBAR_HEIGHT + pile->height - 1u) * 8;
 	dynamic_metasprite.elapsed_frames = 0;
 	dynamic_metasprite.target_frames = MOVE_TARGET_FRAMES;
 	dynamic_metasprite.metasprite = metasprite_sequential_2x3;
 	dynamic_metasprite.metasprite_offset = OFFSET_SPRITE_BACK;
-	dynamic_metasprite.data_0 = 0;
+	dynamic_metasprite.data[0] = 0;
 	dynamic_metasprite.callback = &dynamic_metasprite_deal_callback;
 	flags |= FLAG_PLAYING_ANIMATION;
 }
@@ -362,9 +367,6 @@ inline void deal(void)
 	}
 	top_card_idx += 10u;
 
-	if (top_card_idx == 104u)
-		draw_sequential_card(0, 0, OFFSET_BKG_BLANK);
-
 	dynamic_metasprite_deal();
 }
 
@@ -379,35 +381,62 @@ void set_metasprite_card(const UINT8 card_data)
 	(iter++)->dtile = OFFSET_CARD_RANK_ROT + RANK(card_data);
 }
 
-void dynamic_metasprite_unfold_callback(void)
+void dynamic_metasprite_fold(const UINT8 top_card_data, const UINT8 src_x, const UINT8 src_y, const UINT8 dest_x, const UINT8 dest_y, const UINT8 stack_height, const Card *base_card, const UINT8 unfold, const UINT8 piles_to_clear);
+
+void dynamic_metasprite_fold_pile(void)
 {
-	Card *card = dynamic_metasprite.data_ptr;
-	if (!card->next_card) {
-		draw_card(dynamic_metasprite.data_1 / 8u, (UINT8)dynamic_metasprite.src[1] / 8u + 1u, card->data);
+	UINT8 pile_idx = dynamic_metasprite.data[3] & 0xF;
+	if (!pile_idx) {
 		metasprite_2x3_hide(SPRITE_DYNAMIC);
 		flags &= ~FLAG_PLAYING_ANIMATION;
 		dynamic_metasprite.target_frames = -1;
 		return;
 	}
+
+	Pile *pile = IDX_PTR(piles, pile_idx);
+	UINT8 x = pile_idx * 16u;
+	dynamic_metasprite_fold(pile->top->data,
+		x,
+		SCOREBAR_HEIGHT + 8u * 15u,
+		x,
+		0,
+		13u,
+		pile->base,
+		0,
+		dynamic_metasprite.data[3] >> 4u
+	);
+	pile->base = NULL;
+	pile->top = NULL;
+	pile->height = 0;
+	cursor_adjust_height();
+}
+
+void dynamic_metasprite_unfold_callback(void)
+{
+	Card *card = dynamic_metasprite.data_ptr;
+	if (!card->next_card) {
+		draw_card(dynamic_metasprite.data[1] / 8u, (UINT8)dynamic_metasprite.src[1] / 8u + 1u, card->data);
+		dynamic_metasprite_fold_pile();
+		return;
+	}
 	dynamic_metasprite.data_ptr = card->next_card;
 	dynamic_metasprite.src[1] += 8;
-	draw_card_top(dynamic_metasprite.data_1 / 8u, dynamic_metasprite.src[1] / 8u, card->data);
+	draw_card_top(dynamic_metasprite.data[1] / 8u, dynamic_metasprite.src[1] / 8u, card->data);
 	dynamic_metasprite.elapsed_frames = 0;
 }
 
 void dynamic_metasprite_move_stack_callback(void)
 {
-	if (dynamic_metasprite.data_0 & BITMASK_DYNAMIC_METASPRITE_UNFOLD) {
-		dynamic_metasprite.src[0] = dynamic_metasprite.data_1;
-		dynamic_metasprite.src[1] = dynamic_metasprite.data_2 - 8u;
+	if (dynamic_metasprite.data[0] & BITMASK_DYNAMIC_METASPRITE_UNFOLD) {
+		dynamic_metasprite.src[0] = dynamic_metasprite.data[1];
+		dynamic_metasprite.src[1] = dynamic_metasprite.data[2] - 8u;
 		dynamic_metasprite.dist[0] = 0;
 		dynamic_metasprite.dist[1] = 8;
 		dynamic_metasprite.target_frames = FOLD_TARGET_FRAMES;
 		dynamic_metasprite.callback = &dynamic_metasprite_unfold_callback;
 		dynamic_metasprite_unfold_callback();
 	} else {
-		flags &= ~FLAG_PLAYING_ANIMATION;
-		dynamic_metasprite.target_frames = -1;
+		dynamic_metasprite_fold_pile();
 	}
 }
 
@@ -416,34 +445,38 @@ void dynamic_metasprite_fold_callback(void)
 	dynamic_metasprite.src[1] -= 8;
 	dynamic_metasprite.elapsed_frames = 0;
 	clear_bkg_2x1((UINT8)dynamic_metasprite.src[0] / 8u, (UINT8)dynamic_metasprite.src[1] / 8u + 2u);
-	if (dynamic_metasprite.data_0 & ~BITMASK_DYNAMIC_METASPRITE_UNFOLD) {
-		dynamic_metasprite.data_0--;
+	if (dynamic_metasprite.data[0] & ~BITMASK_DYNAMIC_METASPRITE_UNFOLD) {
+		dynamic_metasprite.data[0]--;
 	} else {
-		if (cursor.card_to_show)
+		if (cursor.card_to_show) {
 			draw_card(dynamic_metasprite.src[0] / 8u, dynamic_metasprite.src[1] / 8u - 1u, cursor.card_to_show->data);
-		dynamic_metasprite.dist[0] = (INT16)dynamic_metasprite.data_1 - dynamic_metasprite.src[0];
-		dynamic_metasprite.dist[1] = (INT16)dynamic_metasprite.data_2 - dynamic_metasprite.src[1];
+			cursor.card_to_show = NULL;
+		} else {
+			draw_sequential_card(dynamic_metasprite.src[0] / 8u, dynamic_metasprite.src[1] / 8u, OFFSET_BKG_OUTLINE);
+		}
+		dynamic_metasprite.dist[0] = (INT16)dynamic_metasprite.data[1] - dynamic_metasprite.src[0];
+		dynamic_metasprite.dist[1] = (INT16)dynamic_metasprite.data[2] - dynamic_metasprite.src[1];
 		dynamic_metasprite.target_frames = MOVE_TARGET_FRAMES;
 		dynamic_metasprite.callback = &dynamic_metasprite_move_stack_callback;
 	}
 
 }
 
-void dynamic_metasprite_fold(const UINT8 top_card_data, const UINT8 src_x, const UINT8 src_y, const UINT8 dest_x, const UINT8 dest_y, const UINT8 stack_height, const Card *base_card, const UINT8 unfold)
+void dynamic_metasprite_fold(const UINT8 top_card_data, const UINT8 src_x, const UINT8 src_y, const UINT8 dest_x, const UINT8 dest_y, const UINT8 stack_height, const Card *base_card, const UINT8 unfold, const UINT8 piles_to_clear)
 {
 	set_metasprite_card(top_card_data);
 
 	dynamic_metasprite.metasprite = metasprite_custom_2x3;
 	dynamic_metasprite.metasprite_offset = OFFSET_SPRITE_CARD;
 
-	dynamic_metasprite.data_1 = dest_x;
-	dynamic_metasprite.data_2 = dest_y;
+	dynamic_metasprite.data[0] = (stack_height - 1u) | unfold;
+	dynamic_metasprite.data[1] = dest_x;
+	dynamic_metasprite.data[2] = dest_y;
+	dynamic_metasprite.data[3] = piles_to_clear;
 	dynamic_metasprite.data_ptr = base_card;
 
 	dynamic_metasprite.src[0] = src_x;
 	dynamic_metasprite.src[1] = src_y + 8u;
-
-	dynamic_metasprite.data_0 = (stack_height - 1u) | unfold;
 
 	flags |= FLAG_PLAYING_ANIMATION;
 
@@ -468,23 +501,33 @@ void pile_append_cursor_stack(Pile *pile)
 	while (top_card->next_card)
 		top_card = top_card->next_card;
 	pile->top = top_card;
+	cursor.height = pile->height - !!pile->height;
+	pile->height += cursor.held_stack_size;
 	if (cursor.hand_pile_idx != cursor.pile_idx) {
+		UINT8 piles_to_clear = 0;
+		if (src_pile->height == 13u && is_stack_coherent(src_pile->base)) {
+			piles_to_clear = cursor.pile_idx;
+		}
+		if (pile->height == 13u && is_stack_coherent(pile->base)) {
+			cursor.height = 0;
+			piles_to_clear |= piles_to_clear ? cursor.hand_pile_idx << 4u : cursor.hand_pile_idx;
+		}
+
 		if (cursor.card_to_show)
 			cursor.card_to_show->data |= BITMASK_DATA_VISIBLE;
 		dynamic_metasprite_fold(top_card->data,
 			cursor.pile_idx * 16u,
-			(src_pile->height + SCOREBAR_HEIGHT + cursor.held_stack_size) * 8u, cursor.hand_pile_idx * 16u,
-			(pile->height + SCOREBAR_HEIGHT + 1u) * 8u,
+			(src_pile->height + SCOREBAR_HEIGHT + cursor.held_stack_size - 1u) * 8u, cursor.hand_pile_idx * 16u,
+			(pile->height + SCOREBAR_HEIGHT - cursor.held_stack_size) * 8u,
 			cursor.held_stack_size,
 			cursor.held_card,
-			BITMASK_DYNAMIC_METASPRITE_UNFOLD
+			BITMASK_DYNAMIC_METASPRITE_UNFOLD,
+			piles_to_clear
 		);
 	}
 
-	pile->height += cursor.held_stack_size;
 	cursor.held_card = NULL;
 	cursor.pile_idx = cursor.hand_pile_idx;
-	cursor.height = pile->height;
 	flags |= FLAG_REDRAW_CURSOR;
 }
 
@@ -523,7 +566,7 @@ inline void input_process(void)
 		if (new_input & J_DOWN) {
 			if (cursor.pile_idx == PILE_IDX_DECK)
 				cursor.pile_idx = 0;
-			else if (cursor.height < piles[cursor.pile_idx].height)
+			else if (cursor.height + 1u < piles[cursor.pile_idx].height)
 				cursor.height++;
 		} else if (new_input & J_UP) {
 			if (cursor.height == 0)
@@ -579,15 +622,17 @@ inline void cursor_process(void)
 	}
 	if (flags & FLAG_REDRAW_HAND) {
 		flags &= ~FLAG_REDRAW_HAND;
-		if (cursor.held_card)
+		if (cursor.held_card) {
+			UINT8 height = piles[cursor.hand_pile_idx].height;
 			move_metasprite(metasprite_sequential_2x3,
 				OFFSET_SPRITE_HAND,
 				SPRITE_HAND,
 				cursor.hand_pile_idx << 4u,
-				SCOREBAR_HEIGHT * 8u + (piles[cursor.hand_pile_idx].height << 3u)
+				SCOREBAR_HEIGHT * 8u + ((height + !height) << 3u) - 8u
 			);
-		else
+		} else {
 			metasprite_2x3_hide(SPRITE_HAND);
+		}
 	}
 }
 
@@ -610,9 +655,9 @@ inline void dynamic_metasprite_process(void)
 
 void main(void)
 {
-	initrand(DIV_REG);
-
 	set_bkg_data(OFFSET_BKG_CARD, N_CARD, card_textures);
+
+	initrand(DIV_REG);
 
 	init_deck();
 

@@ -13,8 +13,7 @@
 #include "../res/cursor.h"
 #include "../res/card.h"
 #include "../res/regular_metasprite.h"
-#include "../res/title.h"
-#include "../res/copyright.h"
+#include "../res/menu.h"
 
 /*******************************************************************************
 *	MACRO
@@ -25,17 +24,23 @@
 #define OFFSET_BKG_NONE       0u
 #define OFFSET_BKG_FONT       1u
 #define OFFSET_BKG_FONT_ADDON (OFFSET_BKG_FONT + N_FONT)
-#define OFFSET_BKG_CARD       128u
-#define OFFSET_BKG_TITLE      (OFFSET_BKG_CARD + N_CARD)
+#define OFFSET_BKG_CARD_ADDON (OFFSET_BKG_FONT_ADDON + N_FONT_ADDON)
+
+#define OFFSET_BKG_TITLE      128u
+#define OFFSET_BKG_CARD       (OFFSET_BKG_TITLE + N_TITLE)
 
 #define OFFSET_SPRITE_NONE   0u
 #define OFFSET_SPRITE_CURSOR 1u
-#define OFFSET_SPRITE_CARD   128u
-#define OFFSET_SPRITE_TITLE  (OFFSET_SPRITE_CARD + N_CARD)
 
-#define SPRITE_FRAME   34u
-#define SPRITE_HAND    28u
+#define OFFSET_SPRITE_TITLE  128u
+#define OFFSET_SPRITE_CARD   (OFFSET_SPRITE_TITLE + N_TITLE)
+
 #define SPRITE_DYNAMIC 0u
+#define SPRITE_HAND    6u
+#define SPRITE_FRAME   12u
+#define SPRITE_FRAME_1 18u
+#define SPRITE_FRAME_2 24u
+#define SPRITE_FRAME_3 30u
 
 #define BIT_OFFSET_CARD_RANK    0u
 #define BIT_OFFSET_CARD_SUIT    4u
@@ -49,29 +54,35 @@
 #define SUIT(data)    ((data & BITMASK_CARD_SUIT) >> BIT_OFFSET_CARD_SUIT)
 #define VISIBLE(data) (data & BITMASK_CARD_VISIBLE)
 
-#define FLAG_REDRAW_CURSOR     0b00000001u
-#define FLAG_REDRAW_HAND       0b00000010u
-#define FLAG_PLAYING_ANIMATION 0b00000100u
-#define FLAG_GAME_STATE        0b00011000u
-#define FLAG_GAME_STATE_START  0b00000000u
-#define FLAG_GAME_STATE_PAUSE  0b00001000u
-#define FLAG_GAME_STATE_INGAME 0b00010000u
+#define FLAG_REDRAW_CURSOR       0b00000001u
+#define FLAG_REDRAW_HAND         0b00000010u
+#define FLAG_PLAYING_ANIMATION   0b00000100u
+#define FLAG_GAME_STATE          0b00011000u
+#define FLAG_GAME_STATE_SPLASH   0b00000000u
+#define FLAG_GAME_STATE_PAUSE    0b00001000u
+#define FLAG_GAME_STATE_INGAME   0b00010000u
+#define FLAG_GAME_STATE_SETTINGS 0b00011000u
 
 #define BITMASK_DYNAMIC_METASPRITE_UNFOLD 0b10000000u
 
 #define BIT_OFFSET_SETTING_NUM_SUITS       0u
 #define BIT_OFFSET_SETTING_ANIMATION_SPEED 2u
+#define BIT_OFFSET_SETTING_MUSIC           4u
 
 #define BITMASK_SETTING_NUM_SUITS       0b00000011u
-#define SETTING_ONE_SUIT                0b00000001u
-#define SETTING_TWO_SUIT                0b00000010u
-#define SETTING_FOUR_SUIT               0b00000011u
+#define SETTING_ONE_SUIT                0b00000000u
+#define SETTING_TWO_SUIT                0b00000001u
+#define SETTING_FOUR_SUIT               0b00000010u
 
 #define NUM_SUITS(settings) (settings & BITMASK_SETTING_NUM_SUITS)
 
 #define BITMASK_SETTING_ANIMATION_SPEED 0b00001100u
 
 #define ANIMATION_SPEED(settings) ((settings & BITMASK_SETTING_ANIMATION_SPEED) >> BIT_OFFSET_SETTING_ANIMATION_SPEED)
+
+#define BITMASK_SETTING_MUSIC 0b00010000u
+
+#define MUSIC(settings) (settings & BITMASK_SETTING_MUSIC)
 
 #define IDX_PTR(arr, idx) (arr + idx)
 
@@ -81,6 +92,10 @@
 #define PILE_IDX_DECK 10u
 
 #define TARGET_FRAMES_SPLASH_SCREEN 32u
+
+#define NUM_SETTING_PILES 4u
+#define SETTINGS_SPLIT_X  10u
+#define SETTINGS_PAD_Y    1u
 
 /*******************************************************************************
 *	STRUCTS
@@ -139,8 +154,8 @@ struct AnimationSpeed {
 Card deck[104];
 Pile piles[10];
 UINT8 top_card_idx;
-UINT8 flags = FLAG_GAME_STATE_START;
-UINT8 settings = SETTING_FOUR_SUIT | 0b00000100;
+UINT8 flags = FLAG_GAME_STATE_SPLASH;
+UINT8 settings = SETTING_ONE_SUIT | BITMASK_SETTING_MUSIC;
 
 UINT16 score = 500;
 
@@ -168,6 +183,89 @@ const struct AnimationSpeed animation_speeds[3] = {
 	 .move_target_frames = 8},
 };
 
+enum menu_cards {
+	MENU_CARD_ONE_SUIT = 0u,
+	MENU_CARD_TWO_SUIT,
+	MENU_CARD_FOUR_SUIT,
+	MENU_CARD_MUSIC,
+	MENU_CARD_NO_MUSIC,
+	MENU_CARD_ANIMATION_SLOW,
+	MENU_CARD_ANIMATION_MEDIUM,
+	MENU_CARD_ANIMATION_FAST,
+	MENU_NUM_CARDS,
+};
+
+const UINT8 menu_card_tiles[MENU_NUM_CARDS][6] = {
+	[MENU_CARD_ONE_SUIT] = {
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK,
+		OFFSET_BKG_CARD + OFFSET_CARD_SUIT,
+		OFFSET_BKG_CARD_ADDON + 2u,
+		OFFSET_BKG_CARD_ADDON + 3u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 4u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 5u,
+	},
+	[MENU_CARD_TWO_SUIT] = {
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK,
+		OFFSET_BKG_CARD + OFFSET_CARD_SUIT,
+		OFFSET_BKG_CARD_ADDON + 4u,
+		OFFSET_BKG_CARD_ADDON + 5u,
+		OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT + 2u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 5u,
+	},
+	[MENU_CARD_FOUR_SUIT] = {
+		OFFSET_BKG_CARD_ADDON,
+		OFFSET_BKG_CARD + OFFSET_CARD_SUIT,
+		OFFSET_BKG_CARD_ADDON + 6u,
+		OFFSET_BKG_CARD_ADDON + 7u,
+		OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT + 2u,
+		OFFSET_BKG_CARD_ADDON + 1u,
+	},
+	[MENU_CARD_MUSIC] = {
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 1u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 2u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 3u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 4u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 5u,
+	},
+	[MENU_CARD_NO_MUSIC] = {
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 6u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 2u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 7u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 4u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_MUSIC + 8u,
+	},
+	[MENU_CARD_ANIMATION_SLOW] = {
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 1u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED + 1u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 4u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 5u,
+	},
+	[MENU_CARD_ANIMATION_MEDIUM] = {
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 1u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED + 2u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED + 3u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 4u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 5u,
+	},
+	[MENU_CARD_ANIMATION_FAST] = {
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 1u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED + 4u,
+		OFFSET_BKG_CARD_ADDON + OFFSET_CARD_ADDON_SPEED + 5u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 4u,
+		OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 5u,
+	},
+};
+
+const UINT8 setting_pile_heights[NUM_SETTING_PILES] = {
+	3u, 2u, 3u, 1u
+};
+
 /*******************************************************************************
 *	FUNCTION PROTOTYPES
 *******************************************************************************/
@@ -181,6 +279,8 @@ void draw_sequential_card(const UINT8 x, const UINT8 y, const UINT8 bkg_offset);
 void clear_bkg(void);
 void draw_pile(Card *card, UINT8 pile_idx, UINT8 height);
 void draw_bkg_game(void);
+void draw_bkg_splash_screen(void);
+void draw_bkg_settings(void);
 
 // metasprite
 void metasprite_2x3_hide(const UINT8 sprite);
@@ -299,6 +399,34 @@ void draw_bkg_game(void)
 	draw_sequential_card(0, 0, OFFSET_BKG_CARD + OFFSET_CARD_BACK);
 }
 
+void draw_bkg_splash_screen(void)
+{
+	set_bkg_tiles(5u, 10u, PUSH_TEXT_LEN, 1u, push_text);
+	set_bkg_tiles(PUSH_TEXT_LEN + 6u, 10u, START_TEXT_LEN, 1u, start_text);
+	set_bkg_tiles(0, 14u, COPYRIGHT_TEXT_LEN, 1u, copyright_text);
+	dynamic_metasprite_splash_screen();
+}
+
+void draw_bkg_settings(void)
+{
+	set_bkg_tiles(SETTINGS_SPLIT_X - SUITS_TEXT_LEN, SETTINGS_PAD_Y + 1u, SUITS_TEXT_LEN, 1u, suits_text);
+	set_bkg_tiles(SETTINGS_SPLIT_X, SETTINGS_PAD_Y, 2u, 3u, menu_card_tiles[MENU_CARD_ONE_SUIT]);
+	set_bkg_tiles(SETTINGS_SPLIT_X + 2u, SETTINGS_PAD_Y, 2u, 3u, menu_card_tiles[MENU_CARD_TWO_SUIT]);
+	set_bkg_tiles(SETTINGS_SPLIT_X + 4u, SETTINGS_PAD_Y, 2u, 3u, menu_card_tiles[MENU_CARD_FOUR_SUIT]);
+
+	set_bkg_tiles(SETTINGS_SPLIT_X - MUSIC_TEXT_LEN, SETTINGS_PAD_Y + 5u, MUSIC_TEXT_LEN, 1u, music_text);
+	set_bkg_tiles(SETTINGS_SPLIT_X, SETTINGS_PAD_Y + 4u, 2u, 3u, menu_card_tiles[MENU_CARD_MUSIC]);
+	set_bkg_tiles(SETTINGS_SPLIT_X + 2u, SETTINGS_PAD_Y + 4u, 2u, 3u, menu_card_tiles[MENU_CARD_NO_MUSIC]);
+
+	set_bkg_tiles(SETTINGS_SPLIT_X - SPEED_TEXT_LEN, SETTINGS_PAD_Y + 9u, SPEED_TEXT_LEN, 1u, speed_text);
+	set_bkg_tiles(SETTINGS_SPLIT_X, SETTINGS_PAD_Y + 8u, 2u, 3u, menu_card_tiles[MENU_CARD_ANIMATION_SLOW]);
+	set_bkg_tiles(SETTINGS_SPLIT_X + 2u, SETTINGS_PAD_Y + 8u, 2u, 3u, menu_card_tiles[MENU_CARD_ANIMATION_MEDIUM]);
+	set_bkg_tiles(SETTINGS_SPLIT_X + 4u, SETTINGS_PAD_Y + 8u, 2u, 3u, menu_card_tiles[MENU_CARD_ANIMATION_FAST]);
+
+	set_bkg_tiles(SETTINGS_SPLIT_X - START_TEXT_LEN, SETTINGS_PAD_Y + 13u, START_TEXT_LEN, 1u, start_text);
+	draw_sequential_card(SETTINGS_SPLIT_X, SETTINGS_PAD_Y + 12u, OFFSET_BKG_CARD + OFFSET_CARD_BACK);
+}
+
 /*******************************************************************************
 *	metasprite
 *******************************************************************************/
@@ -322,6 +450,28 @@ void set_metasprite_card(const UINT8 card_data)
 	(iter++)->dtile = OFFSET_CARD_BLANK + 3u;
 	(iter++)->dtile = OFFSET_CARD_SUIT_ROT + SUIT(card_data);
 	(iter++)->dtile = OFFSET_CARD_RANK_ROT + RANK(card_data);
+}
+
+void draw_setting_frame_metasprites(void)
+{
+	move_metasprite(metasprite_sequential_2x3,
+		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
+		SPRITE_FRAME_1,
+		NUM_SUITS(settings) * 16u + SETTINGS_SPLIT_X * 8u,
+		SETTINGS_PAD_Y * 8u
+	);
+	move_metasprite(metasprite_sequential_2x3,
+		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
+		SPRITE_FRAME_2,
+		!MUSIC(settings) * 16u + SETTINGS_SPLIT_X * 8u,
+		(SETTINGS_PAD_Y + 4u) * 8u
+	);
+	move_metasprite(metasprite_sequential_2x3,
+		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
+		SPRITE_FRAME_3,
+		ANIMATION_SPEED(settings) * 16u + SETTINGS_SPLIT_X * 8u,
+		(SETTINGS_PAD_Y + 8u) * 8u
+	);
 }
 
 /*******************************************************************************
@@ -589,6 +739,10 @@ inline void cursor_place_stack(void)
 
 inline void cursor_process(void)
 {
+	switch (flags & FLAG_GAME_STATE) {
+	case FLAG_GAME_STATE_SPLASH:
+		return;
+	}
 	cursor.anim_ctr++;
 	cursor.anim_ctr &= (1u << (CURSOR_PERIOD_LOGSCALE + 1u)) - 1u;
 	UINT8 prev_anim_frame = cursor.anim_frame;
@@ -598,20 +752,33 @@ inline void cursor_process(void)
 
 	if (flags & FLAG_REDRAW_CURSOR) {
 		flags &= ~FLAG_REDRAW_CURSOR;
-		if (cursor.pile_idx == PILE_IDX_DECK)
+		switch (flags & FLAG_GAME_STATE) {
+		case FLAG_GAME_STATE_SETTINGS:
 			move_metasprite(cursor_metasprites[cursor.anim_frame],
 				OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
 				SPRITE_FRAME,
-				0,
-				0
+				cursor.height * 16u + SETTINGS_SPLIT_X * 8u,
+				SETTINGS_PAD_Y * 8u + cursor.pile_idx * 32u
 			);
-		else
-			move_metasprite(cursor_metasprites[cursor.anim_frame],
-				OFFSET_SPRITE_CURSOR +OFFSET_CURSOR_FRAME,
-				SPRITE_FRAME,
-				cursor.pile_idx * 16u,
-				(cursor.height + 3u) * 8u
-			);
+			break;
+		case FLAG_GAME_STATE_INGAME:
+			if (cursor.pile_idx == PILE_IDX_DECK)
+				move_metasprite(cursor_metasprites[cursor.anim_frame],
+					OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
+					SPRITE_FRAME,
+					0,
+					0
+				);
+			else
+				move_metasprite(cursor_metasprites[cursor.anim_frame],
+					OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
+					SPRITE_FRAME,
+					cursor.pile_idx * 16u,
+					(cursor.height + 3u) * 8u
+				);
+			break;
+		}
+
 	}
 	if (flags & FLAG_REDRAW_HAND) {
 		flags &= ~FLAG_REDRAW_HAND;
@@ -640,11 +807,12 @@ void init_deck(void)
 	UINT8 rank;
 	UINT8 i;
 
-	//TODO: change based on settings
 	//Set cards in deck
-	for (suit = 0; suit < 4u; suit++) {
+	UINT8 suit_increment = 4u >> NUM_SUITS(settings);
+	UINT8 i_max = suit_increment * 2u;
+	for (suit = 0; suit < 4u; suit += suit_increment) {
 		for (rank = 0; rank < 13u; rank++) {
-			for (i = 0; i < 2u; i++) {
+			for (i = 0; i < i_max; i++) {
 				card->data = rank | (suit << BIT_OFFSET_CARD_SUIT);
 				card++;
 			}
@@ -778,12 +946,53 @@ void pile_append_cursor_stack(Pile *pile)
 *	MISCELLANEOUS
 *******************************************************************************/
 
-inline void start_game(void)
+void set_cursor_setting(void)
 {
-	initrand(DIV_REG);
+	switch (cursor.pile_idx) {
+	case 0u:
+		settings &= ~BITMASK_SETTING_NUM_SUITS;
+		settings |= cursor.height;
+		draw_setting_frame_metasprites();
+		break;
+	case 1u:
+		settings &= ~BITMASK_SETTING_MUSIC;
+		settings |= !cursor.height << BIT_OFFSET_SETTING_MUSIC;
+		draw_setting_frame_metasprites();
+		break;
+	case 2u:
+		settings &= ~BITMASK_SETTING_ANIMATION_SPEED;
+		settings |= cursor.height << BIT_OFFSET_SETTING_ANIMATION_SPEED;
+		draw_setting_frame_metasprites();
+		break;
+	case 3u:
+		start_game();
+		metasprite_2x3_hide(SPRITE_FRAME_1);
+		metasprite_2x3_hide(SPRITE_FRAME_2);
+		metasprite_2x3_hide(SPRITE_FRAME_3);
+		break;
+	}
+}
+
+void start_game(void)
+{
+	flags &= ~FLAG_GAME_STATE;
+	flags |= FLAG_GAME_STATE_INGAME | FLAG_REDRAW_CURSOR;
+	cursor.pile_idx = 0;
+	cursor.height = 0;
 	init_deck();
 	clear_bkg();
 	draw_bkg_game();
+}
+
+inline void start_settings(void)
+{
+	flags &= ~FLAG_GAME_STATE;
+	flags |= FLAG_GAME_STATE_SETTINGS | FLAG_REDRAW_CURSOR;
+	cursor.pile_idx = 0;
+	cursor.height = 0;
+	draw_setting_frame_metasprites();
+	clear_bkg();
+	draw_bkg_settings();
 }
 
 inline void input_process(void)
@@ -791,61 +1000,83 @@ inline void input_process(void)
 	static UINT8 prev_input = 0;
 	UINT8 input = joypad();
 	UINT8 new_input = input & ~prev_input;
-	switch (flags & FLAG_GAME_STATE) {
-	case FLAG_GAME_STATE_START:
-		if (new_input) {
-			flags &= ~FLAG_GAME_STATE;
-			flags |= FLAG_GAME_STATE_INGAME;
+	if (new_input) {
+		switch (flags & FLAG_GAME_STATE) {
+		case FLAG_GAME_STATE_SPLASH:
+			initrand(DIV_REG);
 			if (flags & FLAG_PLAYING_ANIMATION)
 				dynamic_metasprite_end_animation();
-			start_game();
-		}
-		break;
-	case FLAG_GAME_STATE_INGAME:
-		if (cursor.held_card) {
-			flags |= FLAG_REDRAW_HAND;
-			if (new_input & J_LEFT
-				&& cursor.hand_pile_idx != 0) {
-				cursor.hand_pile_idx--;
-			} else if (new_input & J_RIGHT
-				&& cursor.hand_pile_idx < 9) {
-				cursor.hand_pile_idx++;
-			}
-			if (new_input & J_A
-				&& ~flags & FLAG_PLAYING_ANIMATION) {
-				cursor_place_stack();
-			}
-		} else {
+			start_settings();
+			break;
+		case FLAG_GAME_STATE_SETTINGS:
 			flags |= FLAG_REDRAW_CURSOR;
-			if (new_input & J_DOWN) {
-				if (cursor.pile_idx == PILE_IDX_DECK)
-					cursor.pile_idx = 0;
-				else if (cursor.height + 1u < piles[cursor.pile_idx].height)
-					cursor.height++;
-			} else if (new_input & J_UP) {
-				if (cursor.height == 0)
-					cursor.pile_idx = PILE_IDX_DECK;
-				else
-					cursor.height--;
+			if (new_input & J_START) {
+				start_game();
 			} else if (new_input & J_LEFT
-				&& cursor.pile_idx != 0
-				&& cursor.pile_idx != PILE_IDX_DECK) {
-					cursor.pile_idx--;
-					cursor_adjust_height();
+				&& cursor.height) {
+				cursor.height--;
 			} else if (new_input & J_RIGHT
-				&& cursor.pile_idx < PILE_IDX_DECK - 1u) {
-					cursor.pile_idx++;
-					cursor_adjust_height();
+				&& cursor.height + 1u < setting_pile_heights[cursor.pile_idx]) {
+				cursor.height++;
+			} else if (new_input & J_UP
+				&& cursor.pile_idx) {
+				cursor.pile_idx--;
+				cursor.height = 0;
+			} else if (new_input & J_DOWN
+				&& cursor.pile_idx < NUM_SETTING_PILES - 1u) {
+				cursor.pile_idx++;
+				cursor.height = 0;
 			}
-			if (new_input & J_A
-				&& ~flags & FLAG_PLAYING_ANIMATION) {
-				if (cursor.pile_idx == PILE_IDX_DECK && top_card_idx != 104u)
-					deal();
-				else
-					cursor_grab_stack();
+			if (new_input & J_A) {
+				set_cursor_setting();
 			}
+			break;
+		case FLAG_GAME_STATE_INGAME:
+			if (cursor.held_card) {
+				flags |= FLAG_REDRAW_HAND;
+				if (new_input & J_LEFT
+					&& cursor.hand_pile_idx != 0) {
+					cursor.hand_pile_idx--;
+				} else if (new_input & J_RIGHT
+					&& cursor.hand_pile_idx < 9) {
+					cursor.hand_pile_idx++;
+				}
+				if (new_input & J_A
+					&& ~flags & FLAG_PLAYING_ANIMATION) {
+					cursor_place_stack();
+				}
+			} else {
+				flags |= FLAG_REDRAW_CURSOR;
+				if (new_input & J_DOWN) {
+					if (cursor.pile_idx == PILE_IDX_DECK)
+						cursor.pile_idx = 0;
+					else if (cursor.height + 1u < piles[cursor.pile_idx].height)
+						cursor.height++;
+				} else if (new_input & J_UP) {
+					if (cursor.height == 0)
+						cursor.pile_idx = PILE_IDX_DECK;
+					else
+						cursor.height--;
+				} else if (new_input & J_LEFT
+					&& cursor.pile_idx != 0
+					&& cursor.pile_idx != PILE_IDX_DECK) {
+						cursor.pile_idx--;
+						cursor_adjust_height();
+				} else if (new_input & J_RIGHT
+					&& cursor.pile_idx < PILE_IDX_DECK - 1u) {
+						cursor.pile_idx++;
+						cursor_adjust_height();
+				}
+				if (new_input & J_A
+					&& ~flags & FLAG_PLAYING_ANIMATION) {
+					if (cursor.pile_idx == PILE_IDX_DECK && top_card_idx != 104u)
+						deal();
+					else
+						cursor_grab_stack();
+				}
+			}
+			break;
 		}
-		break;
 	}
 	prev_input = input;
 }
@@ -859,22 +1090,18 @@ void main(void)
 
 	set_bkg_data(OFFSET_BKG_TITLE, N_TITLE, title_textures);
 	set_bkg_data(OFFSET_BKG_CARD, N_CARD, card_textures);
+	set_bkg_data(OFFSET_BKG_CARD_ADDON, N_CARD_ADDON, card_addon);
 	set_sprite_data(OFFSET_SPRITE_CURSOR, N_CURSOR, cursor_textures);
+
+	draw_bkg_splash_screen();
+
 	SHOW_BKG;
 	SHOW_SPRITES;
-
-	set_bkg_tiles(0, 14u, COPYRIGHT_LEN, 1u, copyright);
-
-	dynamic_metasprite_splash_screen();
 
 	while (1) {
 		input_process();
 
-		switch (flags & FLAG_GAME_STATE) {
-		case FLAG_GAME_STATE_INGAME:
-			cursor_process();
-			break;
-		}
+		cursor_process();
 
 		dynamic_metasprite_process();
 

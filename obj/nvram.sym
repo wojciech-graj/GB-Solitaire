@@ -7,19 +7,16 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000000 L
-  0 _cursor_metasprite_1                                           0000A0 GR
-  0 _cursor_metasprite_2                                           0000BC GR
-  0 _cursor_metasprites                                            0000D8 GR
-  0 _cursor_textures                                               000000 GR
-
+  1 _leaderboard                                                   000000 GR
+  1 _nvram_check_data                                              00002D GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size     DC   flags    0
-   1 _DATA                                      size      0   flags    0
+   0 _CODE                                      size      0   flags    0
+   1 _DATA_0                                    size     31   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0
    4 _GSINIT                                    size      0   flags    0

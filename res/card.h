@@ -1,3 +1,6 @@
+#ifndef CARD_H
+#define CARD_H
+
 #define N_CARD_RANK          13u
 #define N_CARD_SUIT          4u
 #define N_CARD_BLANK         6u
@@ -18,3 +21,5 @@
 #define OFFSET_CARD_LIGHT_OUTLINE (OFFSET_CARD_OUTLINE + N_CARD_OUTLINE)
 
 extern const unsigned char card_textures[];
+
+#endif

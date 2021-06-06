@@ -14,6 +14,10 @@
 #include "../res/card.h"
 #include "../res/regular_metasprite.h"
 #include "../res/menu.h"
+#include "../res/nvram/nvram.h"
+
+//TODO: scrolling
+//TODO: BUGFIX: full piles aren't always folded
 
 /*******************************************************************************
 *	MACRO
@@ -25,6 +29,7 @@
 #define OFFSET_BKG_FONT       1u
 #define OFFSET_BKG_FONT_ADDON (OFFSET_BKG_FONT + N_FONT)
 #define OFFSET_BKG_CARD_ADDON (OFFSET_BKG_FONT_ADDON + N_FONT_ADDON)
+#define OFFSET_BKG_BUTTON     (OFFSET_BKG_CARD_ADDON + N_CARD_ADDON)
 
 #define OFFSET_BKG_TITLE      128u
 #define OFFSET_BKG_CARD       (OFFSET_BKG_TITLE + N_TITLE)
@@ -54,14 +59,14 @@
 #define SUIT(data)    ((data & BITMASK_CARD_SUIT) >> BIT_OFFSET_CARD_SUIT)
 #define VISIBLE(data) (data & BITMASK_CARD_VISIBLE)
 
-#define FLAG_REDRAW_CURSOR       0b00000001u
-#define FLAG_REDRAW_HAND         0b00000010u
-#define FLAG_PLAYING_ANIMATION   0b00000100u
-#define FLAG_GAME_STATE          0b00011000u
-#define FLAG_GAME_STATE_SPLASH   0b00000000u
-#define FLAG_GAME_STATE_PAUSE    0b00001000u
-#define FLAG_GAME_STATE_INGAME   0b00010000u
-#define FLAG_GAME_STATE_SETTINGS 0b00011000u
+#define FLAG_REDRAW_CURSOR          0b00000001u
+#define FLAG_REDRAW_HAND            0b00000010u
+#define FLAG_PLAYING_ANIMATION      0b00000100u
+#define FLAG_GAME_STATE             0b00011000u
+#define FLAG_GAME_STATE_SPLASH      0b00000000u
+#define FLAG_GAME_STATE_LEADERBOARD 0b00001000u
+#define FLAG_GAME_STATE_INGAME      0b00010000u
+#define FLAG_GAME_STATE_SETTINGS    0b00011000u
 
 #define BITMASK_DYNAMIC_METASPRITE_UNFOLD 0b10000000u
 
@@ -94,8 +99,16 @@
 #define TARGET_FRAMES_SPLASH_SCREEN 32u
 
 #define NUM_SETTING_PILES 4u
+
 #define SETTINGS_SPLIT_X  10u
 #define SETTINGS_PAD_Y    1u
+
+#define LEADERBOARD_CARD_X 4u
+#define LEADERBOARD_NAME_X 8u
+#define LEADERBOARD_SCORE_X 12u
+#define LEADERBOARD_PAD_Y 4u
+
+#define START_SCORE 500u
 
 /*******************************************************************************
 *	STRUCTS
@@ -154,10 +167,11 @@ struct AnimationSpeed {
 Card deck[104];
 Pile piles[10];
 UINT8 top_card_idx;
-UINT8 flags = FLAG_GAME_STATE_SPLASH;
+UINT8 flags = 0;
 UINT8 settings = SETTING_ONE_SUIT | BITMASK_SETTING_MUSIC;
-
-UINT16 score = 500;
+UINT8 num_folded_piles = 0;
+UINT16 score =  START_SCORE;
+LeaderBoard *selected_leaderboard = NULL;
 
 struct DynamicMetaSprite dynamic_metasprite = {
 	.target_frames = -1,
@@ -277,7 +291,6 @@ void draw_card_bottom(const UINT8 x, const UINT8 y, const UINT8 card_data);
 void draw_card(const UINT8 x, const UINT8 y, const UINT8 card_data);
 void draw_sequential_card(const UINT8 x, const UINT8 y, const UINT8 bkg_offset);
 void clear_bkg(void);
-void draw_pile(Card *card, UINT8 pile_idx, UINT8 height);
 void draw_bkg_game(void);
 void draw_bkg_splash_screen(void);
 void draw_bkg_settings(void);
@@ -285,6 +298,7 @@ void draw_bkg_settings(void);
 // metasprite
 void metasprite_2x3_hide(const UINT8 sprite);
 void set_metasprite_card(const UINT8 card_data);
+void draw_setting_frame_metasprites(void);
 
 // DynamicMetaSprite
 void dynamic_metasprite_end_animation(void);
@@ -303,6 +317,7 @@ void dynamic_metasprite_process(void);
 void cursor_adjust_height(void);
 void cursor_grab_stack(void);
 void cursor_place_stack(void);
+void set_cursor_setting(void);
 void cursor_process(void);
 
 // Card
@@ -313,7 +328,13 @@ void pile_append_cursor_stack(Pile *pile);
 
 // MISCELLANEOUS
 void start_game(void);
+void start_settings(void);
+void start_splash_screen(void);
 void input_process(void);
+void start_leaderboard(void);
+void add_leaderboard(void);
+void nvram_check(void);
+void inc_letter(const INT8 inc);
 void main(void);
 
 /*******************************************************************************
@@ -370,30 +391,19 @@ void clear_bkg(void)
 			set_bkg_tile_xy(x, y, 0);
 }
 
-void draw_pile(Card *card, UINT8 pile_idx, UINT8 height)
-{
-	pile_idx *= 2u;
-	height += 3u;
-	//TODO: check if this check is really neccessary
-	if (!card)
-		return;
-	while (1) {
-		draw_card_top(pile_idx, height, card->data);
-		if (!card->next_card) {
-			draw_card_bottom(pile_idx, height + 1u, card->data);
-			break;
-		}
-		height++;
-		card = card->next_card;
-	}
-}
-
 void draw_bkg_game(void)
 {
-	UINT8 i;
+	UINT8 x;
 	Pile *pile = IDX_PTR(piles, 0);
-	for (i = 0; i < 10u; i++) {
-		draw_pile(pile->base, i, 0);
+	for (x = 0; x < 20u; x += 2) {
+		Card *card = pile->base;
+		UINT8 y = 3u;
+		while (card->next_card) {
+			draw_card_top(x, y, card->data);
+			y++;
+			card = card->next_card;
+		}
+		draw_card(x, y, card->data);
 		pile++;
 	}
 	draw_sequential_card(0, 0, OFFSET_BKG_CARD + OFFSET_CARD_BACK);
@@ -401,10 +411,19 @@ void draw_bkg_game(void)
 
 void draw_bkg_splash_screen(void)
 {
-	set_bkg_tiles(5u, 10u, PUSH_TEXT_LEN, 1u, push_text);
-	set_bkg_tiles(PUSH_TEXT_LEN + 6u, 10u, START_TEXT_LEN, 1u, start_text);
-	set_bkg_tiles(0, 14u, COPYRIGHT_TEXT_LEN, 1u, copyright_text);
-	dynamic_metasprite_splash_screen();
+	set_bkg_tile_xy(2u, 9u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_SYMBOL);
+	set_bkg_tile_xy(3u, 9u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_START);
+	set_bkg_tile_xy(4u, 9u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_START + 1u);
+	set_bkg_tile_xy(5u, 9u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_START + 2u);
+	set_bkg_tiles(7u, 9u, START_TEXT_LEN, 1u, start_text);
+
+	set_bkg_tile_xy(2u, 10u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_SYMBOL);
+	set_bkg_tile_xy(3u, 10u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_SELECT);
+	set_bkg_tile_xy(4u, 10u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_SELECT + 1u);
+	set_bkg_tile_xy(5u, 10u, OFFSET_BKG_BUTTON + OFFSET_BUTTON_SELECT + 2u);
+	set_bkg_tiles(7u, 10u, LEADERBOARD_TEXT_LEN, 1u, leaderboard_text);
+
+	set_bkg_tiles(0, 15u, COPYRIGHT_TEXT_LEN, 1u, copyright_text);
 }
 
 void draw_bkg_settings(void)
@@ -425,6 +444,37 @@ void draw_bkg_settings(void)
 
 	set_bkg_tiles(SETTINGS_SPLIT_X - START_TEXT_LEN, SETTINGS_PAD_Y + 13u, START_TEXT_LEN, 1u, start_text);
 	draw_sequential_card(SETTINGS_SPLIT_X, SETTINGS_PAD_Y + 12u, OFFSET_BKG_CARD + OFFSET_CARD_BACK);
+}
+
+inline void draw_bkg_leaderboard_score(const UINT8 x, const UINT8 y, const UINT16 score)
+{
+	UINT8 score_tiles[3] = {
+		OFFSET_BKG_FONT + (score / 100),
+		OFFSET_BKG_FONT + ((score % 100) / 10),
+		OFFSET_BKG_FONT + (score % 10),
+	};
+	set_bkg_tiles(x, y, 3u, 1u, score_tiles);
+}
+
+//RAM_MBC1 must be enabled
+void draw_bkg_leaderboard(void)
+{
+	set_bkg_tiles(4u, 1u, LEADERBOARD_TEXT_LEN, 1u, leaderboard_text);
+
+	set_bkg_tiles(LEADERBOARD_CARD_X, LEADERBOARD_PAD_Y, 2u, 3u, menu_card_tiles[MENU_CARD_ONE_SUIT]);
+	set_bkg_tiles(LEADERBOARD_CARD_X, LEADERBOARD_PAD_Y + 4u, 2u, 3u, menu_card_tiles[MENU_CARD_TWO_SUIT]);
+	set_bkg_tiles(LEADERBOARD_CARD_X, LEADERBOARD_PAD_Y + 8u, 2u, 3u, menu_card_tiles[MENU_CARD_FOUR_SUIT]);
+
+	LeaderBoard *iter = IDX_PTR(leaderboard[0], 0);
+	UINT8 i, j;
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			UINT8 y = LEADERBOARD_PAD_Y + i * 4u + j;
+			set_bkg_tiles(LEADERBOARD_NAME_X, y, 3u, 1u, iter->name);
+			draw_bkg_leaderboard_score(LEADERBOARD_SCORE_X, y, iter->score);
+			iter++;
+		}
+	}
 }
 
 /*******************************************************************************
@@ -538,8 +588,16 @@ void dynamic_metasprite_fold_pile(void)
 	UINT8 pile_idx = dynamic_metasprite.data[3] & 0xF;
 	if (!pile_idx) {
 		dynamic_metasprite_end_animation();
+		if (num_folded_piles == 8u) {//NOTE: THIS IS WHERE GAME ENDS
+			metasprite_2x3_hide(SPRITE_FRAME);
+			add_leaderboard();
+			start_leaderboard();
+			score = START_SCORE;
+		}
 		return;
 	}
+
+	num_folded_piles++;
 
 	Pile *pile = IDX_PTR(piles, pile_idx);
 	UINT8 x = pile_idx * 16u;
@@ -714,6 +772,7 @@ inline void cursor_grab_stack(void)
 	cursor.hand_pile_idx = cursor.pile_idx;
 	cursor.held_stack_size = pile->height - cursor.height;
 	pile->height = cursor.height;
+	flags |= FLAG_REDRAW_HAND;
 	if (cursor.height) {
 		pile->top = top;
 		top->next_card = NULL;
@@ -734,6 +793,30 @@ inline void cursor_place_stack(void)
 		|| RANK(pile->top->data) == RANK(cursor.held_card->data) + 1u) {
 		pile_append_cursor_stack(pile);
 		score--;
+	}
+}
+
+void set_cursor_setting(void)
+{
+	switch (cursor.pile_idx) {
+	case 0u:
+		settings &= ~BITMASK_SETTING_NUM_SUITS;
+		settings |= cursor.height;
+		draw_setting_frame_metasprites();
+		break;
+	case 1u:
+		settings &= ~BITMASK_SETTING_MUSIC;
+		settings |= !cursor.height << BIT_OFFSET_SETTING_MUSIC;
+		draw_setting_frame_metasprites();
+		break;
+	case 2u:
+		settings &= ~BITMASK_SETTING_ANIMATION_SPEED;
+		settings |= cursor.height << BIT_OFFSET_SETTING_ANIMATION_SPEED;
+		draw_setting_frame_metasprites();
+		break;
+	case 3u:
+		start_game();
+		break;
 	}
 }
 
@@ -760,6 +843,12 @@ inline void cursor_process(void)
 				cursor.height * 16u + SETTINGS_SPLIT_X * 8u,
 				SETTINGS_PAD_Y * 8u + cursor.pile_idx * 32u
 			);
+			break;
+		case FLAG_GAME_STATE_LEADERBOARD:
+			if (selected_leaderboard) {
+				set_sprite_tile(SPRITE_FRAME, OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_UNDERLINE + cursor.anim_frame);
+				move_sprite(SPRITE_FRAME, (LEADERBOARD_NAME_X + 1u) * 8u + cursor.pile_idx * 8u, 16u + cursor.height * 8u);
+			}
 			break;
 		case FLAG_GAME_STATE_INGAME:
 			if (cursor.pile_idx == PILE_IDX_DECK)
@@ -946,39 +1035,15 @@ void pile_append_cursor_stack(Pile *pile)
 *	MISCELLANEOUS
 *******************************************************************************/
 
-void set_cursor_setting(void)
-{
-	switch (cursor.pile_idx) {
-	case 0u:
-		settings &= ~BITMASK_SETTING_NUM_SUITS;
-		settings |= cursor.height;
-		draw_setting_frame_metasprites();
-		break;
-	case 1u:
-		settings &= ~BITMASK_SETTING_MUSIC;
-		settings |= !cursor.height << BIT_OFFSET_SETTING_MUSIC;
-		draw_setting_frame_metasprites();
-		break;
-	case 2u:
-		settings &= ~BITMASK_SETTING_ANIMATION_SPEED;
-		settings |= cursor.height << BIT_OFFSET_SETTING_ANIMATION_SPEED;
-		draw_setting_frame_metasprites();
-		break;
-	case 3u:
-		start_game();
-		metasprite_2x3_hide(SPRITE_FRAME_1);
-		metasprite_2x3_hide(SPRITE_FRAME_2);
-		metasprite_2x3_hide(SPRITE_FRAME_3);
-		break;
-	}
-}
-
 void start_game(void)
 {
 	flags &= ~FLAG_GAME_STATE;
 	flags |= FLAG_GAME_STATE_INGAME | FLAG_REDRAW_CURSOR;
 	cursor.pile_idx = 0;
 	cursor.height = 0;
+	metasprite_2x3_hide(SPRITE_FRAME_1);
+	metasprite_2x3_hide(SPRITE_FRAME_2);
+	metasprite_2x3_hide(SPRITE_FRAME_3);
 	init_deck();
 	clear_bkg();
 	draw_bkg_game();
@@ -995,6 +1060,79 @@ inline void start_settings(void)
 	draw_bkg_settings();
 }
 
+void start_splash_screen(void)
+{
+	flags &= ~FLAG_GAME_STATE;
+	flags |= FLAG_GAME_STATE_SPLASH;
+	clear_bkg();
+	draw_bkg_splash_screen();
+	dynamic_metasprite_splash_screen();
+}
+
+void start_leaderboard(void)
+{
+	ENABLE_RAM_MBC1;
+	flags &= ~FLAG_GAME_STATE;
+	flags |= FLAG_GAME_STATE_LEADERBOARD;
+	cursor.pile_idx = 0;
+	clear_bkg();
+	draw_bkg_leaderboard();
+	DISABLE_RAM_MBC1;
+}
+
+void add_leaderboard(void)
+{
+	ENABLE_RAM_MBC1;
+	LeaderBoard *iter = leaderboard[NUM_SUITS(settings)];
+	UINT8 i;
+	for (i = 0; i < 3u; i++) {
+		if (score > iter->score)
+			break;
+		iter++;
+	}
+	if (i == 3u)
+		return;
+	iter->score = score;
+	iter->name[0] = 0x0B;
+	iter->name[1] = 0x0B;
+	iter->name[2] = 0x0B;
+	selected_leaderboard = iter;
+	cursor.height = LEADERBOARD_PAD_Y + NUM_SUITS(settings) * 4u + i;
+	flags |= FLAG_REDRAW_CURSOR;
+	DISABLE_RAM_MBC1;
+}
+
+void nvram_check(void)
+{
+	ENABLE_RAM_MBC1;
+	if (nvram_check_data != NVRAM_SET) {
+		nvram_check_data = NVRAM_SET;
+		LeaderBoard *iter = IDX_PTR(leaderboard[0], 0u);
+		UINT8 i;
+		for (i = 0; i < NUM_LEADERBOARD; i++) {
+			iter->score = 0u;
+			iter->name[0] = 0u;
+			iter->name[1] = 0u;
+			iter->name[2] = 0u;
+			iter++;
+		}
+	}
+	DISABLE_RAM_MBC1;
+}
+
+void inc_letter(const INT8 inc)
+{
+	ENABLE_RAM_MBC1;
+	UINT8 *letter = &selected_leaderboard->name[cursor.pile_idx];
+	*letter = (INT8)*letter + inc;
+	if (*letter < 0x0Bu)
+		*letter = 0x24u;
+	else if (*letter > 0x24u)
+		*letter = 0x0Bu;
+	set_bkg_tile_xy(LEADERBOARD_NAME_X + cursor.pile_idx, cursor.height, *letter);
+	DISABLE_RAM_MBC1;
+}
+
 inline void input_process(void)
 {
 	static UINT8 prev_input = 0;
@@ -1003,10 +1141,45 @@ inline void input_process(void)
 	if (new_input) {
 		switch (flags & FLAG_GAME_STATE) {
 		case FLAG_GAME_STATE_SPLASH:
-			initrand(DIV_REG);
-			if (flags & FLAG_PLAYING_ANIMATION)
-				dynamic_metasprite_end_animation();
-			start_settings();
+			if (new_input & J_START) {
+				initrand(DIV_REG);
+				if (flags & FLAG_PLAYING_ANIMATION)
+					dynamic_metasprite_end_animation();
+				start_settings();
+			} else if (new_input & J_SELECT) {
+				if (flags & FLAG_PLAYING_ANIMATION)
+					dynamic_metasprite_end_animation();
+				start_leaderboard();
+			}
+			break;
+		case FLAG_GAME_STATE_LEADERBOARD:
+			flags |= FLAG_REDRAW_CURSOR;
+			if (selected_leaderboard) {
+				if (new_input & J_START
+					&& cursor.pile_idx == 2u) {
+					selected_leaderboard = NULL;
+					set_sprite_tile(SPRITE_FRAME, OFFSET_SPRITE_NONE);
+				} else if (new_input & J_A) {
+					if (cursor.pile_idx == 2u) {
+						selected_leaderboard = NULL;
+						set_sprite_tile(SPRITE_FRAME, OFFSET_SPRITE_NONE);
+					} else {
+ 						cursor.pile_idx++;
+					}
+				} else if (new_input & J_RIGHT
+					&& cursor.pile_idx < 2u) {
+					cursor.pile_idx++;
+				} else if (new_input & J_LEFT
+					&& cursor.pile_idx) {
+					cursor.pile_idx--;
+				} else if (new_input & J_UP) {
+					inc_letter(1);
+				} else if (new_input & J_DOWN) {
+					inc_letter(-1);
+				}
+			} else if (new_input & (J_START | J_SELECT | J_A | J_B)) {
+				start_splash_screen();
+			}
 			break;
 		case FLAG_GAME_STATE_SETTINGS:
 			flags |= FLAG_REDRAW_CURSOR;
@@ -1091,12 +1264,16 @@ void main(void)
 	set_bkg_data(OFFSET_BKG_TITLE, N_TITLE, title_textures);
 	set_bkg_data(OFFSET_BKG_CARD, N_CARD, card_textures);
 	set_bkg_data(OFFSET_BKG_CARD_ADDON, N_CARD_ADDON, card_addon);
+	set_bkg_data(OFFSET_BKG_BUTTON, N_BUTTON, button_textures);
 	set_sprite_data(OFFSET_SPRITE_CURSOR, N_CURSOR, cursor_textures);
 
-	draw_bkg_splash_screen();
+	nvram_check();
+
+	start_splash_screen();
 
 	SHOW_BKG;
 	SHOW_SPRITES;
+	DISPLAY_ON;
 
 	while (1) {
 		input_process();

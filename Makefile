@@ -19,15 +19,11 @@ SRCDIR      = src
 OBJDIR      = obj
 RESDIR      = res
 BINS	    = $(OBJDIR)/$(PROJECTNAME).gb
-CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(RESDIR),$(notdir $(wildcard $(dir)/*.c)))
+CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(RESDIR),$(notdir $(wildcard $(dir)/*.c))) nvram.c
 ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
 OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
 
 all:	prepare $(BINS)
-
-make.bat: Makefile
-	@echo "REM Automatically generated from Makefile" > make.bat
-	@make -sn | sed y/\\//\\\\/ | grep -v make >> make.bat
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
@@ -41,6 +37,10 @@ $(OBJDIR)/%.o:	$(RESDIR)/%.c
 $(OBJDIR)/%.o:	$(SRCDIR)/%.s
 	$(LCC) $(CFLAGS) -c -o $@ $<
 
+# Compile nvram
+$(OBJDIR)/%.o:	res/nvram/%.c
+	$(LCC) -Wa-l -Wf-ba0 -c -o $@ $<
+
 # If needed, compile .c files i n"src/" to .s assembly files
 # (not required if .c is compiled directly to .o)
 $(OBJDIR)/%.s:	$(SRCDIR)/%.c
@@ -48,7 +48,7 @@ $(OBJDIR)/%.s:	$(SRCDIR)/%.c
 
 # Link the compiled object files into a .gb ROM file
 $(BINS):	$(OBJS)
-	$(LCC) $(CFLAGS) -o $(BINS) $(OBJS)
+	$(LCC) -Wl-yt2 -Wl-yo2 -Wl-ya4 -o $(BINS) $(OBJS)
 
 prepare:
 	mkdir -p $(OBJDIR)

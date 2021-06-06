@@ -11,9 +11,11 @@
 	.globl _speed_text
 	.globl _music_text
 	.globl _suits_text
+	.globl _leaderboard_text
+	.globl _select_text
 	.globl _start_text
-	.globl _push_text
 	.globl _copyright_text
+	.globl _button_textures
 	.globl _card_addon
 	.globl _font_addon
 	.globl _title_textures
@@ -1200,6 +1202,119 @@ _card_addon:
 	.db #0x31	; 49	'1'
 	.db #0xff	; 255
 	.db #0x21	; 33
+_button_textures:
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x77	; 119	'w'
+	.db #0x77	; 119	'w'
+	.db #0x42	; 66	'B'
+	.db #0x42	; 66	'B'
+	.db #0x72	; 114	'r'
+	.db #0x72	; 114	'r'
+	.db #0x12	; 18
+	.db #0x12	; 18
+	.db #0x72	; 114	'r'
+	.db #0x72	; 114	'r'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x33	; 51	'3'
+	.db #0x33	; 51	'3'
+	.db #0x4a	; 74	'J'
+	.db #0x4a	; 74	'J'
+	.db #0x7b	; 123
+	.db #0x7b	; 123
+	.db #0x4a	; 74	'J'
+	.db #0x4a	; 74	'J'
+	.db #0x4a	; 74	'J'
+	.db #0x4a	; 74	'J'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x9c	; 156
+	.db #0x9c	; 156
+	.db #0x48	; 72	'H'
+	.db #0x48	; 72	'H'
+	.db #0xc8	; 200
+	.db #0xc8	; 200
+	.db #0x88	; 136
+	.db #0x88	; 136
+	.db #0x48	; 72	'H'
+	.db #0x48	; 72	'H'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x76	; 118	'v'
+	.db #0x76	; 118	'v'
+	.db #0x44	; 68	'D'
+	.db #0x44	; 68	'D'
+	.db #0x76	; 118	'v'
+	.db #0x76	; 118	'v'
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x76	; 118	'v'
+	.db #0x76	; 118	'v'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x4c	; 76	'L'
+	.db #0x4c	; 76	'L'
+	.db #0x49	; 73	'I'
+	.db #0x49	; 73	'I'
+	.db #0x4d	; 77	'M'
+	.db #0x4d	; 77	'M'
+	.db #0x49	; 73	'I'
+	.db #0x49	; 73	'I'
+	.db #0x6c	; 108	'l'
+	.db #0x6c	; 108	'l'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0xdc	; 220
+	.db #0xdc	; 220
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0xc8	; 200
+	.db #0xc8	; 200
+	.db #0x00	; 0
+	.db #0x00	; 0
 _copyright_text:
 	.db #0x25	; 37
 	.db #0x00	; 0
@@ -1221,17 +1336,31 @@ _copyright_text:
 	.db #0x1c	; 28
 	.db #0x0b	; 11
 	.db #0x14	; 20
-_push_text:
-	.db #0x1a	; 26
-	.db #0x1f	; 31
-	.db #0x1d	; 29
-	.db #0x12	; 18
 _start_text:
 	.db #0x1d	; 29
 	.db #0x1e	; 30
 	.db #0x0b	; 11
 	.db #0x1c	; 28
 	.db #0x1e	; 30
+_select_text:
+	.db #0x1d	; 29
+	.db #0x0f	; 15
+	.db #0x16	; 22
+	.db #0x0f	; 15
+	.db #0x0d	; 13
+	.db #0x1e	; 30
+_leaderboard_text:
+	.db #0x16	; 22
+	.db #0x0f	; 15
+	.db #0x0b	; 11
+	.db #0x0e	; 14
+	.db #0x0f	; 15
+	.db #0x1c	; 28
+	.db #0x0c	; 12
+	.db #0x19	; 25
+	.db #0x0b	; 11
+	.db #0x1c	; 28
+	.db #0x0e	; 14
 _suits_text:
 	.db #0x1d	; 29
 	.db #0x1f	; 31

@@ -7,23 +7,24 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000000 L
+  0 _button_textures                                               000480 GR
   0 _card_addon                                                    000310 GR
-  0 _copyright_text                                                000480 GR
+  0 _copyright_text                                                0004F0 GR
   0 _font_addon                                                    000300 GR
-  0 _music_text                                                    0004A2 GR
-  0 _push_text                                                     000494 GR
-  0 _speed_text                                                    0004A7 GR
-  0 _start_text                                                    000498 GR
-  0 _suits_text                                                    00049D GR
+  0 _leaderboard_text                                              00050F GR
+  0 _music_text                                                    00051F GR
+  0 _select_text                                                   000509 GR
+  0 _speed_text                                                    000524 GR
+  0 _start_text                                                    000504 GR
+  0 _suits_text                                                    00051A GR
   0 _title_textures                                                000000 GR
-
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    4AC   flags    0
+   0 _CODE                                      size    529   flags    0
    1 _DATA                                      size      0   flags    0
    2 _DABS                                      size      0   flags    8
    3 _HOME                                      size      0   flags    0

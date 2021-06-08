@@ -13,7 +13,7 @@ LCC = $(GBDK_HOME)bin/lcc
 # LCC = $(LCC) -debug
 
 # You can set the name of the .gb ROM file here
-PROJECTNAME    = Solitaire
+PROJECTNAME = Solitaire
 
 SRCDIR      = src
 OBJDIR      = obj
@@ -24,6 +24,7 @@ ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
 OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
 
 all:	prepare $(BINS)
+	mv $(BINS) .
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
@@ -47,6 +48,7 @@ $(OBJDIR)/%.s:	$(SRCDIR)/%.c
 	$(LCC) $(CFLAGS) -S -o $@ $<
 
 # Link the compiled object files into a .gb ROM file
+# The compiler suggests the usage of 4 RAM banks (-Wl-ya4) even though the documentation states that 2 are allowed.
 $(BINS):	$(OBJS)
 	$(LCC) -Wl-yt2 -Wl-yo2 -Wl-ya4 -o $(BINS) $(OBJS)
 

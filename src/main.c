@@ -16,7 +16,7 @@
 #include "../res/menu.h"
 #include "../res/nvram/nvram.h"
 
-//TODO: scrolling
+//TODO: music
 //TODO: BUGFIX: full piles aren't always folded
 
 /*******************************************************************************
@@ -168,6 +168,7 @@ Card deck[104];
 Pile piles[10];
 UINT8 top_card_idx;
 UINT8 flags = 0;
+UINT8 scroll = 0;
 UINT8 settings = SETTING_ONE_SUIT | BITMASK_SETTING_MUSIC;
 UINT8 num_folded_piles = 0;
 UINT16 score =  START_SCORE;
@@ -318,6 +319,7 @@ void cursor_adjust_height(void);
 void cursor_grab_stack(void);
 void cursor_place_stack(void);
 void set_cursor_setting(void);
+void change_cursor_height(const INT8 inc);
 void cursor_process(void);
 
 // Card
@@ -590,6 +592,8 @@ void dynamic_metasprite_fold_pile(void)
 		dynamic_metasprite_end_animation();
 		if (num_folded_piles == 8u) {//NOTE: THIS IS WHERE GAME ENDS
 			metasprite_2x3_hide(SPRITE_FRAME);
+			move_bkg(0, 0);
+			scroll = 0u;
 			add_leaderboard();
 			start_leaderboard();
 			score = START_SCORE;
@@ -738,7 +742,7 @@ inline void dynamic_metasprite_process(void)
 		dynamic_metasprite.metasprite_offset,
 		SPRITE_DYNAMIC,
 		dynamic_metasprite.src[0] + (dynamic_metasprite.dist[0] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames),
-		dynamic_metasprite.src[1] + (dynamic_metasprite.dist[1] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames)
+		(INT16)scroll * -8 + dynamic_metasprite.src[1] + (dynamic_metasprite.dist[1] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames)
 	);
 	if (dynamic_metasprite.elapsed_frames == dynamic_metasprite.target_frames
 		&& dynamic_metasprite.callback)
@@ -820,6 +824,18 @@ void set_cursor_setting(void)
 	}
 }
 
+void change_cursor_height(const INT8 inc)
+{
+	cursor.height = (INT8)cursor.height + inc;
+	if (cursor.height < scroll) {
+		scroll = cursor.height;
+		move_bkg(0, scroll * 8u);
+	} else if (cursor.height > scroll + 9u) {
+		scroll = cursor.height - 9u;
+		move_bkg(0, scroll * 8u);
+	}
+}
+
 inline void cursor_process(void)
 {
 	switch (flags & FLAG_GAME_STATE) {
@@ -863,7 +879,7 @@ inline void cursor_process(void)
 					OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
 					SPRITE_FRAME,
 					cursor.pile_idx * 16u,
-					(cursor.height + 3u) * 8u
+					(cursor.height + 3u - scroll) * 8u
 				);
 			break;
 		}
@@ -877,7 +893,7 @@ inline void cursor_process(void)
 				OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_HAND,
 				SPRITE_HAND,
 				cursor.hand_pile_idx * 16u,
-				(height + !height + 2u) * 8u
+				(height + !height + 2u - scroll) * 8u
 			);
 		} else {
 			metasprite_2x3_hide(SPRITE_HAND);
@@ -1108,13 +1124,20 @@ void nvram_check(void)
 	if (nvram_check_data != NVRAM_SET) {
 		nvram_check_data = NVRAM_SET;
 		LeaderBoard *iter = IDX_PTR(leaderboard[0], 0u);
-		UINT8 i;
-		for (i = 0; i < NUM_LEADERBOARD; i++) {
-			iter->score = 0u;
-			iter->name[0] = 0u;
-			iter->name[1] = 0u;
-			iter->name[2] = 0u;
+		UINT8 i, j;
+		for (i = 0; i < 3; i++) {
+			iter->score = 400u - 100u * (UINT16)i;
+			iter->name[0] = 0x21u;
+			iter->name[1] = 0x19u;
+			iter->name[2] = 0x14u;
 			iter++;
+			for (j = 0; j < 2; j++) {
+				iter->score = 0u;
+				iter->name[0] = 0u;
+				iter->name[1] = 0u;
+				iter->name[2] = 0u;
+				iter++;
+			}
 		}
 	}
 	DISABLE_RAM_MBC1;
@@ -1224,12 +1247,12 @@ inline void input_process(void)
 					if (cursor.pile_idx == PILE_IDX_DECK)
 						cursor.pile_idx = 0;
 					else if (cursor.height + 1u < piles[cursor.pile_idx].height)
-						cursor.height++;
+						change_cursor_height(1);
 				} else if (new_input & J_UP) {
 					if (cursor.height == 0)
 						cursor.pile_idx = PILE_IDX_DECK;
 					else
-						cursor.height--;
+						change_cursor_height(-1);
 				} else if (new_input & J_LEFT
 					&& cursor.pile_idx != 0
 					&& cursor.pile_idx != PILE_IDX_DECK) {

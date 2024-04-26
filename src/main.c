@@ -4,17 +4,17 @@
 * Description: Spider solitaire on the gameboy
 */
 
+#include <gb/font.h>
 #include <gb/gb.h>
 #include <gb/metasprites.h>
-#include <gb/font.h>
 
 #include <rand.h>
 
-#include "../res/cursor.h"
 #include "../res/card.h"
-#include "../res/regular_metasprite.h"
+#include "../res/cursor.h"
 #include "../res/menu.h"
 #include "../res/nvram/nvram.h"
+#include "../res/regular_metasprite.h"
 
 //TODO: music
 //TODO: BUGFIX: full piles aren't always folded
@@ -25,59 +25,59 @@
 
 #define N_FONT 36u
 
-#define OFFSET_BKG_NONE       0u
-#define OFFSET_BKG_FONT       1u
+#define OFFSET_BKG_NONE 0u
+#define OFFSET_BKG_FONT 1u
 #define OFFSET_BKG_FONT_ADDON (OFFSET_BKG_FONT + N_FONT)
 #define OFFSET_BKG_CARD_ADDON (OFFSET_BKG_FONT_ADDON + N_FONT_ADDON)
-#define OFFSET_BKG_BUTTON     (OFFSET_BKG_CARD_ADDON + N_CARD_ADDON)
+#define OFFSET_BKG_BUTTON (OFFSET_BKG_CARD_ADDON + N_CARD_ADDON)
 
-#define OFFSET_BKG_TITLE      128u
-#define OFFSET_BKG_CARD       (OFFSET_BKG_TITLE + N_TITLE)
+#define OFFSET_BKG_TITLE 128u
+#define OFFSET_BKG_CARD (OFFSET_BKG_TITLE + N_TITLE)
 
-#define OFFSET_SPRITE_NONE   0u
+#define OFFSET_SPRITE_NONE 0u
 #define OFFSET_SPRITE_CURSOR 1u
 
-#define OFFSET_SPRITE_TITLE  128u
-#define OFFSET_SPRITE_CARD   (OFFSET_SPRITE_TITLE + N_TITLE)
+#define OFFSET_SPRITE_TITLE 128u
+#define OFFSET_SPRITE_CARD (OFFSET_SPRITE_TITLE + N_TITLE)
 
 #define SPRITE_DYNAMIC 0u
-#define SPRITE_HAND    6u
-#define SPRITE_FRAME   12u
+#define SPRITE_HAND 6u
+#define SPRITE_FRAME 12u
 #define SPRITE_FRAME_1 18u
 #define SPRITE_FRAME_2 24u
 #define SPRITE_FRAME_3 30u
 
-#define BIT_OFFSET_CARD_RANK    0u
-#define BIT_OFFSET_CARD_SUIT    4u
+#define BIT_OFFSET_CARD_RANK 0u
+#define BIT_OFFSET_CARD_SUIT 4u
 #define BIT_OFFSET_CARD_VISIBLE 6u
 
-#define BITMASK_CARD_RANK    0b00001111u
-#define BITMASK_CARD_SUIT    0b00110000u
+#define BITMASK_CARD_RANK 0b00001111u
+#define BITMASK_CARD_SUIT 0b00110000u
 #define BITMASK_CARD_VISIBLE 0b01000000u
 
-#define RANK(data)    (data & BITMASK_CARD_RANK)
-#define SUIT(data)    ((data & BITMASK_CARD_SUIT) >> BIT_OFFSET_CARD_SUIT)
+#define RANK(data) (data & BITMASK_CARD_RANK)
+#define SUIT(data) ((data & BITMASK_CARD_SUIT) >> BIT_OFFSET_CARD_SUIT)
 #define VISIBLE(data) (data & BITMASK_CARD_VISIBLE)
 
-#define FLAG_REDRAW_CURSOR          0b00000001u
-#define FLAG_REDRAW_HAND            0b00000010u
-#define FLAG_PLAYING_ANIMATION      0b00000100u
-#define FLAG_GAME_STATE             0b00011000u
-#define FLAG_GAME_STATE_SPLASH      0b00000000u
+#define FLAG_REDRAW_CURSOR 0b00000001u
+#define FLAG_REDRAW_HAND 0b00000010u
+#define FLAG_PLAYING_ANIMATION 0b00000100u
+#define FLAG_GAME_STATE 0b00011000u
+#define FLAG_GAME_STATE_SPLASH 0b00000000u
 #define FLAG_GAME_STATE_LEADERBOARD 0b00001000u
-#define FLAG_GAME_STATE_INGAME      0b00010000u
-#define FLAG_GAME_STATE_SETTINGS    0b00011000u
+#define FLAG_GAME_STATE_INGAME 0b00010000u
+#define FLAG_GAME_STATE_SETTINGS 0b00011000u
 
 #define BITMASK_DYNAMIC_METASPRITE_UNFOLD 0b10000000u
 
-#define BIT_OFFSET_SETTING_NUM_SUITS       0u
+#define BIT_OFFSET_SETTING_NUM_SUITS 0u
 #define BIT_OFFSET_SETTING_ANIMATION_SPEED 2u
-#define BIT_OFFSET_SETTING_MUSIC           4u
+#define BIT_OFFSET_SETTING_MUSIC 4u
 
-#define BITMASK_SETTING_NUM_SUITS       0b00000011u
-#define SETTING_ONE_SUIT                0b00000000u
-#define SETTING_TWO_SUIT                0b00000001u
-#define SETTING_FOUR_SUIT               0b00000010u
+#define BITMASK_SETTING_NUM_SUITS 0b00000011u
+#define SETTING_ONE_SUIT 0b00000000u
+#define SETTING_TWO_SUIT 0b00000001u
+#define SETTING_FOUR_SUIT 0b00000010u
 
 #define NUM_SUITS(settings) (settings & BITMASK_SETTING_NUM_SUITS)
 
@@ -100,8 +100,8 @@
 
 #define NUM_SETTING_PILES 4u
 
-#define SETTINGS_SPLIT_X  10u
-#define SETTINGS_PAD_Y    1u
+#define SETTINGS_SPLIT_X 10u
+#define SETTINGS_PAD_Y 1u
 
 #define LEADERBOARD_CARD_X 4u
 #define LEADERBOARD_NAME_X 8u
@@ -171,7 +171,7 @@ UINT8 flags = 0;
 UINT8 scroll = 0;
 UINT8 settings = SETTING_ONE_SUIT | BITMASK_SETTING_MUSIC;
 UINT8 num_folded_piles = 0;
-UINT16 score =  START_SCORE;
+UINT16 score = START_SCORE;
 LeaderBoard *selected_leaderboard = NULL;
 
 struct DynamicMetaSprite dynamic_metasprite = {
@@ -190,12 +190,12 @@ struct Cursor cursor = {
 };
 
 const struct AnimationSpeed animation_speeds[3] = {
-	{.fold_target_frames = 16,
-	 .move_target_frames = 32},
-	{.fold_target_frames = 8,
-	 .move_target_frames = 16},
-	{.fold_target_frames = 4,
-	 .move_target_frames = 8},
+	{ .fold_target_frames = 16,
+		.move_target_frames = 32 },
+	{ .fold_target_frames = 8,
+		.move_target_frames = 16 },
+	{ .fold_target_frames = 4,
+		.move_target_frames = 8 },
 };
 
 enum menu_cards {
@@ -364,8 +364,8 @@ void draw_card_bottom(const UINT8 x, const UINT8 y, const UINT8 card_data)
 {
 	set_bkg_tile_xy(x, y, OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 2u);
 	set_bkg_tile_xy(x + 1u, y, OFFSET_BKG_CARD + OFFSET_CARD_BLANK + 3u);
-	set_bkg_tile_xy(x, y+ 1u, SUIT(card_data) + OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT);
-	set_bkg_tile_xy(x + 1u, y+ 1u, RANK(card_data) + OFFSET_BKG_CARD + OFFSET_CARD_RANK_ROT);
+	set_bkg_tile_xy(x, y + 1u, SUIT(card_data) + OFFSET_BKG_CARD + OFFSET_CARD_SUIT_ROT);
+	set_bkg_tile_xy(x + 1u, y + 1u, RANK(card_data) + OFFSET_BKG_CARD + OFFSET_CARD_RANK_ROT);
 }
 
 inline void draw_card(const UINT8 x, const UINT8 y, const UINT8 card_data)
@@ -489,8 +489,7 @@ void metasprite_2x3_hide(const UINT8 sprite)
 		OFFSET_SPRITE_NONE,
 		sprite,
 		0,
-		0
-	);
+		0);
 }
 
 void set_metasprite_card(const UINT8 card_data)
@@ -510,20 +509,17 @@ void draw_setting_frame_metasprites(void)
 		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
 		SPRITE_FRAME_1,
 		NUM_SUITS(settings) * 16u + SETTINGS_SPLIT_X * 8u,
-		SETTINGS_PAD_Y * 8u
-	);
+		SETTINGS_PAD_Y * 8u);
 	move_metasprite(metasprite_sequential_2x3,
 		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
 		SPRITE_FRAME_2,
 		!MUSIC(settings) * 16u + SETTINGS_SPLIT_X * 8u,
-		(SETTINGS_PAD_Y + 4u) * 8u
-	);
+		(SETTINGS_PAD_Y + 4u) * 8u);
 	move_metasprite(metasprite_sequential_2x3,
 		OFFSET_SPRITE_CARD + OFFSET_CARD_LIGHT_OUTLINE,
 		SPRITE_FRAME_3,
 		ANIMATION_SPEED(settings) * 16u + SETTINGS_SPLIT_X * 8u,
-		(SETTINGS_PAD_Y + 8u) * 8u
-	);
+		(SETTINGS_PAD_Y + 8u) * 8u);
 }
 
 /*******************************************************************************
@@ -590,7 +586,7 @@ void dynamic_metasprite_fold_pile(void)
 	UINT8 pile_idx = dynamic_metasprite.data[3] & 0xF;
 	if (!pile_idx) {
 		dynamic_metasprite_end_animation();
-		if (num_folded_piles == 8u) {//NOTE: THIS IS WHERE GAME ENDS
+		if (num_folded_piles == 8u) { //NOTE: THIS IS WHERE GAME ENDS
 			metasprite_2x3_hide(SPRITE_FRAME);
 			move_bkg(0, 0);
 			scroll = 0u;
@@ -613,8 +609,7 @@ void dynamic_metasprite_fold_pile(void)
 		13u,
 		pile->base,
 		0,
-		dynamic_metasprite.data[3] >> 4u
-	);
+		dynamic_metasprite.data[3] >> 4u);
 	pile->base = NULL;
 	pile->top = NULL;
 	pile->height = 0;
@@ -669,7 +664,6 @@ void dynamic_metasprite_fold_callback(void)
 		dynamic_metasprite.target_frames = animation_speeds[ANIMATION_SPEED(settings)].move_target_frames;
 		dynamic_metasprite.callback = &dynamic_metasprite_move_stack_callback;
 	}
-
 }
 
 void dynamic_metasprite_fold(const UINT8 top_card_data, const UINT8 src_x, const UINT8 src_y, const UINT8 dest_x, const UINT8 dest_y, const UINT8 stack_height, const Card *base_card, const UINT8 unfold, const UINT8 piles_to_clear)
@@ -742,8 +736,7 @@ inline void dynamic_metasprite_process(void)
 		dynamic_metasprite.metasprite_offset,
 		SPRITE_DYNAMIC,
 		dynamic_metasprite.src[0] + (dynamic_metasprite.dist[0] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames),
-		(INT16)scroll * -8 + dynamic_metasprite.src[1] + (dynamic_metasprite.dist[1] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames)
-	);
+		(INT16)scroll * -8 + dynamic_metasprite.src[1] + (dynamic_metasprite.dist[1] * dynamic_metasprite.elapsed_frames / dynamic_metasprite.target_frames));
 	if (dynamic_metasprite.elapsed_frames == dynamic_metasprite.target_frames
 		&& dynamic_metasprite.callback)
 		dynamic_metasprite.callback();
@@ -857,8 +850,7 @@ inline void cursor_process(void)
 				OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
 				SPRITE_FRAME,
 				cursor.height * 16u + SETTINGS_SPLIT_X * 8u,
-				SETTINGS_PAD_Y * 8u + cursor.pile_idx * 32u
-			);
+				SETTINGS_PAD_Y * 8u + cursor.pile_idx * 32u);
 			break;
 		case FLAG_GAME_STATE_LEADERBOARD:
 			if (selected_leaderboard) {
@@ -872,18 +864,15 @@ inline void cursor_process(void)
 					OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
 					SPRITE_FRAME,
 					0,
-					0
-				);
+					0);
 			else
 				move_metasprite(cursor_metasprites[cursor.anim_frame],
 					OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_FRAME,
 					SPRITE_FRAME,
 					cursor.pile_idx * 16u,
-					(cursor.height + 3u - scroll) * 8u
-				);
+					(cursor.height + 3u - scroll) * 8u);
 			break;
 		}
-
 	}
 	if (flags & FLAG_REDRAW_HAND) {
 		flags &= ~FLAG_REDRAW_HAND;
@@ -893,8 +882,7 @@ inline void cursor_process(void)
 				OFFSET_SPRITE_CURSOR + OFFSET_CURSOR_HAND,
 				SPRITE_HAND,
 				cursor.hand_pile_idx * 16u,
-				(height + !height + 2u - scroll) * 8u
-			);
+				(height + !height + 2u - scroll) * 8u);
 		} else {
 			metasprite_2x3_hide(SPRITE_HAND);
 		}
@@ -1038,8 +1026,7 @@ void pile_append_cursor_stack(Pile *pile)
 			cursor.held_stack_size,
 			cursor.held_card,
 			BITMASK_DYNAMIC_METASPRITE_UNFOLD,
-			piles_to_clear
-		);
+			piles_to_clear);
 	}
 
 	cursor.held_card = NULL;
@@ -1187,7 +1174,7 @@ inline void input_process(void)
 						selected_leaderboard = NULL;
 						set_sprite_tile(SPRITE_FRAME, OFFSET_SPRITE_NONE);
 					} else {
- 						cursor.pile_idx++;
+						cursor.pile_idx++;
 					}
 				} else if (new_input & J_RIGHT
 					&& cursor.pile_idx < 2u) {
@@ -1256,12 +1243,12 @@ inline void input_process(void)
 				} else if (new_input & J_LEFT
 					&& cursor.pile_idx != 0
 					&& cursor.pile_idx != PILE_IDX_DECK) {
-						cursor.pile_idx--;
-						cursor_adjust_height();
+					cursor.pile_idx--;
+					cursor_adjust_height();
 				} else if (new_input & J_RIGHT
 					&& cursor.pile_idx < PILE_IDX_DECK - 1u) {
-						cursor.pile_idx++;
-						cursor_adjust_height();
+					cursor.pile_idx++;
+					cursor_adjust_height();
 				}
 				if (new_input & J_A
 					&& ~flags & FLAG_PLAYING_ANIMATION) {
